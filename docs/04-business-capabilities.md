@@ -352,3 +352,26 @@ Feature flags are stored in Redis (loaded from DB on startup, refreshed every 60
 | `ff.ai_segment_builder` | off | Enable AI-assisted constituent segmentation (v3) |
 
 Flags settable per org by `super_admin`; some flags unlocked by plan tier.
+
+
+## AI copilots by capability (UX-first)
+
+| Capability | AI assistance opportunity | Human checkpoint | UX research metric |
+|---|---|---|---|
+| Constituent management | Auto-dedupe suggestions, profile enrichment hints | Merge approval | duplicate resolution time |
+| Donations & pledges | Suggested coding, anomaly detection, failed payment recovery draft actions | Finance review for exceptions | reconciliation effort reduction |
+| Campaigns | Draft campaign briefs/segments/messages | Campaign owner approval | time-to-launch |
+| Grants | Draft grant narrative, deadline risk alerts, deliverable completeness checks | Program lead approval | on-time submission rate |
+| Programs & cases | Suggested next best action, case summary generation | Case worker approval | case documentation time |
+| Volunteers | Shift matching + no-show risk prediction | Coordinator approval | fill rate / no-show rate |
+| Impact reporting | Auto-generate indicator narratives + outlier explanation | M&E owner approval | reporting cycle time |
+| Finance handoff | Suggested GL mappings + mismatch detection | Finance sign-off | export error rate |
+
+### UX research backlog per feature
+For each capability above, define:
+- Top 3 user jobs-to-be-done
+- Top 3 pain points today
+- AI intervention hypothesis
+- Prototype test scenario
+- Success criteria (time, errors, trust score)
+

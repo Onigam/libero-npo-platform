@@ -29,3 +29,13 @@
 - < 2 weeks onboarding for pilot org
 - 95%+ migration field mapping coverage for pilot NPSP org
 - Monthly close export reproducible with audit trail
+
+
+## Parallel stream: AI UX Research (all phases)
+- Phase 0: define AI interaction principles + safety constraints
+- Phase 1: test AI copilots for fundraising workflows
+- Phase 2: test AI copilots for case/program workflows
+- Phase 3: test AI copilots for grants/volunteer workflows
+- Phase 4: harden governance, telemetry, and model fallback strategy
+
+Deliverable each phase: validated UX findings + go/no-go for AI feature rollout.

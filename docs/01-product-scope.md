@@ -32,6 +32,26 @@ European nonprofits running on Salesforce NPSP face a compounding set of problem
 
 ## 2. Vision statement
 
+## 3. AI-native UX principle (cross-feature)
+
+Libero should use AI agents **inside each core workflow** to reduce clicks, reduce admin burden, and improve data quality — without hiding critical decisions.
+
+Design rules:
+- AI proposes, human confirms for sensitive operations (finance, compliance, beneficiary status)
+- Explainability required: each suggestion includes "why" + source fields
+- Trust boundaries: no irreversible action without confirmation
+- Full auditability of AI actions/prompts/outputs
+- Progressive disclosure: simple UX for non-technical NGO teams
+
+Research requirement:
+For each major feature, run a lightweight UX research loop:
+1) identify top friction tasks
+2) map where an AI assistant can remove complexity
+3) prototype AI-assisted interaction
+4) measure time saved + error reduction + confidence
+
+
+
 > **"Every nonprofit should have enterprise-grade constituent and program management, without needing a Salesforce admin."**
 
 Libero is not trying to be Salesforce. It is trying to be the tool that 80% of nonprofits actually need: fast to set up, genuinely affordable, GDPR-compliant by default, and deployable in a week — not six months.
