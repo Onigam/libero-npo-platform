@@ -1,0 +1,10 @@
+flowchart LR
+  Staff[NPO Staff] --> App[Libero Platform]
+  Admin[NPO Admin] --> App
+  Beneficiaries[Beneficiaries] --> Portal[Self-service Portal]
+  Volunteers[Volunteers] --> Portal
+  Portal --> App
+  App --> Pay[Stripe/Mollie]
+  App --> IdP[SSO/Keycloak]
+  App --> Mail[Email/SMS Provider]
+  App --> BI[BI/Reporting Export]

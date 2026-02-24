@@ -1,0 +1,7 @@
+flowchart LR
+  SF[Salesforce NPSP Export] --> Profile[Data Profiling]
+  Profile --> Map[Mapping & Transform]
+  Map --> Dry[Dry Run Validation]
+  Dry --> Cutover[Phased Cutover]
+  Cutover --> Verify[Reconciliation]
+  Verify --> GoLive[Go Live]

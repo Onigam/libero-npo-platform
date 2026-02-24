@@ -1,0 +1,10 @@
+erDiagram
+  ORG ||--o{ CONTACT : owns
+  ORG ||--o{ HOUSEHOLD : owns
+  ORG ||--o{ DONATION : owns
+  CONTACT ||--o{ DONATION : gives
+  CAMPAIGN ||--o{ DONATION : attributes
+  PROGRAM ||--o{ ENROLLMENT : has
+  CONTACT ||--o{ ENROLLMENT : enrolls
+  GRANT ||--o{ GRANT_DELIVERABLE : has
+  VOLUNTEER ||--o{ VOLUNTEER_SHIFT : performs

@@ -1,0 +1,13 @@
+flowchart TB
+  UI[Web UI]
+  API[API Layer]
+  WF[Workflow/Jobs]
+  DB[(PostgreSQL)]
+  ES[(Search)]
+  MQ[(Queue)]
+  UI --> API
+  API --> DB
+  API --> ES
+  API --> MQ
+  WF --> DB
+  WF --> MQ
