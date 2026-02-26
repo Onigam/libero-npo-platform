@@ -42,19 +42,43 @@ Libero's visual identity should communicate:
 
 | Role | Name | Hex | Usage |
 |---|---|---|---|
-| Primary | Libero Green | `#2E7D5E` | CTAs, active states, brand marks |
-| Primary light | Sage | `#4CAF82` | Hover states, highlights |
-| Primary dark | Forest | `#1A5240` | Text on light bg, deep accents |
+| Primary | Libero Green | `#2E7D5E` | Brand identity, CTAs, active nav states |
+| Primary light | Sage | `#4CAF82` | Hover states, success badges (with icon) |
+| Primary dark | Forest | `#1A5240` | Text on light bg, deep brand accents |
 | Neutral 50 | Warm White | `#FAFAF8` | Page backgrounds |
 | Neutral 100 | Linen | `#F2F0EC` | Card surfaces, panel backgrounds |
 | Neutral 200 | Stone | `#E4E0D9` | Borders, dividers |
 | Neutral 600 | Slate | `#6B6760` | Secondary text, placeholders |
 | Neutral 900 | Ink | `#1C1B19` | Primary body text |
-| Accent 1 | Amber | `#D97706` | Warnings, highlights, fundraising energy |
-| Accent 2 | Terracotta | `#C0614A` | Destructive actions, alerts |
+| Accent 1 | Amber | `#D97706` | Warnings, fundraising highlights |
+| Accent 2 | Indigo | `#5B4FD4` | Destructive actions, error states |
 | Accent 3 | Sky | `#2E79A6` | Info states, links, grant-related contexts |
 
-**Rationale**: Warm off-whites and organic greens evoke sustainability, trust, and care — qualities nonprofits embody. The palette deliberately avoids cold corporate blues and harsh whites.
+**Rationale**: Warm off-whites and organic greens evoke sustainability, trust, and care. The previous palette used a terracotta/red accent for destructive states — this has been replaced with **indigo** to eliminate the red/green conflict that affects users with deuteranopia (red-green color blindness, ~8% of men). Indigo is clearly distinguishable from forest green for all major color blindness types, while maintaining a warm, non-corporate feel.
+
+### 2.2.1 Color accessibility constraints ⚠️
+
+**Color must never be the sole means of conveying information.** This is both a WCAG 2.1 requirement (criterion 1.4.1) and a design quality standard.
+
+| Rule | Implementation |
+|---|---|
+| Status badges | Always pair color with an icon (✓ ✕ ⚠ ℹ) AND a text label |
+| Form validation | Error highlighted in border color + icon + text message below the field |
+| Chart data series | Use color + pattern or color + direct label (never color-only legends) |
+| Green vs. anything | Never use forest green and another color as the only distinction for semantic meaning |
+| Destructive actions | Indigo badge/button + trash/warning icon + explicit label |
+
+**Colorblind simulation**: Every UI screen must be reviewed through a deuteranopia simulation (available in Figma, Chrome DevTools, and macOS Accessibility Inspector) before design handoff.
+
+**Safe color pairs** (distinguishable across common colorblindness types):
+
+| Use case | Color | Works because |
+|---|---|---|
+| Brand / CTA | Libero Green `#2E7D5E` | Brand color, not a semantic status signal alone |
+| Warning | Amber `#D97706` | Yellow-orange — clearly distinct for all types |
+| Error / Destructive | Indigo `#5B4FD4` | Blue-violet — clearly distinct from green for all types |
+| Info | Sky `#2E79A6` | Blue — distinguishable from green even for deuteranopes |
+| Neutral state | Stone `#E4E0D9` | Achromatic — safe for all |
 
 ### 2.3 Typography
 

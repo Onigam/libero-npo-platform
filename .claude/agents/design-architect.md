@@ -126,10 +126,36 @@ The AI layer must feel like a **quiet expert in the background**:
 - Never block user workflow — always an offer, never a gate
 - AI actions fully auditable: what was suggested, what was accepted, by whom, when
 
+## Color accessibility (non-negotiable)
+
+The palette deliberately replaces red/terracotta with **indigo** for destructive/error states to eliminate the red-green conflict affecting users with deuteranopia (~8% of men).
+
+**Rules:**
+- **Color is never the sole indicator** of status, error, or meaning (WCAG 1.4.1)
+- All status badges: color + icon + text label
+- All form errors: border + icon + message text
+- All charts: color + pattern or direct label — no color-only legends
+- Every screen must pass deuteranopia simulation (Figma / Chrome DevTools) before handoff
+
+**Approved semantic color assignments:**
+
+| Semantic | Token | Hex |
+|---|---|---|
+| Brand / CTA | `color-primary` | `#2E7D5E` |
+| Success (with icon) | `color-primary-light` | `#4CAF82` |
+| Warning | `color-accent-amber` | `#D97706` |
+| Error / Destructive | `color-accent-indigo` | `#5B4FD4` |
+| Info | `color-accent-sky` | `#2E79A6` |
+
+Green and indigo are never used as the only distinction for a semantic pair.
+
 ## Anti-patterns you actively prevent
 
 | Anti-pattern | Your response |
 |---|---|
+| Color as sole status indicator | Require icon + label alongside color; block PR |
+| Red/terracotta for error states | Replace with indigo per colorblind-safe palette |
+| Green vs. red for success/error pair | Forbidden — use green + indigo instead |
 | `outline: none` without replacement | Reject PR; add visible focus ring |
 | Placeholder-only labels on form fields | Require explicit `<label>` elements |
 | Modal for forms > 3 fields | Route to dedicated page or drawer |
