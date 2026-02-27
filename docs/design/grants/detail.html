@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Subvention : Mairie de Marseille</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Grant Detail Page Styles ── */
+
+    /* Top section: info + stats side by side */
+    .detail-top {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: var(--space-6);
+      margin-bottom: var(--space-6);
+    }
+
+    /* Key-value pairs layout */
+    .kv-grid {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: var(--space-3) var(--space-4);
+      font-size: var(--text-sm);
+    }
+
+    .kv-label {
+      color: var(--color-text-secondary);
+      font-weight: var(--weight-medium);
+    }
+
+    .kv-value {
+      color: var(--color-text);
+    }
+
+    .kv-value a {
+      color: var(--color-sky);
+    }
+
+    .kv-value .text-mono {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+    }
+
+    /* Stacked stat widgets on the right */
+    .stat-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .stat-widget-sub {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-2);
+    }
+
+    /* Progress bar within stat widget */
+    .stat-progress {
+      margin-top: var(--space-3);
+    }
+
+    .stat-progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-1);
+    }
+
+    /* Table total row */
+    .data-table tfoot td {
+      padding: var(--space-3) var(--space-4);
+      font-weight: var(--weight-semi);
+      background: var(--color-neutral-100);
+      border-top: 2px solid var(--color-border);
+      font-size: var(--text-sm);
+    }
+
+    .data-table tfoot .cell-mono {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Checklist detail text */
+    .checklist-detail {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-0-5);
+    }
+
+    /* Deadline list */
+    .deadline-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    .deadline-item:last-child {
+      border-bottom: none;
+    }
+
+    .deadline-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-0-5);
+    }
+
+    .deadline-date {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .deadline-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    /* Page title row with badge */
+    .page-title-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-1);
+    }
+
+    /* AI card full-width variant */
+    .ai-card-fullwidth {
+      max-width: 100%;
+    }
+
+    /* Topbar search shortcut */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item"><span class="nav-item-icon">&#9634;</span><span class="nav-item-label">Dashboard</span></a>
+        <a href="../constituents/list.html" class="nav-item"><span class="nav-item-icon">&#9823;</span><span class="nav-item-label">Constituants</span></a>
+        <a href="../donations/list.html" class="nav-item"><span class="nav-item-icon">&#9829;</span><span class="nav-item-label">Dons &amp; Campagnes</span></a>
+        <a href="kanban.html" class="nav-item active"><span class="nav-item-icon">&#9733;</span><span class="nav-item-label">Subventions</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9881;</span><span class="nav-item-label">Programmes</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9975;</span><span class="nav-item-label">B&eacute;n&eacute;voles</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9673;</span><span class="nav-item-label">Impact</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9993;</span><span class="nav-item-label">Communications</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9783;</span><span class="nav-item-label">Rapports</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9881;</span><span class="nav-item-label">Param&egrave;tres</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <a href="kanban.html">Subventions</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="kanban.html">Pipeline</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Mairie de Marseille</span>
+        </div>
+        <div class="topbar-search">
+          <input type="text" class="topbar-search-input" placeholder="Rechercher...">
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- ── Page Header ── -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-title-row">
+              <h1 class="page-title">Mairie de Marseille</h1>
+              <span class="badge badge-success"><span class="badge-icon">&#10003;</span> Accord&eacute;e</span>
+            </div>
+            <p class="page-subtitle">Action jeunesse &mdash; SUB-2025-008</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary">Modifier</button>
+            <button class="btn btn-secondary">Changer le statut</button>
+            <button class="btn btn-primary">Enregistrer un versement</button>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             TOP SECTION: Info card + Stats
+             ============================================================ -->
+        <div class="detail-top">
+
+          <!-- Left: Grant information card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Informations de la subvention</h3>
+            </div>
+            <div class="card-body">
+              <div class="kv-grid">
+                <div class="kv-label">Bailleur</div>
+                <div class="kv-value"><a href="#">Mairie de Marseille</a></div>
+
+                <div class="kv-label">Montant total</div>
+                <div class="kv-value"><span class="text-mono">&euro;22&nbsp;000</span></div>
+
+                <div class="kv-label">Montant vers&eacute;</div>
+                <div class="kv-value"><span class="text-mono">&euro;11&nbsp;000</span> <span class="text-muted">(50&nbsp;%)</span></div>
+
+                <div class="kv-label">Type</div>
+                <div class="kv-value">Annuelle</div>
+
+                <div class="kv-label">Fonds restreint</div>
+                <div class="kv-value">Action jeunesse</div>
+
+                <div class="kv-label">Programme li&eacute;</div>
+                <div class="kv-value"><a href="#">Accompagnement des jeunes 16-25 ans</a></div>
+
+                <div class="kv-label">Responsable</div>
+                <div class="kv-value">
+                  <span class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-green">CD</span>
+                    Claire Dubois
+                  </span>
+                </div>
+
+                <div class="kv-label">Date de candidature</div>
+                <div class="kv-value">15/09/2025</div>
+
+                <div class="kv-label">Date de d&eacute;cision</div>
+                <div class="kv-value">20/11/2025</div>
+
+                <div class="kv-label">Date de fin</div>
+                <div class="kv-value">31/12/2026</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Stacked stat widgets -->
+          <div class="stat-stack">
+            <div class="stat-widget">
+              <div class="stat-widget-label">Montant vers&eacute;</div>
+              <div class="stat-widget-value">&euro;11&nbsp;000</div>
+              <div class="stat-progress">
+                <div class="stat-progress-header">
+                  <span>50&nbsp;% vers&eacute;</span>
+                  <span>&euro;22&nbsp;000 total</span>
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 50%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-widget">
+              <div class="stat-widget-label">Prochaine &eacute;ch&eacute;ance</div>
+              <div class="stat-widget-value" style="font-size: var(--text-lg);">15 mars 2026</div>
+              <div class="stat-widget-sub">
+                <span class="badge badge-warning"><span class="badge-icon">&#9888;</span> Rapport d&ucirc; dans 16 jours</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============================================================
+             TABS
+             ============================================================ -->
+        <div class="tabs">
+          <button class="tab active">Tranches (3)</button>
+          <button class="tab">Livrables (5)</button>
+          <button class="tab">Documents</button>
+          <button class="tab">Historique</button>
+        </div>
+
+        <!-- ============================================================
+             ACTIVE TAB: Tranches table
+             ============================================================ -->
+        <div class="card mb-6">
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tranche</th>
+                  <th class="text-right">Montant</th>
+                  <th>Date pr&eacute;vue</th>
+                  <th>Date vers&eacute;e</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-name">Tranche 1</td>
+                  <td class="text-right cell-mono">&euro;11&nbsp;000</td>
+                  <td>01/01/2026</td>
+                  <td>05/01/2026</td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Vers&eacute;</span></td>
+                </tr>
+                <tr>
+                  <td class="cell-name">Tranche 2</td>
+                  <td class="text-right cell-mono">&euro;5&nbsp;500</td>
+                  <td>01/07/2026</td>
+                  <td class="text-muted">&mdash;</td>
+                  <td><span class="badge badge-warning"><span class="badge-icon">&#9203;</span> En attente</span></td>
+                </tr>
+                <tr>
+                  <td class="cell-name">Tranche 3</td>
+                  <td class="text-right cell-mono">&euro;5&nbsp;500</td>
+                  <td>01/12/2026</td>
+                  <td class="text-muted">&mdash;</td>
+                  <td><span class="badge badge-warning"><span class="badge-icon">&#9203;</span> En attente</span></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>Total</td>
+                  <td class="text-right cell-mono">&euro;22&nbsp;000</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             DELIVERABLES CHECKLIST
+             ============================================================ -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">Livrables</h3>
+          </div>
+          <div class="card-body">
+            <div class="checklist-item completed">
+              <div class="checklist-icon">&#10003;</div>
+              <div>
+                <div class="checklist-text">Rapport de d&eacute;marrage</div>
+              </div>
+            </div>
+            <div class="checklist-item completed">
+              <div class="checklist-icon">&#10003;</div>
+              <div>
+                <div class="checklist-text">Convention sign&eacute;e</div>
+              </div>
+            </div>
+            <div class="checklist-item completed">
+              <div class="checklist-icon">&#10003;</div>
+              <div>
+                <div class="checklist-text">Budget pr&eacute;visionnel valid&eacute;</div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-icon">&#9744;</div>
+              <div>
+                <div class="checklist-text">Rapport interm&eacute;diaire</div>
+                <div class="checklist-detail">&Eacute;ch&eacute;ance : 15 mars 2026</div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-icon">&#9744;</div>
+              <div>
+                <div class="checklist-text">Rapport final et bilan financier</div>
+                <div class="checklist-detail">&Eacute;ch&eacute;ance : 15 d&eacute;cembre 2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             DEADLINE ALERTS
+             ============================================================ -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">Prochaines &eacute;ch&eacute;ances</h3>
+          </div>
+          <div class="card-body">
+            <div class="deadline-item">
+              <div class="deadline-info">
+                <div class="deadline-date">15 mars 2026</div>
+                <div class="deadline-label">Rapport interm&eacute;diaire</div>
+              </div>
+              <span class="badge badge-warning"><span class="badge-icon">&#9888;</span> Dans 16 jours</span>
+            </div>
+            <div class="deadline-item">
+              <div class="deadline-info">
+                <div class="deadline-date">15 d&eacute;c. 2026</div>
+                <div class="deadline-label">Rapport final</div>
+              </div>
+              <span class="badge badge-success"><span class="badge-icon">&#10003;</span> Dans 291 jours</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             AI SUGGESTION CARD
+             ============================================================ -->
+        <div class="ai-card ai-card-fullwidth">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            Rapport d&ucirc; dans 16 jours &mdash; g&eacute;n&eacute;rer un brouillon bas&eacute; sur les indicateurs d'impact du programme Action jeunesse ?
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm">G&eacute;n&eacute;rer le brouillon</button>
+            <button class="btn btn-ghost btn-sm">Ignorer</button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+    <!-- END MAIN WRAPPER -->
+
+  </div>
+  <!-- END APP LAYOUT -->
+</body>
+</html>

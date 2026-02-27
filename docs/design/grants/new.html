@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Nouvelle subvention</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Grant Creation Form Styles ── */
+
+    /* Form footer */
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--space-8);
+    }
+
+    /* Input with prefix (e.g. EUR symbol) */
+    .input-with-prefix {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-prefix {
+      position: absolute;
+      left: 12px;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text-secondary);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .input-with-prefix .form-input {
+      padding-left: 30px;
+    }
+
+    /* Input with search icon */
+    .input-with-search {
+      position: relative;
+    }
+
+    .input-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+
+    .input-with-search .form-input {
+      padding-left: 34px;
+    }
+
+    /* Tranche mini-table */
+    .tranche-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+
+    .tranche-table th {
+      text-align: left;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-text-secondary);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .tranche-table td {
+      padding: var(--space-2) var(--space-3);
+      vertical-align: middle;
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    .tranche-table .form-input {
+      height: 36px;
+      font-size: var(--text-sm);
+    }
+
+    .tranche-table tfoot td {
+      font-weight: var(--weight-semi);
+      padding-top: var(--space-3);
+      border-top: 2px solid var(--color-border);
+      border-bottom: none;
+    }
+
+    .tranche-table .cell-mono {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-bold);
+    }
+
+    .tranche-num {
+      width: 40px;
+      height: 28px;
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-text-secondary);
+    }
+
+    .btn-remove {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .btn-remove:hover {
+      border-color: var(--color-indigo);
+      color: var(--color-indigo);
+      background: var(--color-indigo-50);
+    }
+
+    /* Topbar search shortcut */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item"><span class="nav-item-icon">&#9634;</span><span class="nav-item-label">Dashboard</span></a>
+        <a href="../constituents/list.html" class="nav-item"><span class="nav-item-icon">&#9823;</span><span class="nav-item-label">Constituants</span></a>
+        <a href="../donations/list.html" class="nav-item"><span class="nav-item-icon">&#9829;</span><span class="nav-item-label">Dons &amp; Campagnes</span></a>
+        <a href="kanban.html" class="nav-item active"><span class="nav-item-icon">&#9733;</span><span class="nav-item-label">Subventions</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9881;</span><span class="nav-item-label">Programmes</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9975;</span><span class="nav-item-label">B&eacute;n&eacute;voles</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9673;</span><span class="nav-item-label">Impact</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9993;</span><span class="nav-item-label">Communications</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9783;</span><span class="nav-item-label">Rapports</span></a>
+        <a href="#" class="nav-item"><span class="nav-item-icon">&#9881;</span><span class="nav-item-label">Param&egrave;tres</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <a href="kanban.html">Subventions</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Nouvelle subvention</span>
+        </div>
+        <div class="topbar-search">
+          <input type="text" class="topbar-search-input" placeholder="Rechercher...">
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content main-content--form">
+
+        <!-- ── Page Header ── -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Nouvelle subvention</h1>
+            <p class="page-subtitle">Enregistrez une demande de subvention</p>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             FORM
+             ============================================================ -->
+        <form>
+
+          <!-- ── Section 1: Bailleur et montant ── -->
+          <div class="form-section">
+            <h3 class="form-section-title">Bailleur et montant</h3>
+
+            <div class="form-group">
+              <label class="form-label form-label-required">Bailleur</label>
+              <div class="input-with-search">
+                <span class="input-search-icon">&#128269;</span>
+                <input type="text" class="form-input" placeholder="Rechercher un bailleur..." required>
+              </div>
+              <p class="form-hint">Tapez le nom du bailleur pour rechercher dans vos contacts</p>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label form-label-required">Montant total</label>
+                <div class="input-with-prefix">
+                  <span class="input-prefix">&euro;</span>
+                  <input type="number" class="form-input" placeholder="45 000" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Devise</label>
+                <select class="form-select">
+                  <option selected>EUR</option>
+                  <option>USD</option>
+                  <option>GBP</option>
+                  <option>CHF</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label form-label-required">Type de subvention</label>
+              <select class="form-select" required>
+                <option value="">S&eacute;lectionner un type...</option>
+                <option>Ponctuelle</option>
+                <option>Pluriannuelle (2 ans)</option>
+                <option selected>Pluriannuelle (3 ans)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ── Section 2: Programme et fonds ── -->
+          <div class="form-section">
+            <h3 class="form-section-title">Programme et fonds</h3>
+
+            <div class="form-group">
+              <label class="form-label">Programme li&eacute;</label>
+              <select class="form-select">
+                <option>Aucun</option>
+                <option selected>Accompagnement jeunes 16-25</option>
+                <option>Aide alimentaire</option>
+                <option>H&eacute;bergement d'urgence</option>
+                <option>Int&eacute;gration migrants</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Fonds restreint</label>
+              <select class="form-select">
+                <option selected>Cr&eacute;er automatiquement</option>
+                <option>Fonds g&eacute;n&eacute;ral</option>
+                <option>Action jeunesse</option>
+                <option>Aide alimentaire</option>
+                <option>H&eacute;bergement urgence</option>
+              </select>
+              <p class="form-hint">Un fonds restreint sera automatiquement cr&eacute;&eacute; pour suivre l'utilisation de cette subvention</p>
+            </div>
+          </div>
+
+          <!-- ── Section 3: Dates et responsable ── -->
+          <div class="form-section">
+            <h3 class="form-section-title">Dates et responsable</h3>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Date de candidature</label>
+                <input type="date" class="form-input" value="2026-02-27">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date limite de d&eacute;p&ocirc;t</label>
+                <input type="date" class="form-input" value="2026-03-31">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Responsable interne</label>
+                <select class="form-select">
+                  <option selected>Claire Dubois</option>
+                  <option>Marc Benali</option>
+                  <option>Sophie Laurent</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Statut initial</label>
+                <select class="form-select">
+                  <option>Prospection</option>
+                  <option selected>Candidature pr&eacute;par&eacute;e</option>
+                  <option>Dossier soumis</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description du projet</label>
+              <textarea class="form-textarea" rows="4" placeholder="D&eacute;crivez le projet soumis au bailleur..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Crit&egrave;res d'&eacute;ligibilit&eacute; <span class="text-muted text-xs">(optionnel)</span></label>
+              <textarea class="form-textarea" rows="3" placeholder="Conditions d'&eacute;ligibilit&eacute; sp&eacute;cifiques du bailleur..."></textarea>
+            </div>
+          </div>
+
+          <!-- ── Section 4: Tranches de versement ── -->
+          <div class="form-section">
+            <h3 class="form-section-title">Tranches de versement</h3>
+
+            <div class="card card--flat">
+              <div class="card-header">
+                <div>
+                  <h4 class="card-title">Tranches de versement</h4>
+                  <p class="card-subtitle">D&eacute;finissez les tranches pour cette subvention pluriannuelle</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <table class="tranche-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">#</th>
+                      <th>Montant</th>
+                      <th>Date pr&eacute;vue</th>
+                      <th style="width: 60px;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><div class="tranche-num">1</div></td>
+                      <td>
+                        <div class="input-with-prefix">
+                          <span class="input-prefix">&euro;</span>
+                          <input type="number" class="form-input" value="15000">
+                        </div>
+                      </td>
+                      <td><input type="date" class="form-input" value="2027-01-01"></td>
+                      <td><button type="button" class="btn-remove" title="Supprimer">&times;</button></td>
+                    </tr>
+                    <tr>
+                      <td><div class="tranche-num">2</div></td>
+                      <td>
+                        <div class="input-with-prefix">
+                          <span class="input-prefix">&euro;</span>
+                          <input type="number" class="form-input" value="15000">
+                        </div>
+                      </td>
+                      <td><input type="date" class="form-input" value="2028-01-01"></td>
+                      <td><button type="button" class="btn-remove" title="Supprimer">&times;</button></td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td></td>
+                      <td class="cell-mono">&euro;30&nbsp;000</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="card-footer" style="justify-content: flex-start;">
+                <button type="button" class="btn btn-ghost btn-sm">+ Ajouter une tranche</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Form Footer ── -->
+          <div class="form-footer">
+            <button type="button" class="btn btn-secondary">Annuler</button>
+            <button type="submit" class="btn btn-primary">Sauvegarder</button>
+          </div>
+
+        </form>
+
+      </main>
+    </div>
+    <!-- END MAIN WRAPPER -->
+
+  </div>
+  <!-- END APP LAYOUT -->
+</body>
+</html>
