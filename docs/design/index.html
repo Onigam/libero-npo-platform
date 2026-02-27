@@ -7,590 +7,315 @@
   <link rel="stylesheet" href="shared/tokens.css">
   <link rel="stylesheet" href="shared/base.css">
   <style>
-    /* ── Index Page Layout (no sidebar) ── */
-    body {
-      background: var(--color-bg);
-    }
+    body { background: var(--color-bg, #FAFAF8); }
+    .page { max-width: 1280px; margin: 0 auto; padding: 48px 24px 96px; }
 
-    .index-page {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: var(--space-10) var(--space-6) var(--space-16);
-    }
+    /* Header */
+    .header { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+    .logo { width: 52px; height: 52px; background: #2E7D5E; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 700; flex-shrink: 0; font-family: Georgia, serif; }
+    .header-text h1 { font-family: Georgia, serif; font-size: 32px; color: #1C1B19; margin: 0; }
+    .header-text p { font-size: 14px; color: #6B6760; margin: 4px 0 0; }
+    .divider { height: 1px; background: #E4E0D9; margin: 24px 0 40px; }
 
-    /* ── Header ── */
-    .index-header {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-      margin-bottom: var(--space-6);
-    }
+    /* Stats bar */
+    .stats { display: flex; gap: 32px; margin-bottom: 48px; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 36px; font-weight: 700; color: #2E7D5E; font-family: Georgia, serif; line-height: 1; }
+    .stat-label { font-size: 12px; color: #6B6760; margin-top: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
 
-    .index-logo {
-      width: 52px;
-      height: 52px;
-      background: var(--color-primary);
-      border-radius: var(--radius-lg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-white);
-      font-size: var(--text-2xl);
-      font-weight: var(--weight-bold);
-      flex-shrink: 0;
-    }
+    /* Quick links */
+    .quick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 56px; }
+    .quick-card { background: #fff; border: 2px solid #E4E0D9; border-radius: 12px; padding: 24px; text-decoration: none; color: inherit; transition: all 150ms ease-out; display: flex; flex-direction: column; gap: 8px; }
+    .quick-card:hover { border-color: #2E7D5E; box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-2px); text-decoration: none; }
+    .quick-icon { font-size: 28px; margin-bottom: 4px; }
+    .quick-title { font-family: Georgia, serif; font-size: 18px; color: #1C1B19; }
+    .quick-desc { font-size: 13px; color: #6B6760; }
 
-    .index-header-text {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
+    /* Module section */
+    .module { margin-bottom: 48px; }
+    .module-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #E4E0D9; }
+    .module-emoji { font-size: 22px; }
+    .module-title { font-family: Georgia, serif; font-size: 24px; color: #1C1B19; margin: 0; }
+    .module-count { font-size: 11px; font-weight: 600; color: #2E7D5E; background: #F2F0EC; padding: 3px 10px; border-radius: 99px; letter-spacing: 0.04em; }
 
-    .index-title {
-      font-family: var(--font-heading);
-      font-size: var(--text-3xl);
-      color: var(--color-text);
-      line-height: 1.1;
-    }
+    /* Screen grid */
+    .screens { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+    .card { background: #fff; border: 1px solid #E4E0D9; border-radius: 8px; padding: 20px; text-decoration: none; color: inherit; transition: all 150ms ease-out; display: flex; flex-direction: column; gap: 8px; }
+    .card:hover { border-color: #2E7D5E; box-shadow: 0 1px 8px rgba(0,0,0,0.08); transform: translateY(-1px); text-decoration: none; }
+    .card-top { display: flex; align-items: center; justify-content: space-between; }
+    .card-id { font-family: monospace; font-size: 11px; font-weight: 600; color: #1A5240; background: #F2F0EC; padding: 2px 8px; border-radius: 4px; }
+    .card-must { font-size: 11px; font-weight: 600; color: #2E7D5E; }
+    .card-title { font-family: Georgia, serif; font-size: 16px; color: #1C1B19; line-height: 1.3; }
+    .card-desc { font-size: 13px; color: #6B6760; line-height: 1.5; }
+    .card-arrow { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: #2E7D5E; margin-top: auto; padding-top: 12px; border-top: 1px solid #F2F0EC; }
 
-    .index-subtitle {
-      font-size: var(--text-md);
-      color: var(--color-text-muted);
-      font-weight: var(--weight-regular);
-    }
+    /* Footer */
+    .footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid #E4E0D9; text-align: center; font-size: 13px; color: #6B6760; }
 
-    .index-divider {
-      height: 1px;
-      background: var(--color-border);
-      margin-bottom: var(--space-8);
-    }
-
-    /* ── Quick Links ── */
-    .quick-links {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-5);
-      margin-bottom: var(--space-10);
-    }
-
-    .quick-link {
-      background: var(--color-surface);
-      border: 2px solid var(--color-primary-100);
-      border-radius: var(--radius-lg);
-      padding: var(--space-6);
-      text-decoration: none;
-      color: inherit;
-      transition: all var(--duration-normal) var(--ease-out);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
-
-    .quick-link:hover {
-      border-color: var(--color-primary);
-      box-shadow: var(--shadow-md);
-      text-decoration: none;
-      transform: translateY(-2px);
-    }
-
-    .quick-link-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--color-primary-50);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: var(--color-primary);
-    }
-
-    .quick-link-title {
-      font-family: var(--font-heading);
-      font-size: var(--text-xl);
-      color: var(--color-text);
-    }
-
-    .quick-link-desc {
-      font-size: var(--text-sm);
-      color: var(--color-text-secondary);
-      line-height: var(--leading-normal);
-    }
-
-    /* ── Module Sections ── */
-    .module-section {
-      margin-bottom: var(--space-10);
-    }
-
-    .module-section-header {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      margin-bottom: var(--space-5);
-    }
-
-    .module-section-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--color-neutral-100);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: var(--color-text-secondary);
-    }
-
-    .module-section-title {
-      font-family: var(--font-heading);
-      font-size: var(--text-2xl);
-      color: var(--color-text);
-    }
-
-    .module-section-count {
-      font-size: var(--text-xs);
-      font-weight: var(--weight-semi);
-      color: var(--color-text-secondary);
-      background: var(--color-neutral-100);
-      padding: 2px 10px;
-      border-radius: var(--radius-pill);
-    }
-
-    .module-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: var(--space-4);
-    }
-
-    /* ── Screen Card ── */
-    .screen-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-5);
-      text-decoration: none;
-      color: inherit;
-      transition: all var(--duration-normal) var(--ease-out);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
-
-    .screen-card:hover {
-      border-color: var(--color-primary);
-      box-shadow: var(--shadow-card);
-      text-decoration: none;
-      transform: translateY(-1px);
-    }
-
-    .screen-card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .screen-card-id {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      font-weight: var(--weight-medium);
-      color: var(--color-primary-dark);
-      background: var(--color-primary-50);
-      padding: 2px 8px;
-      border-radius: var(--radius-sm);
-    }
-
-    .screen-card-priority {
-      font-size: var(--text-xs);
-      font-weight: var(--weight-semi);
-      color: var(--color-primary-dark);
-      background: var(--color-primary-50);
-      padding: 2px 8px;
-      border-radius: var(--radius-pill);
-      letter-spacing: var(--tracking-wide);
-    }
-
-    .screen-card-title {
-      font-family: var(--font-heading);
-      font-size: var(--text-lg);
-      color: var(--color-text);
-      line-height: var(--leading-tight);
-    }
-
-    .screen-card-desc {
-      font-size: var(--text-sm);
-      color: var(--color-text-secondary);
-      line-height: var(--leading-normal);
-    }
-
-    .screen-card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
-      font-size: var(--text-xs);
-      font-weight: var(--weight-medium);
-      color: var(--color-primary);
-      margin-top: auto;
-      padding-top: var(--space-3);
-      border-top: 1px solid var(--color-neutral-100);
-    }
-
-    .screen-card:hover .screen-card-link {
-      color: var(--color-primary-dark);
-    }
-
-    /* ── Footer ── */
-    .index-footer {
-      margin-top: var(--space-16);
-      padding-top: var(--space-6);
-      border-top: 1px solid var(--color-border);
-      text-align: center;
-      font-size: var(--text-sm);
-      color: var(--color-text-muted);
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .quick-links {
-        grid-template-columns: 1fr;
-      }
-
-      .module-cards {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .index-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .index-title {
-        font-size: var(--text-2xl);
-      }
+    @media (max-width: 768px) {
+      .quick { grid-template-columns: 1fr; }
+      .stats { flex-wrap: wrap; gap: 16px; }
     }
   </style>
 </head>
 <body>
+<div class="page">
 
-  <div class="index-page">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">L</div>
+    <div class="header-text">
+      <h1>Libero NPO Platform</h1>
+      <p>Design Mockups — v2.0 · Février 2026</p>
+    </div>
+  </div>
+  <div class="divider"></div>
 
-    <!-- ── Header ── -->
-    <header class="index-header">
-      <div class="index-logo">L</div>
-      <div class="index-header-text">
-        <h1 class="index-title">Libero NPO Platform</h1>
-        <p class="index-subtitle">Design Mockups — v1.0</p>
-      </div>
-    </header>
-
-    <div class="index-divider"></div>
-
-    <!-- ── Quick Links ── -->
-    <section class="quick-links">
-
-      <a href="moodboard.html" class="quick-link">
-        <div class="quick-link-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="13.5" cy="6.5" r="2.5"/>
-            <path d="M17.08 8.26a2.5 2.5 0 0 1 1.33 4.24L12 18 5.59 12.5a2.5 2.5 0 0 1 1.33-4.24"/>
-            <circle cx="6" cy="12" r="2"/>
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
-          </svg>
-        </div>
-        <div class="quick-link-title">Moodboard</div>
-        <div class="quick-link-desc">Brand identity, couleurs, typographie</div>
-      </a>
-
-      <a href="design-system.html" class="quick-link">
-        <div class="quick-link-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7"/>
-            <rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/>
-            <rect x="3" y="14" width="7" height="7"/>
-          </svg>
-        </div>
-        <div class="quick-link-title">Design System</div>
-        <div class="quick-link-desc">Tokens, composants, accessibilite</div>
-      </a>
-
-      <a href="dashboard.html" class="quick-link">
-        <div class="quick-link-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="20" x2="18" y2="10"/>
-            <line x1="12" y1="20" x2="12" y2="4"/>
-            <line x1="6" y1="20" x2="6" y2="14"/>
-          </svg>
-        </div>
-        <div class="quick-link-title">Dashboard</div>
-        <div class="quick-link-desc">Vue d'ensemble principale</div>
-      </a>
-
-    </section>
-
-    <!-- ══════════════════════════════════════════════════
-         Module: Authentification
-         ══════════════════════════════════════════════════ -->
-    <section class="module-section">
-      <div class="module-section-header">
-        <div class="module-section-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-        </div>
-        <h2 class="module-section-title">Authentification</h2>
-        <span class="module-section-count">6 ecrans</span>
-      </div>
-
-      <div class="module-cards">
-
-        <a href="auth/login.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">AUTH-001</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Connexion</div>
-          <div class="screen-card-desc">Page de connexion avec formulaire email/mot de passe et options de recuperation.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-        <a href="auth/onboarding-1.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">AUTH-005</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Onboarding 1 — Organisation</div>
-          <div class="screen-card-desc">Premiere etape : informations de l'organisation, type de structure et secteur d'activite.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-        <a href="auth/onboarding-2.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">AUTH-006</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Onboarding 2 — Equipe</div>
-          <div class="screen-card-desc">Deuxieme etape : invitation des membres de l'equipe et attribution des roles.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-        <a href="auth/onboarding-3.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">AUTH-007</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Onboarding 3 — Donnees</div>
-          <div class="screen-card-desc">Troisieme etape : import initial des donnees existantes (constituants, dons).</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-        <a href="auth/onboarding-4.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">AUTH-008</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Onboarding 4 — RGPD</div>
-          <div class="screen-card-desc">Quatrieme etape : configuration de la conformite RGPD et consentements.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-        <a href="auth/onboarding-5.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">AUTH-009</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Onboarding 5 — Termine</div>
-          <div class="screen-card-desc">Derniere etape : confirmation et acces au tableau de bord.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════════
-         Module: Constituants
-         ══════════════════════════════════════════════════ -->
-    <section class="module-section">
-      <div class="module-section-header">
-        <div class="module-section-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-        </div>
-        <h2 class="module-section-title">Constituants</h2>
-        <span class="module-section-count">2 ecrans</span>
-      </div>
-
-      <div class="module-cards">
-
-        <a href="constituents/list.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">CON-001</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Liste des constituants</div>
-          <div class="screen-card-desc">Tableau avec recherche, filtres et pagination pour gerer tous les constituants.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-        <a href="constituents/detail.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">CON-002</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Fiche constituant</div>
-          <div class="screen-card-desc">Vue detaillee d'un constituant avec historique, dons, interactions et notes.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════════
-         Module: Dons
-         ══════════════════════════════════════════════════ -->
-    <section class="module-section">
-      <div class="module-section-header">
-        <div class="module-section-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-        </div>
-        <h2 class="module-section-title">Dons</h2>
-        <span class="module-section-count">2 ecrans</span>
-      </div>
-
-      <div class="module-cards">
-
-        <a href="donations/list.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">DON-001</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Liste des dons</div>
-          <div class="screen-card-desc">Tableau des dons recus avec montants, dates, donateurs et statuts de recus fiscaux.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-        <a href="donations/new.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">DON-002</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Nouveau don</div>
-          <div class="screen-card-desc">Formulaire de saisie d'un don avec selection du donateur, montant et affectation.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════════
-         Module: Campagnes
-         ══════════════════════════════════════════════════ -->
-    <section class="module-section">
-      <div class="module-section-header">
-        <div class="module-section-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-          </svg>
-        </div>
-        <h2 class="module-section-title">Campagnes</h2>
-        <span class="module-section-count">1 ecran</span>
-      </div>
-
-      <div class="module-cards">
-
-        <a href="campaigns/list.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">CAMP-001</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Liste des campagnes</div>
-          <div class="screen-card-desc">Vue d'ensemble des campagnes de collecte avec objectifs, progression et statuts.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════════
-         Module: Subventions
-         ══════════════════════════════════════════════════ -->
-    <section class="module-section">
-      <div class="module-section-header">
-        <div class="module-section-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-          </svg>
-        </div>
-        <h2 class="module-section-title">Subventions</h2>
-        <span class="module-section-count">1 ecran</span>
-      </div>
-
-      <div class="module-cards">
-
-        <a href="grants/kanban.html" class="screen-card">
-          <div class="screen-card-top">
-            <span class="screen-card-id">GRANT-001</span>
-            <span class="screen-card-priority">MUST</span>
-          </div>
-          <div class="screen-card-title">Pipeline Kanban</div>
-          <div class="screen-card-desc">Vue Kanban du pipeline de subventions avec colonnes par etape du processus.</div>
-          <div class="screen-card-link">
-            Voir la maquette
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </a>
-
-      </div>
-    </section>
-
-    <!-- ── Footer ── -->
-    <footer class="index-footer">
-      Libero NPO Platform — Design Architect — Fevrier 2026
-    </footer>
-
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num">61</div><div class="stat-label">Écrans</div></div>
+    <div class="stat"><div class="stat-num">15</div><div class="stat-label">Modules</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">MUST couverts</div></div>
+    <div class="stat"><div class="stat-num">WCAG 2.1</div><div class="stat-label">AA conforme</div></div>
   </div>
 
+  <!-- Quick links -->
+  <div class="quick">
+    <a href="moodboard.html" class="quick-card">
+      <div class="quick-icon">🎨</div>
+      <div class="quick-title">Moodboard</div>
+      <div class="quick-desc">Identité visuelle, palette, typographie</div>
+    </a>
+    <a href="design-system.html" class="quick-card">
+      <div class="quick-icon">🧩</div>
+      <div class="quick-title">Design System</div>
+      <div class="quick-desc">Tokens, composants, accessibilité</div>
+    </a>
+    <a href="dashboard.html" class="quick-card">
+      <div class="quick-icon">📊</div>
+      <div class="quick-title">Dashboard</div>
+      <div class="quick-desc">Vue d'ensemble principale</div>
+    </a>
+  </div>
+
+  <!-- ── AUTH ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">🔐</span>
+      <h2 class="module-title">Authentification</h2>
+      <span class="module-count">8 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="auth/login.html" class="card"><div class="card-top"><span class="card-id">AUTH-001</span><span class="card-must">MUST</span></div><div class="card-title">Connexion</div><div class="card-desc">Email + mot de passe, lien SSO, mot de passe oublié.</div><div class="card-arrow">Voir →</div></a>
+      <a href="auth/forgot-password.html" class="card"><div class="card-top"><span class="card-id">AUTH-003</span><span class="card-must">MUST</span></div><div class="card-title">Mot de passe oublié</div><div class="card-desc">Saisie email pour recevoir le lien de réinitialisation.</div><div class="card-arrow">Voir →</div></a>
+      <a href="auth/reset-password.html" class="card"><div class="card-top"><span class="card-id">AUTH-004</span><span class="card-must">MUST</span></div><div class="card-title">Réinitialisation</div><div class="card-desc">Nouveau mot de passe avec indicateur de force.</div><div class="card-arrow">Voir →</div></a>
+      <a href="auth/onboarding-1.html" class="card"><div class="card-top"><span class="card-id">AUTH-005</span><span class="card-must">MUST</span></div><div class="card-title">Onboarding 1 — Organisation</div><div class="card-desc">Informations légales, pays, devise, logo.</div><div class="card-arrow">Voir →</div></a>
+      <a href="auth/onboarding-2.html" class="card"><div class="card-top"><span class="card-id">AUTH-006</span><span class="card-must">MUST</span></div><div class="card-title">Onboarding 2 — Équipe</div><div class="card-desc">Invitation des membres et attribution des rôles.</div><div class="card-arrow">Voir →</div></a>
+      <a href="auth/onboarding-3.html" class="card"><div class="card-top"><span class="card-id">AUTH-007</span><span class="card-must">MUST</span></div><div class="card-title">Onboarding 3 — Données</div><div class="card-desc">Import depuis Salesforce, CSV ou démarrage vierge.</div><div class="card-arrow">Voir →</div></a>
+      <a href="auth/onboarding-4.html" class="card"><div class="card-top"><span class="card-id">AUTH-008</span><span class="card-must">MUST</span></div><div class="card-title">Onboarding 4 — RGPD</div><div class="card-desc">Résidence des données, rétention, consentements.</div><div class="card-arrow">Voir →</div></a>
+      <a href="auth/onboarding-5.html" class="card"><div class="card-top"><span class="card-id">AUTH-009</span><span class="card-must">MUST</span></div><div class="card-title">Onboarding 5 — Terminé</div><div class="card-desc">Récapitulatif et accès au tableau de bord.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── CONSTITUANTS ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">👥</span>
+      <h2 class="module-title">Constituants</h2>
+      <span class="module-count">8 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="constituents/list.html" class="card"><div class="card-top"><span class="card-id">CON-001</span><span class="card-must">MUST</span></div><div class="card-title">Liste des constituants</div><div class="card-desc">Tableau paginé, filtres avancés, actions en masse.</div><div class="card-arrow">Voir →</div></a>
+      <a href="constituents/detail.html" class="card"><div class="card-top"><span class="card-id">CON-002</span><span class="card-must">MUST</span></div><div class="card-title">Fiche constituant</div><div class="card-desc">Vue tabulée : Infos, Activité, Dons, Programmes, RGPD.</div><div class="card-arrow">Voir →</div></a>
+      <a href="constituents/organizations-list.html" class="card"><div class="card-top"><span class="card-id">CON-004</span><span class="card-must">MUST</span></div><div class="card-title">Liste des organisations</div><div class="card-desc">Entreprises, fondations, partenaires avec types et contributions.</div><div class="card-arrow">Voir →</div></a>
+      <a href="constituents/organization-detail.html" class="card"><div class="card-top"><span class="card-id">CON-003</span><span class="card-must">MUST</span></div><div class="card-title">Fiche organisation</div><div class="card-desc">Contacts liés, subventions, dons entreprise, relations.</div><div class="card-arrow">Voir →</div></a>
+      <a href="constituents/households-list.html" class="card"><div class="card-top"><span class="card-id">CON-006</span><span class="card-must">MUST</span></div><div class="card-title">Liste des ménages</div><div class="card-desc">Ménages avec membres, total dons, reçus fiscaux agrégés.</div><div class="card-arrow">Voir →</div></a>
+      <a href="constituents/household-detail.html" class="card"><div class="card-top"><span class="card-id">CON-005</span><span class="card-must">MUST</span></div><div class="card-title">Fiche ménage</div><div class="card-desc">Membres, adresse commune, récapitulatif fiscal consolidé.</div><div class="card-arrow">Voir →</div></a>
+      <a href="constituents/new.html" class="card"><div class="card-top"><span class="card-id">CON-007</span><span class="card-must">MUST</span></div><div class="card-title">Nouveau constituant</div><div class="card-desc">Formulaire de création avec détection de doublons temps réel.</div><div class="card-arrow">Voir →</div></a>
+      <a href="constituents/import.html" class="card"><div class="card-top"><span class="card-id">CON-008</span><span class="card-must">MUST</span></div><div class="card-title">Import CSV</div><div class="card-desc">Wizard 3 étapes : upload → mapping colonnes → validation.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── DONS ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">💶</span>
+      <h2 class="module-title">Dons</h2>
+      <span class="module-count">6 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="donations/list.html" class="card"><div class="card-top"><span class="card-id">DON-001</span><span class="card-must">MUST</span></div><div class="card-title">Liste des dons</div><div class="card-desc">Tableau filtrable, montants, statuts, export.</div><div class="card-arrow">Voir →</div></a>
+      <a href="donations/new.html" class="card"><div class="card-top"><span class="card-id">DON-002</span><span class="card-must">MUST</span></div><div class="card-title">Nouveau don</div><div class="card-desc">Formulaire avec sélecteur donateur, fonds, génération reçu.</div><div class="card-arrow">Voir →</div></a>
+      <a href="donations/detail.html" class="card"><div class="card-top"><span class="card-id">DON-003</span><span class="card-must">MUST</span></div><div class="card-title">Détail du don</div><div class="card-desc">Allocation fonds, audit log, téléchargement reçu.</div><div class="card-arrow">Voir →</div></a>
+      <a href="donations/receipt.html" class="card"><div class="card-top"><span class="card-id">DON-004</span><span class="card-must">MUST</span></div><div class="card-title">Reçu fiscal</div><div class="card-desc">Aperçu PDF avec mentions légales, envoi email.</div><div class="card-arrow">Voir →</div></a>
+      <a href="donations/batches.html" class="card"><div class="card-top"><span class="card-id">DON-005</span><span class="card-must">MUST</span></div><div class="card-title">Batches de dons</div><div class="card-desc">Groupements comptables — Ouvert / Soumis / Posté.</div><div class="card-arrow">Voir →</div></a>
+      <a href="donations/batch-detail.html" class="card"><div class="card-top"><span class="card-id">DON-006</span><span class="card-must">MUST</span></div><div class="card-title">Détail batch</div><div class="card-desc">Dons inclus, totaux par fonds, export GL.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── CAMPAGNES ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">📣</span>
+      <h2 class="module-title">Campagnes</h2>
+      <span class="module-count">3 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="campaigns/list.html" class="card"><div class="card-top"><span class="card-id">CAMP-001</span><span class="card-must">MUST</span></div><div class="card-title">Liste des campagnes</div><div class="card-desc">Barres de progression, objectifs, statuts, filtres.</div><div class="card-arrow">Voir →</div></a>
+      <a href="campaigns/detail.html" class="card"><div class="card-top"><span class="card-id">CAMP-002</span><span class="card-must">MUST</span></div><div class="card-title">Détail campagne</div><div class="card-desc">KPIs temps réel, dons liés, communications, AI insight.</div><div class="card-arrow">Voir →</div></a>
+      <a href="campaigns/new.html" class="card"><div class="card-top"><span class="card-id">CAMP-003</span><span class="card-must">MUST</span></div><div class="card-title">Nouvelle campagne</div><div class="card-desc">Formulaire : nom, type, dates, objectif, fonds, parent.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── SUBVENTIONS ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">🏛️</span>
+      <h2 class="module-title">Subventions</h2>
+      <span class="module-count">4 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="grants/kanban.html" class="card"><div class="card-top"><span class="card-id">GRANT-001</span><span class="card-must">MUST</span></div><div class="card-title">Pipeline Kanban</div><div class="card-desc">Colonnes par étape, drag & drop, montants, urgences.</div><div class="card-arrow">Voir →</div></a>
+      <a href="grants/detail.html" class="card"><div class="card-top"><span class="card-id">GRANT-002</span><span class="card-must">MUST</span></div><div class="card-title">Détail subvention</div><div class="card-desc">Tranches, livrables checklist, alertes échéances, AI.</div><div class="card-arrow">Voir →</div></a>
+      <a href="grants/new.html" class="card"><div class="card-top"><span class="card-id">GRANT-003</span><span class="card-must">MUST</span></div><div class="card-title">Nouvelle subvention</div><div class="card-desc">Formulaire avec éditeur de tranches pluriannuelles.</div><div class="card-arrow">Voir →</div></a>
+      <a href="grants/deadlines.html" class="card"><div class="card-top"><span class="card-id">GRANT-004</span><span class="card-must">MUST</span></div><div class="card-title">Tableau échéances</div><div class="card-desc">Calendrier + liste, code couleur urgence, export iCal.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── PROGRAMMES ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">🤝</span>
+      <h2 class="module-title">Programmes</h2>
+      <span class="module-count">5 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="programs/list.html" class="card"><div class="card-top"><span class="card-id">PROG-001</span><span class="card-must">MUST</span></div><div class="card-title">Liste des programmes</div><div class="card-desc">Bénéficiaires actifs, taux d'occupation, financements.</div><div class="card-arrow">Voir →</div></a>
+      <a href="programs/detail.html" class="card"><div class="card-top"><span class="card-id">PROG-002</span><span class="card-must">MUST</span></div><div class="card-title">Détail programme</div><div class="card-desc">Capacité, indicateurs impact, bénéficiaires, fonds.</div><div class="card-arrow">Voir →</div></a>
+      <a href="programs/beneficiaries.html" class="card"><div class="card-top"><span class="card-id">PROG-003</span><span class="card-must">MUST</span></div><div class="card-title">Bénéficiaires inscrits</div><div class="card-desc">Tableau des inscriptions, statuts, chargé de cas, actions masse.</div><div class="card-arrow">Voir →</div></a>
+      <a href="programs/beneficiary-detail.html" class="card"><div class="card-top"><span class="card-id">PROG-004</span><span class="card-must">MUST</span></div><div class="card-title">Fiche bénéficiaire</div><div class="card-desc">Services délivrés, notes de cas, référencements, documents.</div><div class="card-arrow">Voir →</div></a>
+      <a href="programs/case-notes.html" class="card"><div class="card-top"><span class="card-id">PROG-005</span><span class="card-must">MUST</span></div><div class="card-title">Notes de cas</div><div class="card-desc">Chronologie horodatée, verrouillage 24h, saisie riche.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── BÉNÉVOLES ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">🙋</span>
+      <h2 class="module-title">Bénévoles</h2>
+      <span class="module-count">4 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="volunteers/list.html" class="card"><div class="card-top"><span class="card-id">VOL-001</span><span class="card-must">MUST</span></div><div class="card-title">Liste des bénévoles</div><div class="card-desc">Compétences, statut DBS, heures, alerte expiration.</div><div class="card-arrow">Voir →</div></a>
+      <a href="volunteers/detail.html" class="card"><div class="card-top"><span class="card-id">VOL-002</span><span class="card-must">MUST</span></div><div class="card-title">Fiche bénévole</div><div class="card-desc">Disponibilités, missions, heures, formations, DBS.</div><div class="card-arrow">Voir →</div></a>
+      <a href="volunteers/schedule.html" class="card"><div class="card-top"><span class="card-id">VOL-003</span><span class="card-must">MUST</span></div><div class="card-title">Planning des missions</div><div class="card-desc">Calendrier hebdo, postes vacants, assignation.</div><div class="card-arrow">Voir →</div></a>
+      <a href="volunteers/hours.html" class="card"><div class="card-top"><span class="card-id">VOL-004</span><span class="card-must">MUST</span></div><div class="card-title">Saisie des heures</div><div class="card-desc">Heures prévues vs réelles, validation, valeur monétaire.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── IMPACT ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">📈</span>
+      <h2 class="module-title">Impact</h2>
+      <span class="module-count">3 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="impact/dashboard.html" class="card"><div class="card-top"><span class="card-id">IMP-001</span><span class="card-must">MUST</span></div><div class="card-title">Tableau de bord KPIs</div><div class="card-desc">Indicateurs, jauges, tendances, alertes AI, export PDF.</div><div class="card-arrow">Voir →</div></a>
+      <a href="impact/indicator-entry.html" class="card"><div class="card-top"><span class="card-id">IMP-002</span><span class="card-must">MUST</span></div><div class="card-title">Saisie indicateur</div><div class="card-desc">Valeur, période, source, mini-graphique historique, anomalie AI.</div><div class="card-arrow">Voir →</div></a>
+      <a href="impact/report.html" class="card"><div class="card-top"><span class="card-id">IMP-003</span><span class="card-must">MUST</span></div><div class="card-title">Rapport d'impact</div><div class="card-desc">Configurateur + aperçu rapport avec graphiques et narratif.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── COMMUNICATIONS ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">✉️</span>
+      <h2 class="module-title">Communications</h2>
+      <span class="module-count">3 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="communications/list.html" class="card"><div class="card-top"><span class="card-id">COM-001</span><span class="card-must">MUST</span></div><div class="card-title">Liste des envois</div><div class="card-desc">Historique emails, taux ouverture/clic, statuts, AI alert.</div><div class="card-arrow">Voir →</div></a>
+      <a href="communications/compose.html" class="card"><div class="card-top"><span class="card-id">COM-002</span><span class="card-must">MUST</span></div><div class="card-title">Composer un email</div><div class="card-desc">Segment builder, WYSIWYG, preview desktop/mobile, planification.</div><div class="card-arrow">Voir →</div></a>
+      <a href="communications/constituent-history.html" class="card"><div class="card-top"><span class="card-id">COM-004</span><span class="card-must">MUST</span></div><div class="card-title">Historique constituant</div><div class="card-desc">Timeline des communications d'un constituant.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── FINANCE ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">💰</span>
+      <h2 class="module-title">Finance</h2>
+      <span class="module-count">2 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="finance/gl-export.html" class="card"><div class="card-top"><span class="card-id">FIN-001</span><span class="card-must">MUST</span></div><div class="card-title">Export Grand Livre</div><div class="card-desc">Période, batch, format (CSV/Xero/QuickBooks), aperçu écritures.</div><div class="card-arrow">Voir →</div></a>
+      <a href="finance/restricted-funds.html" class="card"><div class="card-top"><span class="card-id">FIN-003</span><span class="card-must">MUST</span></div><div class="card-title">Fonds restreints</div><div class="card-desc">Soldes, % utilisé, alertes expiration, AI suggestion.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── RGPD ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">🔒</span>
+      <h2 class="module-title">RGPD</h2>
+      <span class="module-count">3 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="gdpr/consents.html" class="card"><div class="card-top"><span class="card-id">GDPR-001</span><span class="card-must">MUST</span></div><div class="card-title">Registre des consentements</div><div class="card-desc">Base légale, canaux, statuts, export DPA audit.</div><div class="card-arrow">Voir →</div></a>
+      <a href="gdpr/requests.html" class="card"><div class="card-top"><span class="card-id">GDPR-002</span><span class="card-must">MUST</span></div><div class="card-title">Demandes d'accès (SAR)</div><div class="card-desc">Délai J+30, urgence colorée, workflow structuré.</div><div class="card-arrow">Voir →</div></a>
+      <a href="gdpr/erasure.html" class="card"><div class="card-top"><span class="card-id">GDPR-003</span><span class="card-must">MUST</span></div><div class="card-title">Procédure d'effacement</div><div class="card-desc">Inventaire données, bases légales, double confirmation.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── ADMIN ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">⚙️</span>
+      <h2 class="module-title">Administration</h2>
+      <span class="module-count">4 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="admin/organization.html" class="card"><div class="card-top"><span class="card-id">ADM-001</span><span class="card-must">MUST</span></div><div class="card-title">Paramètres organisation</div><div class="card-desc">Informations légales, logo, reçus fiscaux, locale.</div><div class="card-arrow">Voir →</div></a>
+      <a href="admin/users.html" class="card"><div class="card-top"><span class="card-id">ADM-002</span><span class="card-must">MUST</span></div><div class="card-title">Gestion utilisateurs</div><div class="card-desc">Invitations, rôles, statuts actif/invité/désactivé.</div><div class="card-arrow">Voir →</div></a>
+      <a href="admin/integrations.html" class="card"><div class="card-top"><span class="card-id">ADM-004</span><span class="card-must">MUST</span></div><div class="card-title">Intégrations</div><div class="card-desc">Stripe, Xero, Mailchimp, Google Workspace et plus.</div><div class="card-arrow">Voir →</div></a>
+      <a href="admin/billing.html" class="card"><div class="card-top"><span class="card-id">ADM-005</span><span class="card-must">MUST</span></div><div class="card-title">Facturation</div><div class="card-desc">Plan, sièges, prochaine facture, historique, paiement.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── RAPPORTS ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">📋</span>
+      <h2 class="module-title">Rapports</h2>
+      <span class="module-count">3 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="reports/library.html" class="card"><div class="card-top"><span class="card-id">REP-001</span><span class="card-must">MUST</span></div><div class="card-title">Bibliothèque de rapports</div><div class="card-desc">Rapports standard (LYBUNT, SYBUNT…) + rapports custom.</div><div class="card-arrow">Voir →</div></a>
+      <a href="reports/builder.html" class="card"><div class="card-top"><span class="card-id">REP-002</span><span class="card-must">MUST</span></div><div class="card-title">Générateur de rapports</div><div class="card-desc">3 panneaux : sélecteur champs / filtres / aperçu live.</div><div class="card-arrow">Voir →</div></a>
+      <a href="reports/view.html" class="card"><div class="card-top"><span class="card-id">REP-003</span><span class="card-must">MUST</span></div><div class="card-title">Vue d'un rapport</div><div class="card-desc">Résultats tabulés, visualisation, export CSV/Excel/PDF.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── GLOBAL ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">🌐</span>
+      <h2 class="module-title">Global</h2>
+      <span class="module-count">4 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="global/command-palette.html" class="card"><div class="card-top"><span class="card-id">GLO-001</span><span class="card-must">MUST</span></div><div class="card-title">Palette de commandes</div><div class="card-desc">Overlay ⌘K — recherche globale, navigation rapide, actions.</div><div class="card-arrow">Voir →</div></a>
+      <a href="global/404.html" class="card"><div class="card-top"><span class="card-id">GLO-002</span><span class="card-must">MUST</span></div><div class="card-title">Page 404</div><div class="card-desc">Page introuvable — calme, constructif, retour dashboard.</div><div class="card-arrow">Voir →</div></a>
+      <a href="global/500.html" class="card"><div class="card-top"><span class="card-id">GLO-003</span><span class="card-must">MUST</span></div><div class="card-title">Erreur serveur 500</div><div class="card-desc">Erreur inattendue — message humain, ID erreur, support.</div><div class="card-arrow">Voir →</div></a>
+      <a href="global/notifications.html" class="card"><div class="card-top"><span class="card-id">GLO-004</span><span class="card-must">MUST</span></div><div class="card-title">Notifications</div><div class="card-desc">Panneau latéral — alertes, tâches, badge non-lus.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Libero NPO Platform · Design System v2.0 · 61 écrans · Février 2026
+  </footer>
+
+</div>
 </body>
 </html>
