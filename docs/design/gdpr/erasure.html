@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proc&eacute;dure d'effacement — Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for gdpr/erasure (GDPR-003) ── */
+
+    /* Serious/sobering tone — slightly cooler surface */
+    .main-content {
+      background: var(--color-neutral-50);
+    }
+
+    .erasure-context {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--space-6);
+      border-left: 4px solid var(--color-indigo);
+    }
+
+    .erasure-context-icon {
+      font-size: var(--text-2xl);
+      flex-shrink: 0;
+    }
+
+    .erasure-context-info {
+      flex: 1;
+    }
+
+    .erasure-context-name {
+      font-size: var(--text-lg);
+      font-family: var(--font-heading);
+      margin-bottom: var(--space-1);
+    }
+
+    .erasure-context-meta {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      display: flex;
+      gap: var(--space-4);
+    }
+
+    /* Data categories */
+    .data-category {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      margin-bottom: var(--space-4);
+      overflow: hidden;
+    }
+
+    .data-category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-neutral-100);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .data-category-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .data-category-title-icon {
+      font-size: var(--text-md);
+    }
+
+    .data-category-count {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    .data-category-body {
+      padding: 0;
+    }
+
+    .data-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-neutral-100);
+      font-size: var(--text-sm);
+    }
+
+    .data-item:last-child {
+      border-bottom: none;
+    }
+
+    .data-item-checkbox {
+      flex-shrink: 0;
+      accent-color: var(--color-indigo);
+    }
+
+    .data-item-label {
+      flex: 1;
+      color: var(--color-text);
+    }
+
+    .data-item-detail {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+
+    .data-item-basis {
+      flex-shrink: 0;
+    }
+
+    /* Conservation basis badges */
+    .basis-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: 2px 8px;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+
+    .basis-badge--erasable {
+      background: var(--color-primary-50);
+      color: var(--color-primary-dark);
+    }
+
+    .basis-badge--retain {
+      background: var(--color-amber-50);
+      color: #92400E;
+    }
+
+    .basis-badge--legal {
+      background: var(--color-indigo-50);
+      color: var(--color-indigo);
+    }
+
+    /* Consequences summary */
+    .consequences-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 2px solid var(--color-indigo);
+      padding: var(--space-5);
+      margin-top: var(--space-6);
+    }
+
+    .consequences-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      color: var(--color-indigo);
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .consequences-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .consequences-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      padding: var(--space-2) 0;
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    .consequences-list li:last-child {
+      border-bottom: none;
+    }
+
+    .consequences-list-icon {
+      flex-shrink: 0;
+      color: var(--color-indigo);
+      font-size: var(--text-sm);
+      margin-top: 1px;
+    }
+
+    .consequences-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-neutral-200);
+    }
+
+    .consequences-stat {
+      text-align: center;
+    }
+
+    .consequences-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+    }
+
+    .consequences-stat-value--delete {
+      color: var(--color-indigo);
+    }
+
+    .consequences-stat-value--retain {
+      color: var(--color-amber);
+    }
+
+    .consequences-stat-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-0-5);
+    }
+
+    /* Confirm modal concept */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: var(--z-modal);
+      /* Toggle display: none to hide */
+    }
+
+    .modal-card {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-modal);
+      width: 100%;
+      max-width: 520px;
+      padding: var(--space-8);
+    }
+
+    .modal-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--color-indigo-50);
+      color: var(--color-indigo);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-2xl);
+      margin: 0 auto var(--space-4);
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      text-align: center;
+      margin-bottom: var(--space-3);
+      color: var(--color-text);
+    }
+
+    .modal-text {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      text-align: center;
+      line-height: var(--leading-normal);
+      margin-bottom: var(--space-6);
+    }
+
+    .modal-text strong {
+      color: var(--color-indigo);
+    }
+
+    .modal-confirm-field {
+      margin-bottom: var(--space-6);
+    }
+
+    .modal-confirm-label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-2);
+      text-align: center;
+      color: var(--color-text);
+    }
+
+    .modal-confirm-input {
+      width: 100%;
+      height: 44px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: var(--text-md);
+      letter-spacing: var(--tracking-wide);
+      border: 2px solid var(--color-border);
+      border-radius: 6px;
+      color: var(--color-text);
+      transition: border-color var(--duration-normal) var(--ease-out);
+    }
+
+    .modal-confirm-input:focus {
+      outline: none;
+      border-color: var(--color-indigo);
+      box-shadow: 0 0 0 3px var(--color-indigo-50);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+    }
+
+    .modal-actions .btn {
+      min-width: 140px;
+      justify-content: center;
+    }
+
+    /* Action bar */
+    .erasure-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      margin-top: var(--space-6);
+      border-top: 2px solid var(--color-indigo);
+    }
+
+    .erasure-actions-info {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .erasure-actions-info strong {
+      color: var(--color-indigo);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Param&egrave;tres</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="#">RGPD</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="#">Demandes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Proc&eacute;dure d'effacement</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher..." aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">&#128276;</button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Proc&eacute;dure d'effacement</h1>
+            <p class="page-subtitle">Droit &agrave; l'oubli &mdash; Article 17 RGPD</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">&#128196; G&eacute;n&eacute;rer le certificat</button>
+          </div>
+        </div>
+
+        <!-- Serious warning banner -->
+        <div class="alert alert-error mb-6">
+          <span class="alert-icon">&#9888;</span>
+          <div class="alert-content">
+            <strong>Action irr&eacute;versible.</strong> L'effacement des donn&eacute;es est d&eacute;finitif. V&eacute;rifiez chaque cat&eacute;gorie de donn&eacute;es avant de proc&eacute;der. Les donn&eacute;es soumises &agrave; une obligation l&eacute;gale de conservation ne peuvent pas &ecirc;tre effac&eacute;es.
+          </div>
+        </div>
+
+        <!-- Subject context -->
+        <div class="erasure-context">
+          <div class="erasure-context-icon">&#128100;</div>
+          <div class="erasure-context-info">
+            <div class="erasure-context-name">Nadia Berger</div>
+            <div class="erasure-context-meta">
+              <span>Demande re&ccedil;ue : 15/01/2026</span>
+              <span>D&eacute;lai l&eacute;gal : 14/02/2026</span>
+              <span class="badge badge-error">En retard &#10005;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Inventory by Category -->
+
+        <!-- Category 1: Personal Data -->
+        <div class="data-category">
+          <div class="data-category-header">
+            <div class="data-category-title">
+              <span class="data-category-title-icon">&#128100;</span>
+              Donn&eacute;es personnelles
+            </div>
+            <span class="data-category-count">6 enregistrements</span>
+          </div>
+          <div class="data-category-body">
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dp-1">
+              <label for="dp-1" class="data-item-label">
+                Nom, pr&eacute;nom, date de naissance
+                <div class="data-item-detail">Nadia Berger, 14/03/1985</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effac&cedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dp-2">
+              <label for="dp-2" class="data-item-label">
+                Adresse email
+                <div class="data-item-detail">nadia.berger@email.fr</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dp-3">
+              <label for="dp-3" class="data-item-label">
+                T&eacute;l&eacute;phone
+                <div class="data-item-detail">06 98 76 54 32</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dp-4">
+              <label for="dp-4" class="data-item-label">
+                Adresse postale
+                <div class="data-item-detail">12 rue des Oliviers, 13001 Marseille</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dp-5">
+              <label for="dp-5" class="data-item-label">
+                Notes et commentaires internes
+                <div class="data-item-detail">3 notes de suivi</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dp-6">
+              <label for="dp-6" class="data-item-label">
+                Photo de profil
+                <div class="data-item-detail">1 fichier (avatar.jpg)</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category 2: Donations / Financial -->
+        <div class="data-category">
+          <div class="data-category-header">
+            <div class="data-category-title">
+              <span class="data-category-title-icon">&#9829;</span>
+              Dons et donn&eacute;es financi&egrave;res
+            </div>
+            <span class="data-category-count">4 enregistrements</span>
+          </div>
+          <div class="data-category-body">
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" disabled id="df-1">
+              <label for="df-1" class="data-item-label">
+                Re&ccedil;us fiscaux (2024, 2025)
+                <div class="data-item-detail">2 re&ccedil;us &mdash; &euro;450 total</div>
+              </label>
+              <span class="basis-badge basis-badge--legal">&#128274; Conservation l&eacute;gale 10 ans</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" disabled id="df-2">
+              <label for="df-2" class="data-item-label">
+                &Eacute;critures comptables li&eacute;es
+                <div class="data-item-detail">4 &eacute;critures GL (512000, 754100)</div>
+              </label>
+              <span class="basis-badge basis-badge--legal">&#128274; Conservation l&eacute;gale 10 ans</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="df-3">
+              <label for="df-3" class="data-item-label">
+                Historique des paiements (d&eacute;tails carte/IBAN)
+                <div class="data-item-detail">Donn&eacute;es de paiement li&eacute;es &agrave; 3 transactions</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="df-4">
+              <label for="df-4" class="data-item-label">
+                Pr&eacute;f&eacute;rences de don (montant r&eacute;current, fonds pr&eacute;f&eacute;r&eacute;)
+                <div class="data-item-detail">Pr&eacute;f&eacute;rence : 50&euro;/mois, Fonds M&eacute;diterran&eacute;e</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category 3: Communications -->
+        <div class="data-category">
+          <div class="data-category-header">
+            <div class="data-category-title">
+              <span class="data-category-title-icon">&#9993;</span>
+              Communications
+            </div>
+            <span class="data-category-count">12 enregistrements</span>
+          </div>
+          <div class="data-category-body">
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dc-1">
+              <label for="dc-1" class="data-item-label">
+                Historique des emails envoy&eacute;s
+                <div class="data-item-detail">8 emails (newsletters, campagnes)</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dc-2">
+              <label for="dc-2" class="data-item-label">
+                Donn&eacute;es de tracking (ouvertures, clics)
+                <div class="data-item-detail">M&eacute;triques d'engagement par email</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" checked id="dc-3">
+              <label for="dc-3" class="data-item-label">
+                Historique SMS
+                <div class="data-item-detail">2 SMS envoy&eacute;s</div>
+              </label>
+              <span class="basis-badge basis-badge--erasable">&#10003; Effa&ccedil;able</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" disabled id="dc-4">
+              <label for="dc-4" class="data-item-label">
+                Courrier postal (copie re&ccedil;u fiscal)
+                <div class="data-item-detail">1 courrier li&eacute; au re&ccedil;u fiscal</div>
+              </label>
+              <span class="basis-badge basis-badge--legal">&#128274; Conservation l&eacute;gale 10 ans</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category 4: GDPR/Consent records -->
+        <div class="data-category">
+          <div class="data-category-header">
+            <div class="data-category-title">
+              <span class="data-category-title-icon">&#128274;</span>
+              Consentements et activit&eacute; RGPD
+            </div>
+            <span class="data-category-count">3 enregistrements</span>
+          </div>
+          <div class="data-category-body">
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" disabled id="dg-1">
+              <label for="dg-1" class="data-item-label">
+                Registre des consentements
+                <div class="data-item-detail">2 consentements (email marketing, traitement donn&eacute;es)</div>
+              </label>
+              <span class="basis-badge basis-badge--retain">&#128336; Conserver 3 ans apr&egrave;s r&eacute;vocation</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" disabled id="dg-2">
+              <label for="dg-2" class="data-item-label">
+                Historique de la pr&eacute;sente demande d'effacement
+                <div class="data-item-detail">Demande SAR-2026-008, re&ccedil;ue 15/01/2026</div>
+              </label>
+              <span class="basis-badge basis-badge--retain">&#128336; Conserver 5 ans (preuve conformit&eacute;)</span>
+            </div>
+            <div class="data-item">
+              <input type="checkbox" class="data-item-checkbox" disabled id="dg-3">
+              <label for="dg-3" class="data-item-label">
+                Journal d'audit (connexions, modifications)
+                <div class="data-item-detail">14 entr&eacute;es dans le journal d'audit</div>
+              </label>
+              <span class="basis-badge basis-badge--retain">&#128336; Conserver 3 ans</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Consequences Summary -->
+        <div class="consequences-card">
+          <div class="consequences-title">
+            <span>&#9888;</span>
+            R&eacute;capitulatif de l'effacement propos&eacute;
+          </div>
+
+          <div class="consequences-stats">
+            <div class="consequences-stat">
+              <div class="consequences-stat-value consequences-stat-value--delete">14</div>
+              <div class="consequences-stat-label">&Agrave; effacer</div>
+            </div>
+            <div class="consequences-stat">
+              <div class="consequences-stat-value consequences-stat-value--retain">7</div>
+              <div class="consequences-stat-label">Conserv&eacute;s (obligation l&eacute;gale)</div>
+            </div>
+            <div class="consequences-stat">
+              <div class="consequences-stat-value">21</div>
+              <div class="consequences-stat-label">Total enregistrements</div>
+            </div>
+          </div>
+
+          <ul class="consequences-list" style="margin-top: var(--space-4);">
+            <li>
+              <span class="consequences-list-icon">&#10005;</span>
+              <span>Le profil constituant sera <strong>anonymis&eacute;</strong> (nom remplac&eacute; par &laquo; Constituant supprim&eacute; &raquo;)</span>
+            </li>
+            <li>
+              <span class="consequences-list-icon">&#10005;</span>
+              <span>Les coordonn&eacute;es (email, t&eacute;l&eacute;phone, adresse) seront <strong>supprim&eacute;es d&eacute;finitivement</strong></span>
+            </li>
+            <li>
+              <span class="consequences-list-icon">&#10005;</span>
+              <span>L'historique des communications sera <strong>purg&eacute;</strong> (sauf courrier li&eacute; au re&ccedil;u fiscal)</span>
+            </li>
+            <li>
+              <span class="consequences-list-icon">&#10005;</span>
+              <span>Les donn&eacute;es de paiement seront <strong>effac&eacute;es</strong> des syst&egrave;mes de paiement</span>
+            </li>
+            <li>
+              <span class="consequences-list-icon">&#128274;</span>
+              <span>Les re&ccedil;us fiscaux et &eacute;critures comptables seront <strong>conserv&eacute;s 10 ans</strong> (art. L102B LPF)</span>
+            </li>
+            <li>
+              <span class="consequences-list-icon">&#128274;</span>
+              <span>Le registre des consentements sera <strong>conserv&eacute; 3 ans</strong> apr&egrave;s r&eacute;vocation (preuve RGPD)</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Action bar -->
+        <div class="erasure-actions">
+          <div class="erasure-actions-info">
+            <strong>14 enregistrements</strong> seront effac&eacute;s d&eacute;finitivement. <strong>7</strong> seront conserv&eacute;s conform&eacute;ment aux obligations l&eacute;gales.
+          </div>
+          <div style="display: flex; gap: var(--space-3);">
+            <button class="btn btn-secondary" type="button">Annuler</button>
+            <button class="btn btn-destructive" type="button">Proc&eacute;der &agrave; l'effacement</button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!--   Double Confirm Modal Concept  -->
+  <!-- ============================== -->
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon">&#9888;</div>
+      <h2 class="modal-title">Confirmer l'effacement d&eacute;finitif</h2>
+      <p class="modal-text">
+        Vous &ecirc;tes sur le point d'effacer <strong>14 enregistrements</strong> pour <strong>Nadia Berger</strong>.<br>
+        Cette action est <strong>irr&eacute;versible</strong> et ne peut pas &ecirc;tre annul&eacute;e.
+      </p>
+      <div class="modal-confirm-field">
+        <div class="modal-confirm-label">Tapez <strong>EFFACER</strong> pour confirmer</div>
+        <input type="text" class="modal-confirm-input" placeholder="EFFACER" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button">Annuler</button>
+        <button class="btn btn-destructive" type="button" disabled>Effacer d&eacute;finitivement</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
