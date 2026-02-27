@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personnaliser le tableau de bord &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="shared/tokens.css">
+  <link rel="stylesheet" href="shared/base.css">
+  <style>
+    /* ── Page-specific styles for dashboard-customize (DASH-002) ── */
+
+    /* Topbar search shortcut badge */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+
+    /* ── Customize mode badge in topbar ── */
+    .topbar-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--color-amber-light);
+      color: #92400E;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      padding: var(--space-1-5) var(--space-3);
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+
+    .topbar-mode-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-amber);
+      border-radius: var(--radius-full);
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .topbar-mode-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-left: auto;
+    }
+
+    /* ── Overlay backdrop ── */
+    .customize-backdrop {
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-width);
+      right: 0;
+      bottom: 0;
+      background: rgba(30, 28, 25, 0.25);
+      z-index: var(--z-overlay);
+      pointer-events: none;
+    }
+
+    /* ── Dashboard grid under edit mode ── */
+    .dashboard-edit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+      position: relative;
+      z-index: calc(var(--z-overlay) + 1);
+    }
+
+    /* ── Active widgets (draggable placeholders) ── */
+    .active-widget {
+      background: var(--color-white);
+      border: 2px dashed var(--color-primary);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      cursor: grab;
+      transition: box-shadow var(--duration-normal) var(--ease-out);
+    }
+
+    .active-widget:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .active-widget-drag {
+      font-size: var(--text-lg);
+      color: var(--color-text-muted);
+      cursor: grab;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .active-widget-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .active-widget-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .active-widget-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-0-5);
+    }
+
+    .active-widget-remove {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--color-text-muted);
+      font-size: var(--text-md);
+      transition: all var(--duration-normal) var(--ease-out);
+      flex-shrink: 0;
+    }
+
+    .active-widget-remove:hover {
+      background: var(--color-indigo-50);
+      border-color: var(--color-indigo);
+      color: var(--color-indigo);
+    }
+
+    .active-widget--full {
+      grid-column: 1 / -1;
+    }
+
+    /* ── Widget gallery panel (slides in from right) ── */
+    .widget-gallery {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 100vh;
+      background: var(--color-white);
+      box-shadow: var(--shadow-modal);
+      z-index: calc(var(--z-overlay) + 2);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .gallery-header {
+      padding: var(--space-5) var(--space-5) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    .gallery-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+    }
+
+    .gallery-subtitle {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .gallery-search {
+      margin-top: var(--space-3);
+    }
+
+    .gallery-search-input {
+      width: 100%;
+      height: 36px;
+      background: var(--color-neutral-50);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 0 var(--space-3);
+      font-size: var(--text-sm);
+      font-family: var(--font-body);
+      color: var(--color-text);
+    }
+
+    .gallery-search-input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .gallery-search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    .gallery-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4) var(--space-5);
+    }
+
+    /* ── Widget group ── */
+    .widget-group {
+      margin-bottom: var(--space-5);
+    }
+
+    .widget-group-title {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-3);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    /* ── Widget card in gallery ── */
+    .gallery-widget {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-2);
+      cursor: pointer;
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .gallery-widget:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-50);
+    }
+
+    .gallery-widget.selected {
+      border-color: var(--color-primary);
+      background: var(--color-primary-50);
+    }
+
+    .gallery-widget-checkbox {
+      margin-top: 2px;
+      accent-color: var(--color-primary);
+      flex-shrink: 0;
+    }
+
+    .gallery-widget-preview {
+      width: 36px;
+      height: 36px;
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-md);
+      flex-shrink: 0;
+    }
+
+    .gallery-widget-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .gallery-widget-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .gallery-widget-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-0-5);
+      line-height: var(--leading-normal);
+    }
+
+    /* ── AI suggestion in gallery ── */
+    .gallery-ai-card {
+      background: var(--color-neutral-100);
+      border-left: 3px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-top: var(--space-4);
+    }
+
+    .gallery-ai-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+
+    .gallery-ai-icon {
+      font-size: var(--text-sm);
+    }
+
+    .gallery-ai-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-primary-dark);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+
+    .gallery-ai-text {
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      line-height: var(--leading-normal);
+      margin-bottom: var(--space-3);
+    }
+
+    .gallery-ai-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    /* ── Sidebar org logo ── */
+    .sidebar-footer-org-logo {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="constituents/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="donations/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="grants/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-org-logo">ASM</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+          <div class="sidebar-footer-role">Plan Professionnel</div>
+        </div>
+        <div class="sidebar-footer-avatar">CD</div>
+      </div>
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar — Customize Mode -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <a href="dashboard.html">Tableau de bord</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Personnalisation</span>
+        </div>
+
+        <span class="topbar-mode-badge">
+          <span class="topbar-mode-badge-dot"></span>
+          Mode Personnalisation
+        </span>
+
+        <div class="topbar-mode-actions">
+          <button class="btn btn-secondary btn-sm" type="button">Annuler</button>
+          <button class="btn btn-primary btn-sm" type="button">Sauvegarder</button>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Personnaliser le tableau de bord</h1>
+            <p class="page-subtitle">Glissez pour r&eacute;organiser, ajoutez ou retirez des widgets</p>
+          </div>
+        </div>
+
+        <!-- Active Widgets Grid (edit mode) -->
+        <div class="dashboard-edit-grid">
+
+          <!-- Widget 1: Dons ce mois (stat) -->
+          <div class="active-widget">
+            <span class="active-widget-drag">&#10495;</span>
+            <div class="active-widget-info">
+              <div class="active-widget-name">Dons ce mois</div>
+              <div class="active-widget-desc">Montant total et tendance mensuelle</div>
+            </div>
+            <button class="active-widget-remove" type="button" title="Retirer">&times;</button>
+          </div>
+
+          <!-- Widget 2: Constituants actifs (stat) -->
+          <div class="active-widget">
+            <span class="active-widget-drag">&#10495;</span>
+            <div class="active-widget-info">
+              <div class="active-widget-name">Constituants actifs</div>
+              <div class="active-widget-desc">Nombre et &eacute;volution</div>
+            </div>
+            <button class="active-widget-remove" type="button" title="Retirer">&times;</button>
+          </div>
+
+          <!-- Widget 3: Campagnes actives (stat) -->
+          <div class="active-widget">
+            <span class="active-widget-drag">&#10495;</span>
+            <div class="active-widget-info">
+              <div class="active-widget-name">Campagnes actives</div>
+              <div class="active-widget-desc">Campagnes en cours et progression</div>
+            </div>
+            <button class="active-widget-remove" type="button" title="Retirer">&times;</button>
+          </div>
+
+          <!-- Widget 4: Echeances subventions (stat) -->
+          <div class="active-widget">
+            <span class="active-widget-drag">&#10495;</span>
+            <div class="active-widget-info">
+              <div class="active-widget-name">&Eacute;ch&eacute;ances subventions</div>
+              <div class="active-widget-desc">Prochains jalons &agrave; surveiller</div>
+            </div>
+            <button class="active-widget-remove" type="button" title="Retirer">&times;</button>
+          </div>
+
+          <!-- Widget 5: Campagnes en cours (full width) -->
+          <div class="active-widget active-widget--full">
+            <span class="active-widget-drag">&#10495;</span>
+            <div class="active-widget-info">
+              <div class="active-widget-name">Campagnes en cours</div>
+              <div class="active-widget-desc">Liste des campagnes actives avec progression</div>
+            </div>
+            <button class="active-widget-remove" type="button" title="Retirer">&times;</button>
+          </div>
+
+          <!-- Widget 6: Activite recente (full width) -->
+          <div class="active-widget active-widget--full">
+            <span class="active-widget-drag">&#10495;</span>
+            <div class="active-widget-info">
+              <div class="active-widget-name">Activit&eacute; r&eacute;cente</div>
+              <div class="active-widget-desc">Timeline des derniers &eacute;v&eacute;nements</div>
+            </div>
+            <button class="active-widget-remove" type="button" title="Retirer">&times;</button>
+          </div>
+
+          <!-- Widget 7: Checklist de demarrage -->
+          <div class="active-widget active-widget--full">
+            <span class="active-widget-drag">&#10495;</span>
+            <div class="active-widget-info">
+              <div class="active-widget-name">Checklist de d&eacute;marrage</div>
+              <div class="active-widget-desc">&Eacute;tapes d'onboarding restantes</div>
+            </div>
+            <button class="active-widget-remove" type="button" title="Retirer">&times;</button>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+
+    <!-- ============================== -->
+    <!--     Semi-transparent backdrop    -->
+    <!-- ============================== -->
+    <div class="customize-backdrop"></div>
+
+    <!-- ============================== -->
+    <!--     Widget Gallery Panel        -->
+    <!-- ============================== -->
+    <div class="widget-gallery">
+
+      <div class="gallery-header">
+        <h2 class="gallery-title">Galerie de widgets</h2>
+        <p class="gallery-subtitle">Cochez pour ajouter au tableau de bord</p>
+        <div class="gallery-search">
+          <input class="gallery-search-input" type="search" placeholder="Rechercher un widget&hellip;">
+        </div>
+      </div>
+
+      <div class="gallery-body">
+
+        <!-- Group: Finance -->
+        <div class="widget-group">
+          <div class="widget-group-title">Finance</div>
+
+          <label class="gallery-widget selected">
+            <input type="checkbox" class="gallery-widget-checkbox" checked>
+            <div class="gallery-widget-preview">&#128176;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">Dons ce mois</div>
+              <div class="gallery-widget-desc">Montant total avec tendance vs N-1</div>
+            </div>
+          </label>
+
+          <label class="gallery-widget">
+            <input type="checkbox" class="gallery-widget-checkbox">
+            <div class="gallery-widget-preview">&#128200;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">Revenus annuels</div>
+              <div class="gallery-widget-desc">Graphique dons + subventions cumul&eacute;s</div>
+            </div>
+          </label>
+
+          <label class="gallery-widget">
+            <input type="checkbox" class="gallery-widget-checkbox">
+            <div class="gallery-widget-preview">&#128179;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">Re&ccedil;us fiscaux en attente</div>
+              <div class="gallery-widget-desc">Nombre de re&ccedil;us &agrave; g&eacute;n&eacute;rer</div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Group: Constituants -->
+        <div class="widget-group">
+          <div class="widget-group-title">Constituants</div>
+
+          <label class="gallery-widget selected">
+            <input type="checkbox" class="gallery-widget-checkbox" checked>
+            <div class="gallery-widget-preview">&#9823;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">Constituants actifs</div>
+              <div class="gallery-widget-desc">Total et nouveaux ce mois</div>
+            </div>
+          </label>
+
+          <label class="gallery-widget">
+            <input type="checkbox" class="gallery-widget-checkbox">
+            <div class="gallery-widget-preview">&#128101;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">Segments</div>
+              <div class="gallery-widget-desc">R&eacute;partition par segment cl&eacute;</div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Group: Programmes -->
+        <div class="widget-group">
+          <div class="widget-group-title">Programmes</div>
+
+          <label class="gallery-widget">
+            <input type="checkbox" class="gallery-widget-checkbox">
+            <div class="gallery-widget-preview">&#9881;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">Programmes actifs</div>
+              <div class="gallery-widget-desc">Nombre de programmes et b&eacute;n&eacute;ficiaires</div>
+            </div>
+          </label>
+
+          <label class="gallery-widget">
+            <input type="checkbox" class="gallery-widget-checkbox">
+            <div class="gallery-widget-preview">&#127919;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">Impact mensuel</div>
+              <div class="gallery-widget-desc">Indicateurs cl&eacute;s du mois</div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Group: Subventions -->
+        <div class="widget-group">
+          <div class="widget-group-title">Subventions</div>
+
+          <label class="gallery-widget selected">
+            <input type="checkbox" class="gallery-widget-checkbox" checked>
+            <div class="gallery-widget-preview">&#9733;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">&Eacute;ch&eacute;ances subventions</div>
+              <div class="gallery-widget-desc">Prochains jalons &agrave; surveiller</div>
+            </div>
+          </label>
+
+          <label class="gallery-widget">
+            <input type="checkbox" class="gallery-widget-checkbox">
+            <div class="gallery-widget-preview">&#128203;</div>
+            <div class="gallery-widget-info">
+              <div class="gallery-widget-name">Pipeline subventions</div>
+              <div class="gallery-widget-desc">Montant en cours par &eacute;tape</div>
+            </div>
+          </label>
+        </div>
+
+        <!-- AI Suggestion -->
+        <div class="gallery-ai-card">
+          <div class="gallery-ai-header">
+            <span class="gallery-ai-icon">&#10024;</span>
+            <span class="gallery-ai-label">Suggestion IA</span>
+          </div>
+          <p class="gallery-ai-text">
+            Bas&eacute; sur votre r&ocirc;le, nous sugg&eacute;rons d'ajouter le widget <strong>Subventions &eacute;ch&eacute;ances</strong> pour suivre vos prochains jalons critiques.
+          </p>
+          <div class="gallery-ai-actions">
+            <button class="btn btn-primary btn-sm" type="button">Ajouter</button>
+            <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</body>
+</html>

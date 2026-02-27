@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R&eacute;conciliation bancaire &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for finance/reconciliation (FIN-002) ── */
+
+    .import-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--space-6);
+    }
+
+    .import-bar-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .import-bar-info {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .import-bar-info strong {
+      color: var(--color-text);
+    }
+
+    /* Split layout */
+    .recon-split {
+      display: grid;
+      grid-template-columns: 60% 40%;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+      min-height: 420px;
+    }
+
+    .recon-panel {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .recon-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .recon-panel-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      color: var(--color-text);
+    }
+
+    .recon-panel-body {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* Unmatched payments table */
+    .recon-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+
+    .recon-table th {
+      background: var(--color-neutral-200);
+      padding: var(--space-2) var(--space-4);
+      text-align: left;
+      font-weight: var(--weight-semi);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .recon-table td {
+      padding: var(--space-2) var(--space-4);
+      height: var(--table-row-height);
+      vertical-align: middle;
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    .recon-table tbody tr {
+      cursor: pointer;
+      transition: background var(--duration-fast) var(--ease-out);
+    }
+
+    .recon-table tbody tr:nth-child(even) {
+      background: var(--color-neutral-100);
+    }
+
+    .recon-table tbody tr:nth-child(odd) {
+      background: var(--color-white);
+    }
+
+    .recon-table tbody tr:hover {
+      background: var(--color-primary-50);
+    }
+
+    .recon-table tbody tr.row-active {
+      background: var(--color-primary-50);
+      box-shadow: inset 3px 0 0 var(--color-primary);
+    }
+
+    .recon-table .cell-amount {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .recon-table .cell-ref {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .recon-table .cell-date {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    /* Suggestions panel */
+    .suggestion-list {
+      padding: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .suggestion-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .suggestion-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-card);
+    }
+
+    .suggestion-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-2);
+    }
+
+    .suggestion-card-name {
+      font-weight: var(--weight-medium);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+
+    .suggestion-card-ref {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .suggestion-card-details {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-3);
+    }
+
+    .suggestion-card-amount {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+
+    .suggestion-card-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    /* Confidence badges */
+    .confidence-high {
+      background: var(--color-primary-50);
+      color: var(--color-primary-dark);
+    }
+
+    .confidence-medium {
+      background: var(--color-amber-50);
+      color: #92400E;
+    }
+
+    .confidence-low {
+      background: var(--color-indigo-50);
+      color: var(--color-indigo);
+    }
+
+    /* Empty suggestion state */
+    .suggestion-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-10);
+      text-align: center;
+      color: var(--color-text-secondary);
+      font-size: var(--text-sm);
+    }
+
+    .suggestion-empty-icon {
+      font-size: 32px;
+      opacity: 0.3;
+      margin-bottom: var(--space-3);
+    }
+
+    /* Summary bar */
+    .summary-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--space-6);
+    }
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+    }
+
+    .summary-item-label {
+      color: var(--color-text-secondary);
+    }
+
+    .summary-item-value {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .summary-item-sub {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .summary-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--color-border);
+    }
+
+    /* AI card override for full width */
+    .ai-card--wide {
+      max-width: 100%;
+      margin-bottom: var(--space-6);
+    }
+
+    /* Bottom actions */
+    .bottom-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Finance</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">R&eacute;conciliation</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher&hellip;  &#8984;K" aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">R&eacute;conciliation bancaire</h1>
+            <p class="page-subtitle">Rapprochez les paiements re&ccedil;us avec les relev&eacute;s bancaires import&eacute;s</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">&#128196; Exporter le rapport</button>
+          </div>
+        </div>
+
+        <!-- Import Bar -->
+        <div class="import-bar">
+          <div class="import-bar-left">
+            <button class="btn btn-primary" type="button">&#128194; Importer un relev&eacute; bancaire</button>
+            <div class="import-bar-info">
+              Dernier import : <strong>24 f&eacute;vrier 2026</strong> &mdash; Banque Postale &mdash; releve_BP_fev2026.csv
+            </div>
+          </div>
+          <span class="badge badge-success">42 transactions import&eacute;es</span>
+        </div>
+
+        <!-- AI Card -->
+        <div class="ai-card ai-card--wide">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#9672;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <div class="ai-card-text">
+            <strong>Matching automatique</strong> &mdash; 28 paiements ont &eacute;t&eacute; rapproch&eacute;s avec une confiance &eacute;lev&eacute;e. Souhaitez-vous les valider en masse ?
+          </div>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm" type="button">Valider les 28 rapprochements</button>
+            <button class="btn btn-ghost btn-sm" type="button">V&eacute;rifier un par un</button>
+          </div>
+        </div>
+
+        <!-- Split Layout -->
+        <div class="recon-split">
+
+          <!-- LEFT: Unmatched Payments -->
+          <div class="recon-panel">
+            <div class="recon-panel-header">
+              <h3 class="recon-panel-title">Paiements non rapproch&eacute;s</h3>
+              <span class="badge badge-warning">8 restants</span>
+            </div>
+            <div class="recon-panel-body">
+              <table class="recon-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Libell&eacute;</th>
+                    <th class="text-right">Montant</th>
+                    <th>R&eacute;f. bancaire</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="row-active">
+                    <td class="cell-date">25/02/2026</td>
+                    <td class="cell-name">VIR SEPA M FONTAINE MARC</td>
+                    <td class="cell-amount text-right">&euro;500,00</td>
+                    <td class="cell-ref">BP-26022501</td>
+                    <td><button class="btn btn-primary btn-sm" type="button">Rapprocher</button></td>
+                  </tr>
+                  <tr>
+                    <td class="cell-date">24/02/2026</td>
+                    <td class="cell-name">CHQ N&deg;4827610 LEFEVRE</td>
+                    <td class="cell-amount text-right">&euro;2 000,00</td>
+                    <td class="cell-ref">BP-24022502</td>
+                    <td><button class="btn btn-secondary btn-sm" type="button">Rapprocher</button></td>
+                  </tr>
+                  <tr>
+                    <td class="cell-date">23/02/2026</td>
+                    <td class="cell-name">VIR INST ACME SAS DON HIVER</td>
+                    <td class="cell-amount text-right">&euro;5 000,00</td>
+                    <td class="cell-ref">BP-23022503</td>
+                    <td><button class="btn btn-secondary btn-sm" type="button">Rapprocher</button></td>
+                  </tr>
+                  <tr>
+                    <td class="cell-date">22/02/2026</td>
+                    <td class="cell-name">PRLV SEPA MARTIN SOPHIE</td>
+                    <td class="cell-amount text-right">&euro;150,00</td>
+                    <td class="cell-ref">BP-22022504</td>
+                    <td><button class="btn btn-secondary btn-sm" type="button">Rapprocher</button></td>
+                  </tr>
+                  <tr>
+                    <td class="cell-date">21/02/2026</td>
+                    <td class="cell-name">VIR SEPA BENALI AMINA</td>
+                    <td class="cell-amount text-right">&euro;75,00</td>
+                    <td class="cell-ref">BP-21022505</td>
+                    <td><button class="btn btn-secondary btn-sm" type="button">Rapprocher</button></td>
+                  </tr>
+                  <tr>
+                    <td class="cell-date">20/02/2026</td>
+                    <td class="cell-name">CB STRIPE *DON EN LIGNE</td>
+                    <td class="cell-amount text-right">&euro;320,00</td>
+                    <td class="cell-ref">BP-20022506</td>
+                    <td><button class="btn btn-secondary btn-sm" type="button">Rapprocher</button></td>
+                  </tr>
+                  <tr>
+                    <td class="cell-date">19/02/2026</td>
+                    <td class="cell-name">VIR SEPA MAIRIE MARSEILLE</td>
+                    <td class="cell-amount text-right">&euro;12 500,00</td>
+                    <td class="cell-ref">BP-19022507</td>
+                    <td><button class="btn btn-secondary btn-sm" type="button">Rapprocher</button></td>
+                  </tr>
+                  <tr>
+                    <td class="cell-date">18/02/2026</td>
+                    <td class="cell-name">VIR SEPA RENAULT JACQUES</td>
+                    <td class="cell-amount text-right">&euro;200,00</td>
+                    <td class="cell-ref">BP-18022508</td>
+                    <td><button class="btn btn-secondary btn-sm" type="button">Rapprocher</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- RIGHT: Suggestions -->
+          <div class="recon-panel">
+            <div class="recon-panel-header">
+              <h3 class="recon-panel-title">Suggestions de rapprochement</h3>
+            </div>
+            <div class="recon-panel-body">
+              <div class="suggestion-list">
+
+                <!-- Suggestion 1 — High confidence -->
+                <div class="suggestion-card">
+                  <div class="suggestion-card-top">
+                    <div>
+                      <div class="suggestion-card-name">Don M.-C. Fontaine &mdash; virement</div>
+                      <div class="suggestion-card-ref">DON-2026-0247</div>
+                    </div>
+                    <span class="badge confidence-high">&Eacute;lev&eacute;e &middot; 97%</span>
+                  </div>
+                  <div class="suggestion-card-details">
+                    <span>24/02/2026</span>
+                    <span>&middot;</span>
+                    <span>Fonds Hiver 2026</span>
+                    <span>&middot;</span>
+                    <span class="suggestion-card-amount">&euro;500,00</span>
+                  </div>
+                  <div class="suggestion-card-actions">
+                    <button class="btn btn-primary btn-sm" type="button">Confirmer</button>
+                    <button class="btn btn-ghost btn-sm" type="button">Rejeter</button>
+                  </div>
+                </div>
+
+                <!-- Suggestion 2 — Medium confidence -->
+                <div class="suggestion-card">
+                  <div class="suggestion-card-top">
+                    <div>
+                      <div class="suggestion-card-name">Don M. Fontaine &mdash; SEPA r&eacute;current</div>
+                      <div class="suggestion-card-ref">DON-2026-0241</div>
+                    </div>
+                    <span class="badge confidence-medium">Moyenne &middot; 68%</span>
+                  </div>
+                  <div class="suggestion-card-details">
+                    <span>20/02/2026</span>
+                    <span>&middot;</span>
+                    <span>Gala 2026</span>
+                    <span>&middot;</span>
+                    <span class="suggestion-card-amount">&euro;500,00</span>
+                  </div>
+                  <div class="suggestion-card-actions">
+                    <button class="btn btn-primary btn-sm" type="button">Confirmer</button>
+                    <button class="btn btn-ghost btn-sm" type="button">Rejeter</button>
+                  </div>
+                </div>
+
+                <!-- Suggestion 3 — Low confidence -->
+                <div class="suggestion-card">
+                  <div class="suggestion-card-top">
+                    <div>
+                      <div class="suggestion-card-name">Don anonyme &mdash; ch&egrave;que</div>
+                      <div class="suggestion-card-ref">DON-2026-0239</div>
+                    </div>
+                    <span class="badge confidence-low">Faible &middot; 32%</span>
+                  </div>
+                  <div class="suggestion-card-details">
+                    <span>22/02/2026</span>
+                    <span>&middot;</span>
+                    <span>Non affect&eacute;</span>
+                    <span>&middot;</span>
+                    <span class="suggestion-card-amount">&euro;500,00</span>
+                  </div>
+                  <div class="suggestion-card-actions">
+                    <button class="btn btn-primary btn-sm" type="button">Confirmer</button>
+                    <button class="btn btn-ghost btn-sm" type="button">Rejeter</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Summary Bar -->
+        <div class="summary-bar">
+          <div class="summary-item">
+            <span class="summary-item-label">Rapproch&eacute;s :</span>
+            <span class="summary-item-value">34</span>
+            <span class="summary-item-sub">(12 450 &euro;)</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-item">
+            <span class="summary-item-label">Non rapproch&eacute;s :</span>
+            <span class="summary-item-value">8</span>
+            <span class="summary-item-sub">(2 340 &euro;)</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-item">
+            <span class="summary-item-label">Total :</span>
+            <span class="summary-item-value">42</span>
+          </div>
+          <div style="flex: 1;"></div>
+          <div class="summary-item">
+            <div class="progress" style="width: 120px;">
+              <div class="progress-fill" style="width: 81%;"></div>
+            </div>
+            <span class="text-xs text-muted">81 % rapproch&eacute;</span>
+          </div>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="bottom-actions">
+          <button class="btn btn-secondary" type="button">&#128196; Exporter le rapport</button>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>

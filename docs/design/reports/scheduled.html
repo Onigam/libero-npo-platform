@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rapports planifi&eacute;s &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for reports/scheduled (REP-004) ── */
+
+    /* Frequency badges */
+    .freq-daily {
+      background: var(--color-indigo-50);
+      color: var(--color-indigo);
+    }
+
+    .freq-weekly {
+      background: var(--color-sky-50);
+      color: #1E5A7E;
+    }
+
+    .freq-monthly {
+      background: var(--color-amber-50);
+      color: #92400E;
+    }
+
+    /* Format badges */
+    .format-csv {
+      background: var(--color-neutral-100);
+      color: var(--color-text-secondary);
+    }
+
+    .format-pdf {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .format-excel {
+      background: var(--color-primary-50);
+      color: var(--color-primary-dark);
+    }
+
+    /* Avatar stack */
+    .avatar-stack {
+      display: flex;
+      align-items: center;
+    }
+
+    .avatar-stack .avatar {
+      margin-left: -8px;
+      border: 2px solid var(--color-white);
+    }
+
+    .avatar-stack .avatar:first-child {
+      margin-left: 0;
+    }
+
+    .avatar-stack-more {
+      margin-left: -8px;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background: var(--color-neutral-200);
+      color: var(--color-text-secondary);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--color-white);
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      background: var(--color-neutral-300);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: background var(--duration-normal) var(--ease-out);
+      flex-shrink: 0;
+    }
+
+    .toggle.active {
+      background: var(--color-primary);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: var(--color-white);
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-xs);
+      transition: transform var(--duration-normal) var(--ease-out);
+    }
+
+    .toggle.active::after {
+      transform: translateX(18px);
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .toggle-label .active-text {
+      color: var(--color-primary-dark);
+      font-weight: var(--weight-medium);
+    }
+
+    /* Last execution */
+    .exec-status {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+    }
+
+    .exec-success {
+      color: var(--color-primary-dark);
+    }
+
+    .exec-error {
+      color: var(--color-indigo);
+    }
+
+    .exec-icon {
+      font-size: var(--text-sm);
+    }
+
+    /* Row actions */
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    /* Expanded inline "modal" for creating a scheduled report */
+    .inline-expanded {
+      background: var(--color-primary-50);
+      border: 2px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      margin: var(--space-3) var(--space-4);
+      padding: var(--space-5);
+    }
+
+    .inline-expanded-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      color: var(--color-text);
+      margin-bottom: var(--space-4);
+    }
+
+    .inline-expanded-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+
+    .inline-expanded-form .form-group {
+      margin-bottom: 0;
+    }
+
+    .inline-expanded-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-primary-100);
+    }
+
+    /* Empty state additions */
+    .empty-state-illustration {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto var(--space-4);
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Rapports</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Rapports planifi&eacute;s</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher&hellip;  &#8984;K" aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Rapports planifi&eacute;s</h1>
+            <p class="page-subtitle">Automatisez la g&eacute;n&eacute;ration et l'envoi de rapports r&eacute;currents</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" type="button">+ Planifier un rapport</button>
+          </div>
+        </div>
+
+        <!-- Table Controls -->
+        <div class="table-controls">
+          <div class="table-controls-left">
+            <div class="filter-bar">
+              <button class="filter-chip active" type="button">Tous</button>
+              <button class="filter-chip" type="button">Actifs</button>
+              <button class="filter-chip" type="button">En pause</button>
+            </div>
+          </div>
+          <div class="table-controls-right">
+            <span class="text-sm text-muted">6 rapports planifi&eacute;s</span>
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Rapport</th>
+                <th>Fr&eacute;quence</th>
+                <th>Prochaine ex&eacute;cution</th>
+                <th>Destinataires</th>
+                <th>Format</th>
+                <th>Statut</th>
+                <th>Derni&egrave;re ex&eacute;cution</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- Row 1 -->
+              <tr>
+                <td>
+                  <div class="cell-name">Synth&egrave;se des dons</div>
+                  <div class="cell-secondary">Dashboard financier hebdomadaire</div>
+                </td>
+                <td><span class="badge freq-weekly">Hebdomadaire</span></td>
+                <td class="cell-secondary">Lun. 2 mars 2026, 08h00</td>
+                <td>
+                  <div class="avatar-stack">
+                    <div class="avatar avatar-sm avatar-green">CD</div>
+                    <div class="avatar avatar-sm avatar-sky">ML</div>
+                  </div>
+                </td>
+                <td><span class="badge format-pdf">PDF</span></td>
+                <td>
+                  <div class="toggle-label">
+                    <div class="toggle active"></div>
+                    <span class="active-text">Actif</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="exec-status exec-success">
+                    <span class="exec-icon">&#10003;</span>
+                    <span>23 f&eacute;v. 2026</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-sm" type="button">Modifier</button>
+                    <button class="btn btn-secondary btn-sm" type="button">Ex&eacute;cuter</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr>
+                <td>
+                  <div class="cell-name">Export comptable GL</div>
+                  <div class="cell-secondary">Export grand livre mensuel au format FEC</div>
+                </td>
+                <td><span class="badge freq-monthly">Mensuel</span></td>
+                <td class="cell-secondary">1 mars 2026, 06h00</td>
+                <td>
+                  <div class="avatar-stack">
+                    <div class="avatar avatar-sm avatar-green">CD</div>
+                  </div>
+                </td>
+                <td><span class="badge format-csv">CSV</span></td>
+                <td>
+                  <div class="toggle-label">
+                    <div class="toggle active"></div>
+                    <span class="active-text">Actif</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="exec-status exec-success">
+                    <span class="exec-icon">&#10003;</span>
+                    <span>1 f&eacute;v. 2026</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-sm" type="button">Modifier</button>
+                    <button class="btn btn-secondary btn-sm" type="button">Ex&eacute;cuter</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3 — Inline expanded state (modal concept) -->
+              <tr>
+                <td>
+                  <div class="cell-name">Suivi des campagnes</div>
+                  <div class="cell-secondary">Performance des campagnes actives</div>
+                </td>
+                <td><span class="badge freq-weekly">Hebdomadaire</span></td>
+                <td class="cell-secondary">Lun. 2 mars 2026, 09h00</td>
+                <td>
+                  <div class="avatar-stack">
+                    <div class="avatar avatar-sm avatar-sky">ML</div>
+                    <div class="avatar avatar-sm avatar-indigo">PD</div>
+                    <div class="avatar-stack-more">+2</div>
+                  </div>
+                </td>
+                <td><span class="badge format-excel">Excel</span></td>
+                <td>
+                  <div class="toggle-label">
+                    <div class="toggle active"></div>
+                    <span class="active-text">Actif</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="exec-status exec-success">
+                    <span class="exec-icon">&#10003;</span>
+                    <span>24 f&eacute;v. 2026</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-sm" type="button">Modifier</button>
+                    <button class="btn btn-secondary btn-sm" type="button">Ex&eacute;cuter</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr>
+                <td>
+                  <div class="cell-name">Rapport RGPD — consentements</div>
+                  <div class="cell-secondary">Audit mensuel des consentements actifs</div>
+                </td>
+                <td><span class="badge freq-monthly">Mensuel</span></td>
+                <td class="cell-secondary">1 mars 2026, 07h00</td>
+                <td>
+                  <div class="avatar-stack">
+                    <div class="avatar avatar-sm avatar-green">CD</div>
+                  </div>
+                </td>
+                <td><span class="badge format-pdf">PDF</span></td>
+                <td>
+                  <div class="toggle-label">
+                    <div class="toggle active"></div>
+                    <span class="active-text">Actif</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="exec-status exec-success">
+                    <span class="exec-icon">&#10003;</span>
+                    <span>1 f&eacute;v. 2026</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-sm" type="button">Modifier</button>
+                    <button class="btn btn-secondary btn-sm" type="button">Ex&eacute;cuter</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 5 — Paused, with error -->
+              <tr>
+                <td>
+                  <div class="cell-name">Rapport d'impact trimestriel</div>
+                  <div class="cell-secondary">Indicateurs KPI et suivi des b&eacute;n&eacute;ficiaires</div>
+                </td>
+                <td><span class="badge freq-monthly">Mensuel</span></td>
+                <td class="cell-secondary" style="color: var(--color-text-muted);">&mdash;</td>
+                <td>
+                  <div class="avatar-stack">
+                    <div class="avatar avatar-sm avatar-amber">SB</div>
+                    <div class="avatar avatar-sm avatar-green">CD</div>
+                  </div>
+                </td>
+                <td><span class="badge format-pdf">PDF</span></td>
+                <td>
+                  <div class="toggle-label">
+                    <div class="toggle"></div>
+                    <span>Paus&eacute;</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="exec-status exec-error">
+                    <span class="exec-icon">&#10007;</span>
+                    <span>15 f&eacute;v. 2026 &mdash; Erreur</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-sm" type="button">Modifier</button>
+                    <button class="btn btn-secondary btn-sm" type="button">R&eacute;activer</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 6 — Daily -->
+              <tr>
+                <td>
+                  <div class="cell-name">Alertes dons importants</div>
+                  <div class="cell-secondary">Notification pour dons &gt; 1 000 &euro;</div>
+                </td>
+                <td><span class="badge freq-daily">Quotidien</span></td>
+                <td class="cell-secondary">28 f&eacute;v. 2026, 07h30</td>
+                <td>
+                  <div class="avatar-stack">
+                    <div class="avatar avatar-sm avatar-sky">ML</div>
+                    <div class="avatar avatar-sm avatar-green">CD</div>
+                  </div>
+                </td>
+                <td><span class="badge format-csv">CSV</span></td>
+                <td>
+                  <div class="toggle-label">
+                    <div class="toggle active"></div>
+                    <span class="active-text">Actif</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="exec-status exec-success">
+                    <span class="exec-icon">&#10003;</span>
+                    <span>27 f&eacute;v. 2026</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-sm" type="button">Modifier</button>
+                    <button class="btn btn-secondary btn-sm" type="button">Ex&eacute;cuter</button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Inline expanded state — concept of "Planifier un rapport" modal shown inline -->
+        <div class="inline-expanded mt-6">
+          <h3 class="inline-expanded-title">Planifier un nouveau rapport</h3>
+          <div class="inline-expanded-form">
+            <div class="form-group">
+              <label class="form-label form-label-required" for="sched-report">Rapport</label>
+              <select class="form-select" id="sched-report">
+                <option selected>S&eacute;lectionnez un rapport&hellip;</option>
+                <option>Synth&egrave;se des dons</option>
+                <option>Export comptable GL</option>
+                <option>Suivi des campagnes</option>
+                <option>Rapport RGPD</option>
+                <option>Rapport d'impact</option>
+                <option>Analyse des constituants</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label form-label-required" for="sched-freq">Fr&eacute;quence</label>
+              <select class="form-select" id="sched-freq">
+                <option>Quotidien</option>
+                <option selected>Hebdomadaire</option>
+                <option>Mensuel</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label form-label-required" for="sched-format">Format de sortie</label>
+              <select class="form-select" id="sched-format">
+                <option>PDF</option>
+                <option selected>CSV</option>
+                <option>Excel</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-dest">Destinataires (emails)</label>
+              <input class="form-input" type="text" id="sched-dest" placeholder="claire@solidarite-med.org, marc@...">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-time">Heure d'ex&eacute;cution</label>
+              <input class="form-input" type="time" id="sched-time" value="08:00">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-day">Jour (hebdomadaire)</label>
+              <select class="form-select" id="sched-day">
+                <option selected>Lundi</option>
+                <option>Mardi</option>
+                <option>Mercredi</option>
+                <option>Jeudi</option>
+                <option>Vendredi</option>
+              </select>
+            </div>
+          </div>
+          <div class="inline-expanded-actions">
+            <button class="btn btn-secondary" type="button">Annuler</button>
+            <button class="btn btn-primary" type="button">Planifier le rapport</button>
+          </div>
+        </div>
+
+        <!-- Empty State (shown as visual reference below the table) -->
+        <div class="card mt-8" style="border: 2px dashed var(--color-border);">
+          <div class="empty-state">
+            <div class="empty-state-illustration">&#128197;</div>
+            <h3 class="empty-state-title">&Eacute;tat vide &mdash; Aucun rapport planifi&eacute;</h3>
+            <p class="empty-state-text">
+              Automatisez vos rapports r&eacute;currents. Choisissez un mod&egrave;le, d&eacute;finissez la fr&eacute;quence et les destinataires, et laissez Libero faire le reste.
+            </p>
+            <button class="btn btn-primary" type="button">+ Planifier mon premier rapport</button>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination mt-4">
+          <span class="pagination-info">Affichage 1&ndash;6 sur 6 rapports planifi&eacute;s</span>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>
