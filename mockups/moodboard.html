@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Moodboard / Identite visuelle</title>
+  <link rel="stylesheet" href="shared/tokens.css">
+  <link rel="stylesheet" href="shared/base.css">
+  <style>
+    /* ── Moodboard Layout (no sidebar) ── */
+    body {
+      background: var(--color-bg);
+    }
+
+    .moodboard {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-8) var(--space-6) var(--space-16);
+    }
+
+    /* ── Header ── */
+    .moodboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: var(--space-8);
+      border-bottom: 2px solid var(--color-primary);
+      margin-bottom: var(--space-12);
+    }
+
+    .moodboard-header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .moodboard-logo {
+      width: 52px;
+      height: 52px;
+      background: var(--color-primary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: 24px;
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+
+    .moodboard-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .moodboard-brand-name {
+      font-family: var(--font-heading);
+      font-size: var(--text-3xl);
+      color: var(--color-text);
+      line-height: 1;
+    }
+
+    .moodboard-subtitle {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text-secondary);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wide);
+    }
+
+    .moodboard-back {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      transition: color var(--duration-normal) var(--ease-out);
+    }
+
+    .moodboard-back:hover {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    /* ── Section ── */
+    .mb-section {
+      margin-bottom: var(--space-16);
+    }
+
+    .mb-section-header {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .mb-section-number {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-primary);
+      background: var(--color-primary-50);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .mb-section-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      color: var(--color-text);
+    }
+
+    /* ── Principle Cards ── */
+    .principle-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+
+    .principle-card {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8) var(--space-6);
+      box-shadow: var(--shadow-card);
+      border-top: 4px solid var(--color-primary);
+      text-align: center;
+      transition: box-shadow var(--duration-slow) var(--ease-out),
+                  transform var(--duration-slow) var(--ease-out);
+    }
+
+    .principle-card:hover {
+      box-shadow: var(--shadow-elevated);
+      transform: translateY(-2px);
+    }
+
+    .principle-card-icon {
+      font-size: 40px;
+      margin-bottom: var(--space-4);
+      display: block;
+    }
+
+    .principle-card-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      color: var(--color-primary-dark);
+      margin-bottom: var(--space-3);
+    }
+
+    .principle-card-desc {
+      font-size: var(--text-base);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* ── Color Palette ── */
+    .color-group {
+      margin-bottom: var(--space-8);
+    }
+
+    .color-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .color-group-label {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      color: var(--color-text);
+      margin-bottom: var(--space-4);
+    }
+
+    .color-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+
+    .color-swatch {
+      min-width: 160px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      background: var(--color-white);
+      transition: box-shadow var(--duration-normal) var(--ease-out),
+                  transform var(--duration-normal) var(--ease-out);
+    }
+
+    .color-swatch:hover {
+      box-shadow: var(--shadow-elevated);
+      transform: translateY(-2px);
+    }
+
+    .color-swatch-fill {
+      height: 88px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: var(--space-3);
+    }
+
+    .color-swatch-fill .text-demo-light {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: #FFFFFF;
+      opacity: 0.95;
+    }
+
+    .color-swatch-fill .text-demo-dark {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: #1C1B19;
+      opacity: 0.9;
+    }
+
+    .color-swatch-info {
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .color-swatch-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      margin-bottom: 2px;
+    }
+
+    .color-swatch-hex {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-bottom: 2px;
+    }
+
+    .color-swatch-var {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-1);
+    }
+
+    .color-swatch-usage {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+      margin-top: var(--space-1);
+      padding-top: var(--space-1);
+      border-top: 1px solid var(--color-neutral-100);
+    }
+
+    /* ── Typography Specimens ── */
+    .type-specimen {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--space-6);
+    }
+
+    .type-specimen:last-child {
+      margin-bottom: 0;
+    }
+
+    .type-specimen-header {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    .type-specimen-font-name {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .type-specimen-role {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      background: var(--color-neutral-100);
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .type-sample {
+      margin-bottom: var(--space-5);
+      padding-bottom: var(--space-5);
+      border-bottom: 1px solid var(--color-neutral-50);
+    }
+
+    .type-sample:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .type-sample-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-2);
+    }
+
+    .type-sample-size {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      background: var(--color-primary-50);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+
+    .type-sample-weight {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .type-sample-text {
+      color: var(--color-text);
+      line-height: var(--leading-normal);
+    }
+
+    /* ── Iconography ── */
+    .icon-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: var(--space-4);
+    }
+
+    .icon-cell {
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      padding: var(--space-5) var(--space-3);
+      text-align: center;
+      box-shadow: var(--shadow-xs);
+      border: 1px solid var(--color-neutral-100);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .icon-cell:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-card);
+    }
+
+    .icon-cell-symbol {
+      font-size: 28px;
+      display: block;
+      margin-bottom: var(--space-2);
+      line-height: 1;
+    }
+
+    .icon-cell-label {
+      font-size: 10px;
+      font-weight: var(--weight-medium);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+
+    .icon-spec {
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-5);
+      margin-bottom: var(--space-6);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .icon-spec-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--color-primary);
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    .icon-spec-text {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .icon-spec-text strong {
+      color: var(--color-text);
+      font-weight: var(--weight-semi);
+    }
+
+    /* ── Component Gallery ── */
+    .component-row {
+      margin-bottom: var(--space-8);
+    }
+
+    .component-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .component-label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      margin-bottom: var(--space-4);
+    }
+
+    .component-showcase {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-card);
+    }
+
+    .btn-pair {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-right: var(--space-6);
+      margin-bottom: var(--space-3);
+    }
+
+    .btn-pair-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+      min-width: 40px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .sample-card {
+      max-width: 400px;
+    }
+
+    .progress-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    .progress-demo-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .progress-demo-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .progress-demo-bar {
+      flex: 1;
+    }
+
+    .alert-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    /* Hover state simulation */
+    .btn-primary.is-hover {
+      background: var(--color-primary-dark);
+      border-color: var(--color-primary-dark);
+    }
+
+    .btn-secondary.is-hover {
+      background: var(--color-neutral-50);
+      border-color: var(--color-neutral-300);
+    }
+
+    .btn-destructive.is-hover {
+      background: #4A3FC4;
+      border-color: #4A3FC4;
+    }
+
+    .btn-ghost.is-hover {
+      background: var(--color-neutral-100);
+      color: var(--color-text);
+    }
+
+    /* ── Brand Feel ── */
+    .brand-quote {
+      text-align: center;
+      padding: var(--space-12) var(--space-8);
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--space-8);
+      border-left: 4px solid var(--color-primary);
+      border-right: 4px solid var(--color-primary);
+    }
+
+    .brand-quote-text {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-style: italic;
+      color: var(--color-text);
+      line-height: var(--leading-normal);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .brand-attributes {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-4);
+    }
+
+    .brand-attribute {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      border-bottom: 3px solid var(--color-primary);
+      transition: box-shadow var(--duration-slow) var(--ease-out),
+                  transform var(--duration-slow) var(--ease-out);
+    }
+
+    .brand-attribute:hover {
+      box-shadow: var(--shadow-elevated);
+      transform: translateY(-2px);
+    }
+
+    .brand-attribute-icon {
+      font-size: 32px;
+      margin-bottom: var(--space-3);
+      display: block;
+    }
+
+    .brand-attribute-name {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      color: var(--color-primary-dark);
+      margin-bottom: var(--space-2);
+    }
+
+    .brand-attribute-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+
+    /* ── Footer ── */
+    .moodboard-footer {
+      margin-top: var(--space-16);
+      padding-top: var(--space-6);
+      border-top: 2px solid var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .moodboard-footer-brand {
+      font-family: var(--font-heading);
+      font-size: var(--text-base);
+      color: var(--color-text-secondary);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .principle-cards {
+        grid-template-columns: 1fr;
+      }
+      .brand-attributes {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .brand-attributes {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .color-swatches {
+        flex-direction: column;
+      }
+      .color-swatch {
+        min-width: 100%;
+      }
+      .color-swatch-fill {
+        height: 64px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="moodboard">
+
+  <!-- ================================================================
+       1. HEADER
+       ================================================================ -->
+  <header class="moodboard-header">
+    <div class="moodboard-header-left">
+      <div class="moodboard-logo">L</div>
+      <div class="moodboard-title-group">
+        <div class="moodboard-brand-name">Libero</div>
+        <div class="moodboard-subtitle">Moodboard &mdash; Identit&eacute; visuelle</div>
+      </div>
+    </div>
+    <a href="index.html" class="moodboard-back">&larr; Retour a l'index</a>
+  </header>
+
+
+  <!-- ================================================================
+       2. PHILOSOPHIE DE MARQUE
+       ================================================================ -->
+  <section class="mb-section">
+    <div class="mb-section-header">
+      <span class="mb-section-number">1</span>
+      <h2 class="mb-section-title">Philosophie de marque</h2>
+    </div>
+
+    <div class="principle-cards">
+      <div class="principle-card">
+        <span class="principle-card-icon">&#9878;</span>
+        <div class="principle-card-title">Lib&eacute;ration</div>
+        <p class="principle-card-desc">
+          Libert&eacute; face &agrave; la complexit&eacute; administrative.
+          Chaque fonctionnalit&eacute; lib&egrave;re du temps pour ce qui compte vraiment&nbsp;:
+          la mission de l'association.
+        </p>
+      </div>
+
+      <div class="principle-card">
+        <span class="principle-card-icon">&#9878;</span>
+        <div class="principle-card-title">Enracinement</div>
+        <p class="principle-card-desc">
+          Europ&eacute;en, local, civique.
+          Ancr&eacute; dans les r&eacute;alit&eacute;s du tissu associatif francophone
+          et respectueux des normes europ&eacute;ennes.
+        </p>
+      </div>
+
+      <div class="principle-card">
+        <span class="principle-card-icon">&#9829;</span>
+        <div class="principle-card-title">Chaleur</div>
+        <p class="principle-card-desc">
+          La cause compte, les personnes comptent.
+          Un outil num&eacute;rique qui n'oublie jamais l'humain
+          derri&egrave;re chaque donn&eacute;e.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================
+       3. PALETTE DE COULEURS
+       ================================================================ -->
+  <section class="mb-section">
+    <div class="mb-section-header">
+      <span class="mb-section-number">2</span>
+      <h2 class="mb-section-title">Palette de couleurs</h2>
+    </div>
+
+    <!-- Primary Family -->
+    <div class="color-group">
+      <h3 class="color-group-label">Famille primaire</h3>
+      <div class="color-swatches">
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #2E7D5E;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Primary</div>
+            <div class="color-swatch-hex">#2E7D5E</div>
+            <div class="color-swatch-var">--color-primary</div>
+            <div class="color-swatch-usage">Boutons principaux, liens actifs, barre lat&eacute;rale, &eacute;l&eacute;ments d'accent</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #4CAF82;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Primary Light</div>
+            <div class="color-swatch-hex">#4CAF82</div>
+            <div class="color-swatch-var">--color-primary-light</div>
+            <div class="color-swatch-usage">Indicateurs de succ&egrave;s, &eacute;tapes compl&eacute;t&eacute;es, barres de progression</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #1A5240;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Primary Dark</div>
+            <div class="color-swatch-hex">#1A5240</div>
+            <div class="color-swatch-var">--color-primary-dark</div>
+            <div class="color-swatch-usage">&Eacute;tat hover sur primaire, titres dans badges succ&egrave;s, texte accentu&eacute;</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #E8F5EE;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Primary 50</div>
+            <div class="color-swatch-hex">#E8F5EE</div>
+            <div class="color-swatch-var">--color-primary-50</div>
+            <div class="color-swatch-usage">Fonds de badges succ&egrave;s, alertes succ&egrave;s, surbrillance ligne tableau</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #C8E6D7;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Primary 100</div>
+            <div class="color-swatch-hex">#C8E6D7</div>
+            <div class="color-swatch-var">--color-primary-100</div>
+            <div class="color-swatch-usage">Bordures d'alertes succ&egrave;s, lignes de checklist compl&eacute;t&eacute;es</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Neutrals -->
+    <div class="color-group">
+      <h3 class="color-group-label">Neutres</h3>
+      <div class="color-swatches">
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #FAFAF8; border: 1px solid #E4E0D9;">
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Neutral 50</div>
+            <div class="color-swatch-hex">#FAFAF8</div>
+            <div class="color-swatch-var">--color-neutral-50</div>
+            <div class="color-swatch-usage">Fond de page principal (--color-bg)</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #F2F0EC; border: 1px solid #E4E0D9;">
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Neutral 100</div>
+            <div class="color-swatch-hex">#F2F0EC</div>
+            <div class="color-swatch-var">--color-neutral-100</div>
+            <div class="color-swatch-usage">Surface alternative, fond de carte AI, colonnes Kanban</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #E4E0D9;">
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Neutral 200</div>
+            <div class="color-swatch-hex">#E4E0D9</div>
+            <div class="color-swatch-var">--color-neutral-200</div>
+            <div class="color-swatch-usage">Bordures, s&eacute;parateurs, fond de barre de progression</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #6B6760;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Neutral 600</div>
+            <div class="color-swatch-hex">#6B6760</div>
+            <div class="color-swatch-var">--color-neutral-600</div>
+            <div class="color-swatch-usage">Texte secondaire, libell&eacute;s, descriptions</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #1C1B19;">
+            <span class="text-demo-light">Texte clair</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Neutral 900</div>
+            <div class="color-swatch-hex">#1C1B19</div>
+            <div class="color-swatch-var">--color-neutral-900</div>
+            <div class="color-swatch-usage">Texte principal, titres, contenu critique</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Accents -->
+    <div class="color-group">
+      <h3 class="color-group-label">Accents</h3>
+      <div class="color-swatches">
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #D97706;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Amber</div>
+            <div class="color-swatch-hex">#D97706</div>
+            <div class="color-swatch-var">--color-amber</div>
+            <div class="color-swatch-usage">Avertissements, notifications, tendances n&eacute;gatives, urgences</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #5B4FD4;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Indigo</div>
+            <div class="color-swatch-hex">#5B4FD4</div>
+            <div class="color-swatch-var">--color-indigo</div>
+            <div class="color-swatch-usage">Erreurs, champs obligatoires, actions destructives</div>
+          </div>
+        </div>
+
+        <div class="color-swatch">
+          <div class="color-swatch-fill" style="background: #2E79A6;">
+            <span class="text-demo-light">Texte clair</span>
+            <span class="text-demo-dark">Texte sombre</span>
+          </div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name">Sky</div>
+            <div class="color-swatch-hex">#2E79A6</div>
+            <div class="color-swatch-var">--color-sky</div>
+            <div class="color-swatch-usage">Informations, liens, alertes informatives</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================
+       4. SPECIMENS TYPOGRAPHIQUES
+       ================================================================ -->
+  <section class="mb-section">
+    <div class="mb-section-header">
+      <span class="mb-section-number">3</span>
+      <h2 class="mb-section-title">Sp&eacute;cimens typographiques</h2>
+    </div>
+
+    <!-- Instrument Serif -->
+    <div class="type-specimen">
+      <div class="type-specimen-header">
+        <span class="type-specimen-font-name">Instrument Serif</span>
+        <span class="type-specimen-role">Police de titres</span>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">36px</span>
+          <span class="type-sample-weight">var(--text-3xl)</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Instrument Serif', Georgia, serif; font-size: 36px; line-height: 1.25;">
+          Les grandes causes m&eacute;ritent de grands outils
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">28px</span>
+          <span class="type-sample-weight">var(--text-2xl)</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Instrument Serif', Georgia, serif; font-size: 28px; line-height: 1.25;">
+          Les grandes causes m&eacute;ritent de grands outils
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">24px</span>
+          <span class="type-sample-weight">var(--text-xl)</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Instrument Serif', Georgia, serif; font-size: 24px; line-height: 1.25;">
+          Les grandes causes m&eacute;ritent de grands outils
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">20px</span>
+          <span class="type-sample-weight">var(--text-lg)</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Instrument Serif', Georgia, serif; font-size: 20px; line-height: 1.25;">
+          Les grandes causes m&eacute;ritent de grands outils
+        </div>
+      </div>
+    </div>
+
+    <!-- Inter -->
+    <div class="type-specimen">
+      <div class="type-specimen-header">
+        <span class="type-specimen-font-name">Inter</span>
+        <span class="type-specimen-role">Police de corps</span>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">16px</span>
+          <span class="type-sample-weight">Regular 400</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 400; line-height: 1.5;">
+          Libero accompagne les associations dans leur transformation num&eacute;rique. Une plateforme con&ccedil;ue pour simplifier la gestion quotidienne et amplifier l'impact social.
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">16px</span>
+          <span class="type-sample-weight">Medium 500</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; line-height: 1.5;">
+          Libero accompagne les associations dans leur transformation num&eacute;rique. Une plateforme con&ccedil;ue pour simplifier la gestion quotidienne et amplifier l'impact social.
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">16px</span>
+          <span class="type-sample-weight">Semi-bold 600</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; line-height: 1.5;">
+          Libero accompagne les associations dans leur transformation num&eacute;rique. Une plateforme con&ccedil;ue pour simplifier la gestion quotidienne et amplifier l'impact social.
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">14px</span>
+          <span class="type-sample-weight">Regular 400 &middot; var(--text-base)</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.5;">
+          Libero accompagne les associations dans leur transformation num&eacute;rique. Une plateforme con&ccedil;ue pour simplifier la gestion quotidienne et amplifier l'impact social.
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">14px</span>
+          <span class="type-sample-weight">Medium 500</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; line-height: 1.5;">
+          Libero accompagne les associations dans leur transformation num&eacute;rique. Une plateforme con&ccedil;ue pour simplifier la gestion quotidienne et amplifier l'impact social.
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">14px</span>
+          <span class="type-sample-weight">Semi-bold 600</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; line-height: 1.5;">
+          Libero accompagne les associations dans leur transformation num&eacute;rique. Une plateforme con&ccedil;ue pour simplifier la gestion quotidienne et amplifier l'impact social.
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">13px</span>
+          <span class="type-sample-weight">Regular 400 &middot; var(--text-sm)</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 400; line-height: 1.5;">
+          Libero accompagne les associations dans leur transformation num&eacute;rique. Une plateforme con&ccedil;ue pour simplifier la gestion quotidienne et amplifier l'impact social.
+        </div>
+      </div>
+    </div>
+
+    <!-- JetBrains Mono -->
+    <div class="type-specimen">
+      <div class="type-specimen-header">
+        <span class="type-specimen-font-name">JetBrains Mono</span>
+        <span class="type-specimen-role">Police de donn&eacute;es</span>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">14px</span>
+          <span class="type-sample-weight">Regular 400 &middot; var(--text-base)</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 400; line-height: 1.5;">
+          &euro;12&nbsp;450,00 &mdash; 1&nbsp;247 constituants &mdash; 89,3%
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">14px</span>
+          <span class="type-sample-weight">Medium 500</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 500; line-height: 1.5;">
+          &euro;12&nbsp;450,00 &mdash; 1&nbsp;247 constituants &mdash; 89,3%
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">12px</span>
+          <span class="type-sample-weight">Regular 400</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 400; line-height: 1.5;">
+          &euro;12&nbsp;450,00 &mdash; 1&nbsp;247 constituants &mdash; 89,3%
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-sample-meta">
+          <span class="type-sample-size">12px</span>
+          <span class="type-sample-weight">Medium 500</span>
+        </div>
+        <div class="type-sample-text" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; line-height: 1.5;">
+          &euro;12&nbsp;450,00 &mdash; 1&nbsp;247 constituants &mdash; 89,3%
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================
+       5. ICONOGRAPHIE
+       ================================================================ -->
+  <section class="mb-section">
+    <div class="mb-section-header">
+      <span class="mb-section-number">4</span>
+      <h2 class="mb-section-title">Iconographie</h2>
+    </div>
+
+    <div class="icon-spec">
+      <span class="icon-spec-dot"></span>
+      <span class="icon-spec-text">
+        <strong>Lucide Icons</strong> &mdash; Grille 24px, trait 1.5px, coins arrondis. Style coh&eacute;rent et lisible &agrave; toutes les tailles.
+      </span>
+    </div>
+
+    <div class="icon-gallery">
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9633;</span>
+        <span class="icon-cell-label">Tableau de bord</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9775;</span>
+        <span class="icon-cell-label">Utilisateurs</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9825;</span>
+        <span class="icon-cell-label">Coeur</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9881;</span>
+        <span class="icon-cell-label">Don</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9960;</span>
+        <span class="icon-cell-label">Organisation</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9744;</span>
+        <span class="icon-cell-label">Calendrier</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9636;</span>
+        <span class="icon-cell-label">Graphique</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9993;</span>
+        <span class="icon-cell-label">Courrier</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9881;</span>
+        <span class="icon-cell-label">Param&egrave;tres</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#8981;</span>
+        <span class="icon-cell-label">Recherche</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#10010;</span>
+        <span class="icon-cell-label">Ajouter</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#10003;</span>
+        <span class="icon-cell-label">Valider</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#9888;</span>
+        <span class="icon-cell-label">Attention</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-cell-symbol">&#10005;</span>
+        <span class="icon-cell-label">Fermer</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================
+       6. GALERIE DE COMPOSANTS
+       ================================================================ -->
+  <section class="mb-section">
+    <div class="mb-section-header">
+      <span class="mb-section-number">5</span>
+      <h2 class="mb-section-title">Galerie de composants</h2>
+    </div>
+
+    <!-- Buttons -->
+    <div class="component-row">
+      <div class="component-label">Boutons</div>
+      <div class="component-showcase">
+        <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start;">
+
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Primary</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <button class="btn btn-primary">Enregistrer</button>
+              <button class="btn btn-primary is-hover">Enregistrer</button>
+            </div>
+            <span style="font-size: 10px; color: var(--color-text-muted);">normal &nbsp;&middot;&nbsp; hover</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Secondary</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <button class="btn btn-secondary">Annuler</button>
+              <button class="btn btn-secondary is-hover">Annuler</button>
+            </div>
+            <span style="font-size: 10px; color: var(--color-text-muted);">normal &nbsp;&middot;&nbsp; hover</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Destructive</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <button class="btn btn-destructive">Supprimer</button>
+              <button class="btn btn-destructive is-hover">Supprimer</button>
+            </div>
+            <span style="font-size: 10px; color: var(--color-text-muted);">normal &nbsp;&middot;&nbsp; hover</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Ghost</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <button class="btn btn-ghost">Options</button>
+              <button class="btn btn-ghost is-hover">Options</button>
+            </div>
+            <span style="font-size: 10px; color: var(--color-text-muted);">normal &nbsp;&middot;&nbsp; hover</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="component-row">
+      <div class="component-label">Badges</div>
+      <div class="component-showcase">
+        <div class="badge-row">
+          <span class="badge badge-success"><span class="badge-icon">&#10003;</span> Succ&egrave;s</span>
+          <span class="badge badge-warning"><span class="badge-icon">&#9888;</span> Avertissement</span>
+          <span class="badge badge-error"><span class="badge-icon">&#10005;</span> Erreur</span>
+          <span class="badge badge-info"><span class="badge-icon">&#8505;</span> Information</span>
+          <span class="badge badge-neutral">Neutre</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card -->
+    <div class="component-row">
+      <div class="component-label">Carte standard</div>
+      <div class="component-showcase" style="background: var(--color-neutral-50);">
+        <div class="card sample-card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Campagne solidaire 2025</div>
+              <div class="card-subtitle">Objectif annuel de collecte de fonds</div>
+            </div>
+            <span class="badge badge-success"><span class="badge-icon">&#10003;</span> Active</span>
+          </div>
+          <div class="card-body">
+            <p style="font-size: var(--text-sm); color: var(--color-text-secondary); line-height: var(--leading-relaxed);">
+              Cette campagne vise &agrave; rassembler les dons n&eacute;cessaires pour financer les projets
+              d'&eacute;ducation et d'insertion de l'ann&eacute;e. Chaque contribution fait la diff&eacute;rence.
+            </p>
+            <div style="margin-top: var(--space-4);">
+              <div style="display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--color-text-secondary); margin-bottom: var(--space-1);">
+                <span>Progression</span>
+                <span style="font-family: var(--font-mono);">67%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-fill" style="width: 67%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-ghost btn-sm">D&eacute;tails</button>
+            <button class="btn btn-primary btn-sm">Modifier</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Card -->
+    <div class="component-row">
+      <div class="component-label">Carte suggestion IA</div>
+      <div class="component-showcase" style="background: var(--color-neutral-50);">
+        <div class="ai-card">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#129504;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <div class="ai-card-text">
+            Le donateur <strong>Jean-Pierre Martin</strong> n'a pas &eacute;t&eacute; remerci&eacute; pour son don
+            de <strong style="font-family: var(--font-mono);">&euro;500</strong> re&ccedil;u il y a 3 jours.
+            Un email de remerciement personnalis&eacute; pourrait renforcer la fid&eacute;lisation.
+          </div>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm">Appliquer</button>
+            <button class="btn btn-ghost btn-sm">Ignorer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Bars -->
+    <div class="component-row">
+      <div class="component-label">Barres de progression</div>
+      <div class="component-showcase">
+        <div class="progress-demo">
+          <div class="progress-demo-item">
+            <span class="progress-demo-label">0%</span>
+            <div class="progress-demo-bar">
+              <div class="progress">
+                <div class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="progress-demo-item">
+            <span class="progress-demo-label">35%</span>
+            <div class="progress-demo-bar">
+              <div class="progress">
+                <div class="progress-fill progress-fill--amber" style="width: 35%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="progress-demo-item">
+            <span class="progress-demo-label">67%</span>
+            <div class="progress-demo-bar">
+              <div class="progress">
+                <div class="progress-fill" style="width: 67%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="progress-demo-item">
+            <span class="progress-demo-label">100%</span>
+            <div class="progress-demo-bar">
+              <div class="progress">
+                <div class="progress-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="component-row">
+      <div class="component-label">Alertes</div>
+      <div class="component-showcase">
+        <div class="alert-stack">
+          <div class="alert alert-success">
+            <span class="alert-icon">&#10003;</span>
+            <div class="alert-content">
+              <strong>Succ&egrave;s</strong> &mdash; Le re&ccedil;u fiscal a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; et envoy&eacute; par email au donateur.
+            </div>
+          </div>
+          <div class="alert alert-warning">
+            <span class="alert-icon">&#9888;</span>
+            <div class="alert-content">
+              <strong>Attention</strong> &mdash; 12 re&ccedil;us fiscaux sont en attente de validation avant la date limite du 31 mars.
+            </div>
+          </div>
+          <div class="alert alert-error">
+            <span class="alert-icon">&#10005;</span>
+            <div class="alert-content">
+              <strong>Erreur</strong> &mdash; Impossible de synchroniser avec le prestataire de paiement. V&eacute;rifiez vos identifiants API.
+            </div>
+          </div>
+          <div class="alert alert-info">
+            <span class="alert-icon">&#8505;</span>
+            <div class="alert-content">
+              <strong>Information</strong> &mdash; Une nouvelle version de la plateforme est disponible. Les mises &agrave; jour seront appliqu&eacute;es ce soir &agrave; 22h.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================
+       7. ESPRIT DE MARQUE
+       ================================================================ -->
+  <section class="mb-section">
+    <div class="mb-section-header">
+      <span class="mb-section-number">6</span>
+      <h2 class="mb-section-title">Esprit de marque</h2>
+    </div>
+
+    <div class="brand-quote">
+      <p class="brand-quote-text">
+        &laquo;&nbsp;La meilleure interface est celle qui donne l'impression d'avoir toujours &eacute;t&eacute; l&agrave;.&nbsp;&raquo;
+      </p>
+    </div>
+
+    <div class="brand-attributes">
+      <div class="brand-attribute">
+        <span class="brand-attribute-icon">&#9728;</span>
+        <div class="brand-attribute-name">Chaleureux</div>
+        <p class="brand-attribute-desc">
+          Des teintes organiques, une typographie serif &eacute;l&eacute;gante.
+          L'interface respire la bienveillance.
+        </p>
+      </div>
+
+      <div class="brand-attribute">
+        <span class="brand-attribute-icon">&#9670;</span>
+        <div class="brand-attribute-name">Calme</div>
+        <p class="brand-attribute-desc">
+          Des espaces g&eacute;n&eacute;reux, pas de surcharge visuelle.
+          Chaque &eacute;cran invite &agrave; la concentration.
+        </p>
+      </div>
+
+      <div class="brand-attribute">
+        <span class="brand-attribute-icon">&#9881;</span>
+        <div class="brand-attribute-name">Capable</div>
+        <p class="brand-attribute-desc">
+          Des tableaux de bord puissants, des donn&eacute;es lisibles.
+          L'outil ma&icirc;trise la complexit&eacute; pour vous.
+        </p>
+      </div>
+
+      <div class="brand-attribute">
+        <span class="brand-attribute-icon">&#9878;</span>
+        <div class="brand-attribute-name">Fiable</div>
+        <p class="brand-attribute-desc">
+          Des actions pr&eacute;visibles, des retours clairs.
+          La confiance se construit &agrave; chaque interaction.
+        </p>
+      </div>
+
+      <div class="brand-attribute">
+        <span class="brand-attribute-icon">&#9734;</span>
+        <div class="brand-attribute-name">Inclusif</div>
+        <p class="brand-attribute-desc">
+          Accessible &agrave; tous les profils, conforme WCAG.
+          La technologie au service de chacun.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── Footer ── -->
+  <footer class="moodboard-footer">
+    <span class="moodboard-footer-brand">Libero NPO Platform</span>
+    <span>Identit&eacute; visuelle &middot; Version 1.0</span>
+  </footer>
+
+</div>
+
+</body>
+</html>

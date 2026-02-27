@@ -430,3 +430,106 @@ POST /v1/webhooks
 | Microsoft 365 | P2 | v2 | SAML SSO |
 | Google Workspace | P2 | v2 | SAML SSO |
 | Zapier | P2 | v2 | No-code automation |
+
+---
+
+## 11. Migration depuis Salesforce NPSP
+
+> Section ajoutée le 2026-02-26 — Design Architect & Product
+
+### 11.1 Contexte produit
+
+La migration depuis Salesforce NPSP est une fonctionnalité **différenciante majeure** de Libero. Elle doit être traitée non seulement comme un outil technique ETL (couvert en section 7), mais comme une **expérience produit complète** qui réduit la friction et renforce la confiance des ONG qui hésitent à quitter Salesforce.
+
+**Enjeux clés pour l'utilisateur :**
+- Peur de perdre des données historiques (dons, constituants, subventions)
+- Incertitude sur la compatibilité des champs personnalisés
+- Risque perçu de rupture d'activité pendant la transition
+- Dépendance de Salesforce Admin interne ou externe
+
+**Promesse Libero :** Migration en 5 jours, sans risque, avec garantie de rollback et support dédié.
+
+---
+
+### 11.2 Migration Assistant — Interface produit (UX)
+
+Le **Migration Assistant** est un wizard step-by-step intégré dans l'onboarding Libero. Il remplace le besoin de consulter un intégrateur externe pour 80% des migrations standards.
+
+#### Étapes du wizard
+
+| Étape | Label UI | Description | Durée estimée |
+|---|---|---|---|
+| 1 | **Connecter Salesforce** | OAuth 2.0 vers l'org Salesforce + scope lecture seule | 2 minutes |
+| 2 | **Analyser les données** | Audit automatique : comptage objets, détection doublons, score de compatibilité | 5–20 minutes |
+| 3 | **Mapper les champs** | Interface de mapping visuel : SF field → Libero field, avec suggestions IA | 30–60 minutes |
+| 4 | **Prévisualiser** | Import en dry-run sur env staging ; rapport HTML téléchargeable | 15–30 minutes |
+| 5 | **Migrer** | Chargement production + rapport final + activation parallel run | 1–4 heures |
+
+#### États et feedback UX
+
+- **Étape 2 — Score de compatibilité** : affiché en donut chart centré sur le pourcentage (ex. "98.2% compatibles"). Au-dessous de 90%, afficher une explication claire des écarts et les actions correctives disponibles.
+- **Étape 4 — Rapport de dry-run** : exportable en HTML/PDF, signable par le référent NPO avant la production.
+- **En cas d'erreur** : message indigo (jamais rouge), description précise du problème, lien vers la documentation ou le chat support.
+
+#### Principes UX Migration Assistant
+
+- **Non-destructif par design** : la connexion Salesforce est en lecture seule (OAuth scope : `api, refresh_token` — aucun accès write). Affiché clairement à l'utilisateur avant autorisation.
+- **Rollback garanti** : snapshot DB automatique avant chaque chargement production, conservé 30 jours.
+- **Progression persistante** : si l'utilisateur quitte et revient, le wizard reprend à l'étape en cours.
+- **Confiance progressive** : chaque étape validée déclenche une confirmation visuelle et un email à l'admin NPO.
+
+---
+
+### 11.3 Compatibilité NPSP — Objets clés
+
+| Objet Salesforce NPSP | Libero | Taux de compatibilité | Notes |
+|---|---|---|---|
+| `Contact` | `constituents` (type=individual) | ✅ 100% | Mapping standard automatique |
+| `Account` (Household) | `households` + `household_members` | ✅ 95% | Logique NPSP ménage fidèlement reproduite |
+| `Account` (Organization) | `constituents` (type=organisation) | ✅ 100% | |
+| `Opportunity` (donation) | `donations` | ✅ 98% | Closed Won uniquement ; stage mapping configurable |
+| `npe03__Recurring_Donation__c` | `pledges` | ✅ 95% | Fréquences SEPA + carte mappées |
+| `Campaign` / `CampaignMember` | `campaigns` | ✅ 90% | Hiérarchie parente/enfant préservée |
+| `Grant__c` (custom) | `grants` | ⚠️ 70% | Objet custom : mapping manuel requis |
+| `Task` / `Activity` | `audit_log` partiel | ⚠️ 60% | Filtrage par type d'activité pertinent |
+| Champs personnalisés `__c` | `custom_fields` (JSONB) | ✅ 100% | Tous préservés dans JSONB, mappables via UI |
+| Fichiers / Pièces jointes | S3 `attachments/` | ✅ 100% | Migration binaire via Bulk API + S3 |
+
+---
+
+### 11.4 Scénarios de migration par taille d'ONG
+
+| Profil ONG | Constituants | Durée phase ETL | Support recommandé |
+|---|---|---|---|
+| Petite association (< 500 contacts) | < 500 | 1–2 jours | Self-service via Migration Assistant |
+| ONG moyenne (500–10 000) | 500–10 000 | 2–5 jours | Migration Assistant + appel de validation |
+| ONG grande (> 10 000) | > 10 000 | 1–3 semaines | Migration assistée par partenaire Libero |
+| Org avec custom objects complexes | Toute taille | +3–5 jours | Accompagnement obligatoire |
+
+---
+
+### 11.5 Communication et accompagnement
+
+La migration est aussi un moment **émotionnel** pour les équipes NPO. Le produit doit le reconnaître :
+
+- **Email de bienvenue post-migration** : "Vos données sont en sécurité. Voici ce qui a été migré." avec récap chiffré.
+- **Checklist post-migration** visible sur le dashboard pendant 30 jours : formation équipe, vérification des rapports, désactivation Salesforce.
+- **Garantie 30 jours** : si une donnée manque ou est incorrecte, Libero la corrige sans frais supplémentaires.
+- **Badge "Migré avec Libero"** : petit indicateur de confiance affiché dans les paramètres de l'org pour les équipes fières d'avoir fait le saut.
+
+---
+
+### 11.6 Métriques de succès migration (product-level)
+
+| Métrique | Cible |
+|---|---|
+| Migrations self-service réussies sans support | > 70% |
+| Score de compatibilité moyen | > 95% |
+| Temps moyen migration complète (petite ONG) | < 5 jours |
+| Taux de rollback production | < 2% |
+| NPS post-migration | > 60 |
+| Organisations migrées depuis Salesforce (18 mois) | 30+ |
+
+---
+
+*Section rédigée par Design Architect — 2026-02-26. À compléter avec les retours des premières migrations pilotes.*

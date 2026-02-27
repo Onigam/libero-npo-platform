@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Pipeline des subventions</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Grants Kanban Page Styles ── */
+
+    /* Override kanban board to fill available width */
+    .kanban-board {
+      align-items: flex-start;
+    }
+
+    .kanban-column {
+      flex: 1 1 0;
+      min-width: 220px;
+    }
+
+    /* Column header colored bottom borders */
+    .kanban-column--prospection .kanban-column-header {
+      border-bottom-color: var(--color-neutral-400);
+    }
+
+    .kanban-column--preparee .kanban-column-header {
+      border-bottom-color: var(--color-sky);
+    }
+
+    .kanban-column--soumis .kanban-column-header {
+      border-bottom-color: var(--color-indigo);
+    }
+
+    .kanban-column--evaluation .kanban-column-header {
+      border-bottom-color: var(--color-amber);
+    }
+
+    .kanban-column--accordee .kanban-column-header {
+      border-bottom-color: var(--color-primary);
+    }
+
+    .kanban-column--reporting .kanban-column-header {
+      border-bottom-color: #D97706;
+    }
+
+    /* Card programme label */
+    .kanban-card-programme {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-1);
+    }
+
+    /* Card deadline badge */
+    .kanban-card-deadline {
+      margin-top: var(--space-2);
+    }
+
+    /* ── AI card full-width ── */
+    .ai-card-fullwidth {
+      max-width: 100%;
+    }
+
+    /* ── Topbar search shortcut ── */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+
+    /* ── Sidebar org logo ── */
+    .sidebar-footer-org-logo {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="../constituents/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9775;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="../campaigns/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9670;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9996;</span>
+          <span class="nav-item-label">B&#233;n&#233;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9678;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9776;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&#232;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-org-logo">ASM</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Association Solidarit&#233; M&#233;diterran&#233;e</div>
+          <div class="sidebar-footer-role">Plan Professionnel</div>
+        </div>
+        <div class="sidebar-footer-avatar">CD</div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <a href="#">Subventions</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Pipeline</span>
+        </div>
+
+        <div class="topbar-search">
+          <input
+            type="text"
+            class="topbar-search-input"
+            placeholder="Rechercher..."
+          >
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- ── Main Content ── -->
+      <main class="main-content" style="max-width: 100%;">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Pipeline des subventions</h1>
+            <p class="page-subtitle">18 subventions &mdash; &euro;342&nbsp;000 en pipeline</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary">Vue liste</button>
+            <button class="btn btn-secondary">&#201;ch&#233;ances</button>
+            <button class="btn btn-primary">+ Nouvelle subvention</button>
+          </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="filter-bar mb-6">
+          <span class="filter-chip">Tous les responsables</span>
+          <span class="filter-chip active">Claire Dubois</span>
+          <span class="filter-chip">Marc Benali</span>
+        </div>
+
+        <!-- ============================================================
+             KANBAN BOARD
+             ============================================================ -->
+        <div class="kanban-board">
+
+          <!-- ── Column 1: Prospection (3) ── -->
+          <div class="kanban-column kanban-column--prospection">
+            <div class="kanban-column-header">
+              <span class="kanban-column-title">Prospection</span>
+              <span class="kanban-column-count">3</span>
+            </div>
+            <div class="kanban-column-cards">
+
+              <!-- Card: Fondation Abbe Pierre -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Fondation Abb&#233; Pierre</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Programme h&#233;bergement</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;80&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-green">CD</span>
+                </div>
+              </div>
+
+              <!-- Card: Credit Agricole Mecenat -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Cr&#233;dit Agricole M&#233;c&#233;nat</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Action sociale</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;15&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-sky">MB</span>
+                </div>
+              </div>
+
+              <!-- Card: Fondation SNCF -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Fondation SNCF</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Mobilit&#233; solidaire</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;25&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-green">CD</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── Column 2: Candidature preparee (2) ── -->
+          <div class="kanban-column kanban-column--preparee">
+            <div class="kanban-column-header">
+              <span class="kanban-column-title">Candidature pr&#233;par&#233;e</span>
+              <span class="kanban-column-count">2</span>
+            </div>
+            <div class="kanban-column-cards">
+
+              <!-- Card: Region Sud PACA -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">R&#233;gion Sud PACA</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Int&#233;gration migrants</span>
+                </div>
+                <div class="kanban-card-deadline">
+                  <span class="badge badge-warning">D&#233;p&#244;t : 15 mars</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;45&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-green">CD</span>
+                </div>
+              </div>
+
+              <!-- Card: Fondation Carasso -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Fondation Carasso</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Alimentation durable</span>
+                </div>
+                <div class="kanban-card-deadline">
+                  <span class="badge badge-info">D&#233;p&#244;t : 1 avril</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;30&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-sky">MB</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── Column 3: Dossier soumis (2) ── -->
+          <div class="kanban-column kanban-column--soumis">
+            <div class="kanban-column-header">
+              <span class="kanban-column-title">Dossier soumis</span>
+              <span class="kanban-column-count">2</span>
+            </div>
+            <div class="kanban-column-cards">
+
+              <!-- Card: Fondation de France -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Fondation de France</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Aide alimentaire</span>
+                </div>
+                <div class="kanban-card-deadline">
+                  <span class="badge badge-info">Soumis le 10 f&#233;v.</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;35&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-green">CD</span>
+                </div>
+              </div>
+
+              <!-- Card: Ministere Cohesion -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Minist&#232;re Coh&#233;sion</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Parcours d'insertion</span>
+                </div>
+                <div class="kanban-card-deadline">
+                  <span class="badge badge-info">Soumis le 5 f&#233;v.</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;60&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-green">CD</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── Column 4: En evaluation (1) ── -->
+          <div class="kanban-column kanban-column--evaluation">
+            <div class="kanban-column-header">
+              <span class="kanban-column-title">En &#233;valuation</span>
+              <span class="kanban-column-count">1</span>
+            </div>
+            <div class="kanban-column-cards">
+
+              <!-- Card: Fondation Rothschild -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Fondation Rothschild</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Sant&#233; pr&#233;carit&#233;</span>
+                </div>
+                <div class="kanban-card-deadline">
+                  <span class="badge badge-warning">Rapport d&#251; : 3 mars</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;40&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-sky">MB</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── Column 5: Accordee (2) ── -->
+          <div class="kanban-column kanban-column--accordee">
+            <div class="kanban-column-header">
+              <span class="kanban-column-title">Accord&#233;e</span>
+              <span class="kanban-column-count">2</span>
+            </div>
+            <div class="kanban-column-cards">
+
+              <!-- Card: Mairie de Marseille -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Mairie de Marseille</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Action jeunesse</span>
+                </div>
+                <div class="kanban-card-deadline">
+                  <span class="badge badge-success">Vers&#233; : &euro;11&nbsp;000</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;22&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-green">CD</span>
+                </div>
+              </div>
+
+              <!-- Card: Departement BDR -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">D&#233;partement BDR</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">H&#233;bergement urgence</span>
+                </div>
+                <div class="kanban-card-deadline">
+                  <span class="badge badge-success">Vers&#233; : &euro;27&nbsp;500</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;55&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-green">CD</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── Column 6: Reporting (1) ── -->
+          <div class="kanban-column kanban-column--reporting">
+            <div class="kanban-column-header">
+              <span class="kanban-column-title">Reporting</span>
+              <span class="kanban-column-count">1</span>
+            </div>
+            <div class="kanban-column-cards">
+
+              <!-- Card: Fondation Orange -->
+              <div class="kanban-card">
+                <div class="kanban-card-title">Fondation Orange</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-programme">Num&#233;rique solidaire</span>
+                </div>
+                <div class="kanban-card-deadline">
+                  <span class="badge badge-warning">Rapport final : 10 mars</span>
+                </div>
+                <div class="kanban-card-footer">
+                  <span class="kanban-card-amount">&euro;18&nbsp;000</span>
+                  <span class="avatar avatar-sm avatar-sky">MB</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <!-- END KANBAN BOARD -->
+
+        <!-- ============================================================
+             AI SUGGESTION CARD
+             ============================================================ -->
+        <div class="ai-card ai-card-fullwidth mt-6">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            L'&#233;ch&#233;ance du rapport Fondation Rothschild est dans 5 jours &mdash; d&#233;marrer la r&#233;daction du rapport bas&#233; sur les indicateurs d'impact ?
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm">Appliquer</button>
+            <button class="btn btn-ghost btn-sm">Ignorer</button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+    <!-- END MAIN WRAPPER -->
+
+  </div>
+  <!-- END APP LAYOUT -->
+</body>
+</html>

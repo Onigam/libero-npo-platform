@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Constituants &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: CON-001 Constituents list ── */
+
+    .page-header-left .page-title {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+    }
+
+    .page-title-thin {
+      font-weight: var(--weight-regular);
+      color: var(--color-text-secondary);
+      font-family: var(--font-heading);
+    }
+
+    /* Tag chips inside table cells */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 var(--space-2);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-neutral-200);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    .tags-cell {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+
+    /* Eye action button */
+    .action-icon {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      background: var(--color-white);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+      text-decoration: none;
+    }
+
+    .action-icon:hover {
+      background: var(--color-neutral-50);
+      border-color: var(--color-neutral-300);
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    /* Wider AI card for list context */
+    .ai-card--wide {
+      max-width: 100%;
+    }
+
+    /* Checkbox alignment */
+    .data-table th:first-child,
+    .data-table td:first-child {
+      width: 40px;
+      text-align: center;
+    }
+
+    .data-table input[type="checkbox"] {
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--            Sidebar              -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+
+        <div class="sidebar-section">Principal</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9633;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+          <span class="nav-item-badge">1 247</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9878;</span>
+          <span class="nav-item-label">Campagnes</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9883;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+
+        <div class="sidebar-section">Communication</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Emails</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9782;</span>
+          <span class="nav-item-label">Segments</span>
+        </a>
+
+        <div class="sidebar-section">Administration</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9432;</span>
+          <span class="nav-item-label">Aide &amp; Support</span>
+        </a>
+
+      </nav>
+
+      <!-- Footer / User -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Administratrice</div>
+        </div>
+      </div>
+
+    </aside>
+    <!-- end .sidebar -->
+
+    <!-- ============================== -->
+    <!--          Main wrapper           -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Association Solidarit&eacute; M&eacute;diterran&eacute;e</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Constituants</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher un constituant, un don, une campagne&hellip;"
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+      <!-- end .topbar -->
+
+      <!-- ── Main Content ── -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">
+              Constituants <span class="page-title-thin">&mdash; Individus</span>
+            </h1>
+            <p class="page-subtitle">1 247 constituants</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Importer CSV</button>
+            <button class="btn btn-primary" type="button">+ Nouveau constituant</button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar mb-4">
+          <button class="filter-chip" type="button">Tous</button>
+          <button class="filter-chip active" type="button">Donateurs</button>
+          <button class="filter-chip" type="button">B&eacute;n&eacute;ficiaires</button>
+          <button class="filter-chip" type="button">B&eacute;n&eacute;voles</button>
+          <button class="filter-chip" type="button">Prospects</button>
+        </div>
+
+        <!-- Data Table -->
+        <div class="card">
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" aria-label="S&eacute;lectionner tout"></th>
+                  <th>Nom</th>
+                  <th>Email</th>
+                  <th>T&eacute;l&eacute;phone</th>
+                  <th>Type</th>
+                  <th>Dernier don</th>
+                  <th>Tags</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <!-- Row 1 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Marie-Claire Fontaine"></td>
+                  <td class="cell-name">Marie-Claire Fontaine</td>
+                  <td>mc.fontaine@gmail.com</td>
+                  <td>06 12 34 56 78</td>
+                  <td><span class="badge badge-success">Donatrice</span></td>
+                  <td class="cell-mono">&euro;500 <span class="cell-secondary">le 24/02/2026</span></td>
+                  <td>
+                    <div class="tags-cell">
+                      <span class="tag">Fid&egrave;le</span>
+                      <span class="tag">Gala</span>
+                    </div>
+                  </td>
+                  <td><a href="detail.html" class="action-icon" title="Voir la fiche" aria-label="Voir Marie-Claire Fontaine">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Ahmed Benali"></td>
+                  <td class="cell-name">Ahmed Benali</td>
+                  <td>a.benali@outlook.fr</td>
+                  <td>06 98 76 54 32</td>
+                  <td><span class="badge badge-info">B&eacute;n&eacute;vole</span></td>
+                  <td class="cell-secondary">&mdash;</td>
+                  <td>
+                    <div class="tags-cell">
+                      <span class="tag">Cuisine</span>
+                    </div>
+                  </td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Ahmed Benali">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Sophie Martin"></td>
+                  <td class="cell-name">Sophie Martin</td>
+                  <td>s.martin@free.fr</td>
+                  <td>07 11 22 33 44</td>
+                  <td><span class="badge badge-success">Donatrice</span></td>
+                  <td class="cell-mono">&euro;150 <span class="cell-secondary">le 15/01/2026</span></td>
+                  <td>
+                    <div class="tags-cell">
+                      <span class="tag">R&eacute;current</span>
+                    </div>
+                  </td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Sophie Martin">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Jean-Pierre Rousseau"></td>
+                  <td class="cell-name">Jean-Pierre Rousseau</td>
+                  <td>jp.rousseau@orange.fr</td>
+                  <td>06 55 44 33 22</td>
+                  <td><span class="badge badge-neutral">Prospect</span></td>
+                  <td class="cell-secondary">&mdash;</td>
+                  <td><span class="cell-secondary">&mdash;</span></td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Jean-Pierre Rousseau">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 5 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Fatima El Amrani"></td>
+                  <td class="cell-name">Fatima El Amrani</td>
+                  <td>f.elamrani@yahoo.fr</td>
+                  <td>07 66 77 88 99</td>
+                  <td><span class="badge badge-warning">B&eacute;n&eacute;ficiaire</span></td>
+                  <td class="cell-secondary">&mdash;</td>
+                  <td>
+                    <div class="tags-cell">
+                      <span class="tag">Programme Alpha</span>
+                    </div>
+                  </td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Fatima El Amrani">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 6 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Pierre Lef&egrave;vre"></td>
+                  <td class="cell-name">Pierre Lef&egrave;vre</td>
+                  <td>p.lefevre@gmail.com</td>
+                  <td>06 44 55 66 77</td>
+                  <td><span class="badge badge-success">Donateur</span></td>
+                  <td class="cell-mono">&euro;2&nbsp;000 <span class="cell-secondary">le 10/02/2026</span></td>
+                  <td>
+                    <div class="tags-cell">
+                      <span class="tag">Majeur</span>
+                      <span class="tag">Entreprise</span>
+                    </div>
+                  </td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Pierre Lef&egrave;vre">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 7 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Nadia Berger"></td>
+                  <td class="cell-name">Nadia Berger</td>
+                  <td>n.berger@hotmail.fr</td>
+                  <td>07 22 33 44 55</td>
+                  <td><span class="badge badge-info">B&eacute;n&eacute;vole</span></td>
+                  <td class="cell-secondary">&mdash;</td>
+                  <td>
+                    <div class="tags-cell">
+                      <span class="tag">Accueil</span>
+                      <span class="tag">Langues</span>
+                    </div>
+                  </td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Nadia Berger">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 8 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Fran&ccedil;ois Dupont"></td>
+                  <td class="cell-name">Fran&ccedil;ois Dupont</td>
+                  <td>f.dupont@wanadoo.fr</td>
+                  <td>06 88 99 00 11</td>
+                  <td><span class="badge badge-success">Donateur</span></td>
+                  <td class="cell-mono">&euro;75 <span class="cell-secondary">le 28/01/2026</span></td>
+                  <td><span class="cell-secondary">&mdash;</span></td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Fran&ccedil;ois Dupont">&#128065;</a></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+          <!-- end .data-table-wrapper -->
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <span class="pagination-info">Affichage 1&ndash;25 sur 1&nbsp;247</span>
+            <div class="pagination-controls">
+              <button class="pagination-btn" disabled aria-label="Page pr&eacute;c&eacute;dente">&lsaquo;</button>
+              <button class="pagination-btn active">1</button>
+              <button class="pagination-btn">2</button>
+              <button class="pagination-btn">3</button>
+              <button class="pagination-btn">4</button>
+              <button class="pagination-btn">5</button>
+              <button class="pagination-btn" aria-label="Page suivante">&rsaquo;</button>
+            </div>
+          </div>
+
+        </div>
+        <!-- end .card (table card) -->
+
+        <!-- AI Suggestion Card -->
+        <div class="ai-card ai-card--wide mt-6">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            23 donateurs correspondent au crit&egrave;re &laquo;&nbsp;dernier don &gt; 6 mois&nbsp;&raquo; &mdash; cr&eacute;er un segment de r&eacute;activation ?
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm" type="button">Appliquer</button>
+            <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+          </div>
+        </div>
+
+      </main>
+      <!-- end .main-content -->
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

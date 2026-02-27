@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Onboarding : Parametres RGPD</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    .onboarding-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: var(--space-8);
+      gap: var(--space-3);
+    }
+    .ai-card {
+      max-width: 100%;
+      margin-top: var(--space-6);
+    }
+    .rgpd-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-top: var(--space-2);
+    }
+    .checkbox-card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+    .checkbox-card:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-50);
+    }
+    .checkbox-card input[type="checkbox"] {
+      margin-top: 3px;
+      accent-color: var(--color-primary);
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+    }
+    .checkbox-card-content {
+      flex: 1;
+    }
+    .checkbox-card-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+      margin-bottom: var(--space-0-5);
+    }
+    .checkbox-card-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+    .privacy-link {
+      margin-top: var(--space-6);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-md);
+    }
+    .privacy-link-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--color-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-primary);
+      box-shadow: var(--shadow-xs);
+    }
+    .privacy-link-info {
+      flex: 1;
+    }
+    .privacy-link-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+    .privacy-link-meta {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-0-5);
+    }
+  </style>
+</head>
+<body>
+  <div class="onboarding-layout">
+    <div class="onboarding-container">
+
+      <!-- Logo -->
+      <div class="onboarding-logo">
+        <div class="auth-logo-mark">L</div>
+        <span class="auth-logo-text">Libero</span>
+      </div>
+
+      <!-- Wizard Progress: Step 4 of 5 -->
+      <div class="wizard-progress">
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Organisation</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Equipe</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Donnees</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step active">
+          <div class="wizard-step-dot">4</div>
+          <span class="wizard-step-label">RGPD</span>
+        </div>
+        <div class="wizard-step-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-dot">5</div>
+          <span class="wizard-step-label">Pret !</span>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="onboarding-header">
+        <h1 class="onboarding-title">Parametres RGPD</h1>
+        <p class="onboarding-subtitle">Configurez la conformite au Reglement General sur la Protection des Donnees pour votre organisation.</p>
+      </div>
+
+      <!-- Info Alert -->
+      <div class="alert alert-info" style="margin-bottom: var(--space-6);">
+        <span class="alert-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+        </span>
+        <div class="alert-content">
+          <strong>Conformite RGPD</strong><br>
+          Libero est conforme au RGPD par conception. Les parametres ci-dessous vous permettent d'adapter les delais de retention a la politique de votre organisation. Toutes les donnees sont chiffrees au repos et en transit.
+        </div>
+      </div>
+
+      <!-- Form Card -->
+      <div class="card">
+        <div class="card-body">
+
+          <!-- Residence des donnees -->
+          <div class="form-group">
+            <label class="form-label form-label-required" for="data-residency">Residence des donnees</label>
+            <select id="data-residency" class="form-select">
+              <option value="eu-west-paris" selected>EU-West — Paris, France</option>
+              <option value="eu-central-francfort">EU-Central — Francfort, Allemagne</option>
+            </select>
+            <p class="form-hint">Localisation physique des serveurs hebergeant vos donnees. Ce choix ne peut pas etre modifie apres la creation du compte.</p>
+          </div>
+
+          <!-- Retention constituants inactifs -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label form-label-required" for="retention-inactive">Delai de retention constituants inactifs</label>
+              <select id="retention-inactive" class="form-select">
+                <option value="24">24 mois</option>
+                <option value="36" selected>36 mois</option>
+                <option value="60">60 mois</option>
+              </select>
+              <p class="form-hint">Duree apres laquelle un constituant inactif sera anonymise automatiquement.</p>
+            </div>
+
+            <!-- Archivage des dons -->
+            <div class="form-group">
+              <label class="form-label form-label-required" for="retention-donations">Delai d'archivage des dons</label>
+              <select id="retention-donations" class="form-select">
+                <option value="60">60 mois (5 ans)</option>
+                <option value="84" selected>84 mois (7 ans)</option>
+                <option value="120">120 mois (10 ans)</option>
+              </select>
+              <p class="form-hint">Duree de conservation des transactions de dons avant archivage. Minimum legal en France : 60 mois.</p>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <!-- Checkboxes -->
+          <div class="form-group">
+            <label class="form-label">Engagements</label>
+            <div class="rgpd-checkboxes">
+              <label class="checkbox-card">
+                <input type="checkbox" checked>
+                <div class="checkbox-card-content">
+                  <div class="checkbox-card-title">J'ai lu la politique de confidentialite type</div>
+                  <div class="checkbox-card-desc">Vous confirmez avoir pris connaissance du modele de politique de confidentialite fourni par Libero, adapte aux associations francaises et conforme au RGPD.</div>
+                </div>
+              </label>
+              <label class="checkbox-card">
+                <input type="checkbox" checked>
+                <div class="checkbox-card-content">
+                  <div class="checkbox-card-title">Le registre de consentements sera active</div>
+                  <div class="checkbox-card-desc">Libero tiendra un registre automatique de tous les consentements collectes aupres de vos constituants (opt-in newsletter, communication marketing, partage de donnees).</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AI Suggestion Card -->
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-card-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </span>
+          <span class="ai-card-label">Suggestion IA</span>
+        </div>
+        <p class="ai-card-text">
+          Pour une association francaise, le delai de retention recommande est de <strong>36 mois</strong> pour les constituants inactifs, conformement aux recommandations de la CNIL. Le delai d'archivage des dons de <strong>84 mois (7 ans)</strong> correspond a l'obligation legale de conservation des pieces comptables.
+        </p>
+        <div class="ai-card-actions">
+          <button class="btn btn-primary btn-sm">Appliquer les recommandations</button>
+          <button class="btn btn-ghost btn-sm">Ignorer</button>
+        </div>
+      </div>
+
+      <!-- Privacy Policy Template Download -->
+      <div class="privacy-link">
+        <div class="privacy-link-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="privacy-link-info">
+          <div class="privacy-link-name">Modele de politique de confidentialite</div>
+          <div class="privacy-link-meta">Document Word pre-rempli avec les informations de votre organisation. Conforme RGPD, adapte aux associations loi 1901. A faire valider par votre DPO.</div>
+        </div>
+        <a href="#" class="btn btn-secondary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Telecharger
+        </a>
+      </div>
+
+      <!-- Actions -->
+      <div class="onboarding-actions">
+        <button class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Retour
+        </button>
+        <button class="btn btn-primary">
+          Continuer
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

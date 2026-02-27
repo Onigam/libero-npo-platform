@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Onboarding : Votre organisation</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    .onboarding-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-8);
+      gap: var(--space-4);
+    }
+    .form-upload-area {
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--duration-normal) var(--ease-out);
+      background: var(--color-white);
+    }
+    .form-upload-area:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-50);
+    }
+    .form-upload-icon {
+      font-size: var(--text-2xl);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-2);
+    }
+    .form-upload-text {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+    .form-upload-text strong {
+      color: var(--color-primary);
+      font-weight: var(--weight-medium);
+    }
+    .form-upload-hint {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--space-1);
+    }
+    .ai-card {
+      max-width: 100%;
+      margin-top: var(--space-6);
+    }
+  </style>
+</head>
+<body>
+  <div class="onboarding-layout">
+    <div class="onboarding-container">
+
+      <!-- Logo -->
+      <div class="onboarding-logo">
+        <div class="auth-logo-mark">L</div>
+        <span class="auth-logo-text">Libero</span>
+      </div>
+
+      <!-- Wizard Progress: Step 1 of 5 -->
+      <div class="wizard-progress">
+        <div class="wizard-step active">
+          <div class="wizard-step-dot">1</div>
+          <span class="wizard-step-label">Organisation</span>
+        </div>
+        <div class="wizard-step-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-dot">2</div>
+          <span class="wizard-step-label">Equipe</span>
+        </div>
+        <div class="wizard-step-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-dot">3</div>
+          <span class="wizard-step-label">Donnees</span>
+        </div>
+        <div class="wizard-step-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-dot">4</div>
+          <span class="wizard-step-label">RGPD</span>
+        </div>
+        <div class="wizard-step-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-dot">5</div>
+          <span class="wizard-step-label">Pret !</span>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="onboarding-header">
+        <h1 class="onboarding-title">Votre organisation</h1>
+        <p class="onboarding-subtitle">Commencez par nous parler de votre structure. Ces informations nous aident a personnaliser votre experience.</p>
+      </div>
+
+      <!-- Form Card -->
+      <div class="card">
+        <div class="card-body">
+
+          <!-- Nom de l'organisation -->
+          <div class="form-group">
+            <label class="form-label form-label-required" for="org-name">Nom de l'organisation</label>
+            <input type="text" id="org-name" class="form-input" value="Association Solidarite Mediterranee" placeholder="Nom officiel de votre organisation">
+          </div>
+
+          <!-- Pays -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label form-label-required" for="country">Pays</label>
+              <select id="country" class="form-select">
+                <option value="">Selectionner un pays</option>
+                <option value="AT">Autriche</option>
+                <option value="BE">Belgique</option>
+                <option value="BG">Bulgarie</option>
+                <option value="HR">Croatie</option>
+                <option value="CY">Chypre</option>
+                <option value="CZ">Republique tcheque</option>
+                <option value="DK">Danemark</option>
+                <option value="EE">Estonie</option>
+                <option value="FI">Finlande</option>
+                <option value="FR" selected>France</option>
+                <option value="DE">Allemagne</option>
+                <option value="GR">Grece</option>
+                <option value="HU">Hongrie</option>
+                <option value="IE">Irlande</option>
+                <option value="IT">Italie</option>
+                <option value="LV">Lettonie</option>
+                <option value="LT">Lituanie</option>
+                <option value="LU">Luxembourg</option>
+                <option value="MT">Malte</option>
+                <option value="NL">Pays-Bas</option>
+                <option value="PL">Pologne</option>
+                <option value="PT">Portugal</option>
+                <option value="RO">Roumanie</option>
+                <option value="SK">Slovaquie</option>
+                <option value="SI">Slovenie</option>
+                <option value="ES">Espagne</option>
+                <option value="SE">Suede</option>
+                <option value="GB">Royaume-Uni</option>
+                <option value="CH">Suisse</option>
+                <option value="NO">Norvege</option>
+              </select>
+            </div>
+
+            <!-- Type juridique -->
+            <div class="form-group">
+              <label class="form-label form-label-required" for="legal-type">Type juridique</label>
+              <select id="legal-type" class="form-select">
+                <option value="">Selectionner un type</option>
+                <option value="asso1901" selected>Association loi 1901</option>
+                <option value="fondation">Fondation</option>
+                <option value="frup">Fondation reconnue d'utilite publique</option>
+                <option value="asbl">ASBL (Belgique)</option>
+                <option value="ong">ONG internationale</option>
+                <option value="cooperative">Cooperative sociale</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Devise et numero d'enregistrement -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label form-label-required" for="currency">Devise principale</label>
+              <select id="currency" class="form-select">
+                <option value="EUR" selected>EUR - Euro</option>
+                <option value="GBP">GBP - Livre sterling</option>
+                <option value="CHF">CHF - Franc suisse</option>
+                <option value="NOK">NOK - Couronne norvegienne</option>
+                <option value="SEK">SEK - Couronne suedoise</option>
+                <option value="DKK">DKK - Couronne danoise</option>
+                <option value="PLN">PLN - Zloty polonais</option>
+                <option value="CZK">CZK - Couronne tcheque</option>
+                <option value="HUF">HUF - Forint hongrois</option>
+                <option value="RON">RON - Leu roumain</option>
+                <option value="BGN">BGN - Lev bulgare</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-number">Numero d'enregistrement</label>
+              <input type="text" id="reg-number" class="form-input" placeholder="Ex: W061234567">
+              <p class="form-hint">Numero RNA, SIREN ou equivalent dans votre pays.</p>
+            </div>
+          </div>
+
+          <!-- Logo upload -->
+          <div class="form-group">
+            <label class="form-label">Logo de l'organisation</label>
+            <div class="form-upload-area">
+              <div class="form-upload-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <p class="form-upload-text"><strong>Cliquez pour telecharger</strong> ou glissez-deposez</p>
+              <p class="form-upload-hint">PNG, JPG ou SVG. Taille maximale : 2 Mo.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AI Suggestion Card -->
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-card-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </span>
+          <span class="ai-card-label">Suggestion IA</span>
+        </div>
+        <p class="ai-card-text">
+          Base sur le pays selectionne (France), le type juridique suggere est <strong>Association loi 1901</strong>. La devise principale a ete definie sur <strong>EUR</strong>.
+        </p>
+        <div class="ai-card-actions">
+          <button class="btn btn-primary btn-sm">Appliquer</button>
+          <button class="btn btn-ghost btn-sm">Ignorer</button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="onboarding-actions">
+        <button class="btn btn-secondary">Sauvegarder et reprendre plus tard</button>
+        <button class="btn btn-primary">
+          Continuer
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

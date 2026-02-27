@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des dons — Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for donations/list (DON-001) ── */
+
+    /* Filter bar layout */
+    .filter-bar-section {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .filter-bar-section .form-select {
+      width: auto;
+      min-width: 140px;
+      height: 32px;
+      font-size: var(--text-xs);
+      padding: 0 var(--space-6) 0 var(--space-3);
+      border-radius: var(--radius-pill);
+      background-color: var(--color-white);
+    }
+
+    .filter-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      white-space: nowrap;
+    }
+
+    /* Amount column styling */
+    .cell-amount {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Receipt indicator */
+    .receipt-indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      font-size: var(--text-xs);
+    }
+
+    .receipt-yes {
+      color: var(--color-primary);
+    }
+
+    .receipt-no {
+      color: var(--color-neutral-300);
+    }
+
+    /* Eye action button */
+    .action-view {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .action-view:hover {
+      background: var(--color-neutral-100);
+      color: var(--color-primary);
+    }
+
+    /* AI card positioned below table */
+    .ai-card-wrapper {
+      margin-top: var(--space-6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Dons &amp; Campagnes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Dons</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher..."
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Liste des dons</h1>
+            <p class="page-subtitle">247 dons &mdash; Total : &euro;89 340</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Exporter</button>
+            <button class="btn btn-primary" type="button">+ Enregistrer un don</button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar-section">
+          <span class="filter-label">Filtres :</span>
+          <select class="form-select" aria-label="P&eacute;riode">
+            <option selected>F&eacute;vrier 2026</option>
+            <option>Janvier 2026</option>
+            <option>D&eacute;cembre 2025</option>
+          </select>
+          <select class="form-select" aria-label="Campagne">
+            <option selected>Toutes les campagnes</option>
+            <option>Appel aux dons Hiver 2026</option>
+            <option>Gala annuel 2026</option>
+            <option>Urgence M&eacute;diterran&eacute;e</option>
+          </select>
+          <select class="form-select" aria-label="Type">
+            <option selected>Tous les types</option>
+            <option>Ponctuel</option>
+            <option>R&eacute;current</option>
+            <option>Entreprise</option>
+            <option>En nature</option>
+          </select>
+          <select class="form-select" aria-label="Statut">
+            <option selected>Tous les statuts</option>
+            <option>Confirm&eacute;</option>
+            <option>En attente</option>
+            <option>&Eacute;chou&eacute;</option>
+          </select>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Donateur</th>
+                <th class="text-right">Montant</th>
+                <th>Campagne</th>
+                <th>Type</th>
+                <th>Paiement</th>
+                <th>Statut</th>
+                <th class="text-center">Re&ccedil;u</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1 -->
+              <tr>
+                <td class="cell-secondary">24/02/2026</td>
+                <td class="cell-name">Marie-Claire Fontaine</td>
+                <td class="cell-amount text-right">&euro;500,00</td>
+                <td>Hiver 2026</td>
+                <td><span class="badge badge-info">Ponctuel</span></td>
+                <td class="cell-secondary">Virement</td>
+                <td><span class="badge badge-success">Confirm&eacute; &#10003;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-yes">&#10003;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr>
+                <td class="cell-secondary">23/02/2026</td>
+                <td class="cell-name">Pierre Lef&egrave;vre</td>
+                <td class="cell-amount text-right">&euro;2 000,00</td>
+                <td>Gala 2026</td>
+                <td><span class="badge badge-info">Ponctuel</span></td>
+                <td class="cell-secondary">Ch&egrave;que</td>
+                <td><span class="badge badge-success">Confirm&eacute; &#10003;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-yes">&#10003;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr>
+                <td class="cell-secondary">22/02/2026</td>
+                <td class="cell-name">Entreprise ACME SAS</td>
+                <td class="cell-amount text-right">&euro;5 000,00</td>
+                <td>Hiver 2026</td>
+                <td><span class="badge badge-neutral">Entreprise</span></td>
+                <td class="cell-secondary">Virement</td>
+                <td><span class="badge badge-success">Confirm&eacute; &#10003;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-yes">&#10003;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr>
+                <td class="cell-secondary">20/02/2026</td>
+                <td class="cell-name">Sophie Martin</td>
+                <td class="cell-amount text-right">&euro;150,00</td>
+                <td>Hiver 2026</td>
+                <td><span class="badge badge-warning">R&eacute;current</span></td>
+                <td class="cell-secondary">SEPA</td>
+                <td><span class="badge badge-success">Confirm&eacute; &#10003;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-yes">&#10003;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 5 -->
+              <tr>
+                <td class="cell-secondary">18/02/2026</td>
+                <td class="cell-name">Fran&ccedil;ois Dupont</td>
+                <td class="cell-amount text-right">&euro;75,00</td>
+                <td class="cell-secondary">&mdash;</td>
+                <td><span class="badge badge-info">Ponctuel</span></td>
+                <td class="cell-secondary">CB</td>
+                <td><span class="badge badge-success">Confirm&eacute; &#10003;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-no">&#9675;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 6 -->
+              <tr>
+                <td class="cell-secondary">15/02/2026</td>
+                <td class="cell-name">Nadia Berger</td>
+                <td class="cell-amount text-right">&euro;200,00</td>
+                <td>Urgence M&eacute;d.</td>
+                <td><span class="badge badge-info">Ponctuel</span></td>
+                <td class="cell-secondary">Virement</td>
+                <td><span class="badge badge-success">Confirm&eacute; &#10003;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-yes">&#10003;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 7 -->
+              <tr>
+                <td class="cell-secondary">12/02/2026</td>
+                <td class="cell-name">Anonyme</td>
+                <td class="cell-amount text-right">&euro;50,00</td>
+                <td class="cell-secondary">&mdash;</td>
+                <td><span class="badge badge-info">Ponctuel</span></td>
+                <td class="cell-secondary">Esp&egrave;ces</td>
+                <td><span class="badge badge-warning">En attente &#9888;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-no">&#9675;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 8 -->
+              <tr>
+                <td class="cell-secondary">10/02/2026</td>
+                <td class="cell-name">Laurent Moreau</td>
+                <td class="cell-amount text-right">&euro;1 000,00</td>
+                <td>Gala 2026</td>
+                <td><span class="badge badge-info">Ponctuel</span></td>
+                <td class="cell-secondary">Virement</td>
+                <td><span class="badge badge-success">Confirm&eacute; &#10003;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-yes">&#10003;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 9 -->
+              <tr>
+                <td class="cell-secondary">08/02/2026</td>
+                <td class="cell-name">Catherine Blanc</td>
+                <td class="cell-amount text-right">&euro;300,00</td>
+                <td>Hiver 2026</td>
+                <td><span class="badge badge-warning">R&eacute;current</span></td>
+                <td class="cell-secondary">SEPA</td>
+                <td><span class="badge badge-error">&Eacute;chou&eacute; &#10005;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-no">&#9675;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 10 -->
+              <tr>
+                <td class="cell-secondary">05/02/2026</td>
+                <td class="cell-name">Association Les Oliviers</td>
+                <td class="cell-amount text-right">&euro;750,00</td>
+                <td>Urgence M&eacute;d.</td>
+                <td><span class="badge badge-info">Ponctuel</span></td>
+                <td class="cell-secondary">Virement</td>
+                <td><span class="badge badge-success">Confirm&eacute; &#10003;</span></td>
+                <td class="text-center"><span class="receipt-indicator receipt-yes">&#10003;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <span class="pagination-info">Affichage 1-25 sur 247</span>
+          <div class="pagination-controls">
+            <button class="pagination-btn" disabled aria-label="Page pr&eacute;c&eacute;dente">&#8249;</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">...</button>
+            <button class="pagination-btn">10</button>
+            <button class="pagination-btn" aria-label="Page suivante">&#8250;</button>
+          </div>
+        </div>
+
+        <!-- AI Suggestion Card -->
+        <div class="ai-card-wrapper">
+          <div class="ai-card">
+            <div class="ai-card-header">
+              <span class="ai-card-icon">&#10024;</span>
+              <span class="ai-card-label">Suggestion IA</span>
+            </div>
+            <p class="ai-card-text">3 dons r&eacute;currents ont &eacute;chou&eacute; ce mois &mdash; voir la liste et relancer les pr&eacute;l&egrave;vements ?</p>
+            <div class="ai-card-actions">
+              <button class="btn btn-primary btn-sm" type="button">Appliquer</button>
+              <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nouveau don — Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for donations/new (DON-002) ── */
+
+    /* Donor search input with icon */
+    .search-autocomplete {
+      position: relative;
+    }
+
+    .search-autocomplete .form-input {
+      padding-left: var(--space-8);
+    }
+
+    .search-autocomplete-icon {
+      position: absolute;
+      left: var(--space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    /* Donor preview card */
+    .donor-preview {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-primary-50);
+      border: 1px solid var(--color-primary-100);
+      border-radius: var(--radius-md);
+    }
+
+    .donor-preview-avatar {
+      width: 36px;
+      height: 36px;
+      background: var(--color-primary);
+      color: var(--color-white);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      flex-shrink: 0;
+    }
+
+    .donor-preview-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .donor-preview-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .donor-preview-meta {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: 1px;
+    }
+
+    .donor-preview-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      font-size: var(--text-md);
+      padding: var(--space-1);
+      line-height: 1;
+      border-radius: var(--radius-sm);
+      transition: color var(--duration-normal) var(--ease-out);
+    }
+
+    .donor-preview-close:hover {
+      color: var(--color-text);
+    }
+
+    /* Currency input wrapper */
+    .currency-input-wrapper {
+      position: relative;
+    }
+
+    .currency-input-wrapper .form-input {
+      padding-left: var(--space-8);
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+    }
+
+    .currency-prefix {
+      position: absolute;
+      left: var(--space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-secondary);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semi);
+      pointer-events: none;
+    }
+
+    /* Allocation table */
+    .allocation-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+      margin-top: var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .allocation-table th {
+      background: var(--color-neutral-200);
+      padding: var(--space-2) var(--space-3);
+      text-align: left;
+      font-weight: var(--weight-semi);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .allocation-table td {
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-neutral-100);
+      vertical-align: middle;
+    }
+
+    .allocation-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .allocation-table .cell-mono {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+    }
+
+    /* Form footer with sticky positioning */
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      padding-top: var(--space-6);
+      margin-top: var(--space-8);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .form-footer-left {
+      margin-right: auto;
+    }
+
+    /* AI card within form context */
+    .ai-card-form {
+      margin-top: var(--space-6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Dons &amp; Campagnes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Dons</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Nouveau don</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher..."
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content main-content--form">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Enregistrer un don</h1>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form action="#" method="post" novalidate>
+
+          <!-- ============================== -->
+          <!--     Section: Donateur           -->
+          <!-- ============================== -->
+          <div class="form-section">
+            <h2 class="form-section-title">Donateur</h2>
+
+            <div class="form-group">
+              <label class="form-label form-label-required" for="donor-search">Constituant</label>
+              <div class="search-autocomplete">
+                <span class="search-autocomplete-icon">&#128269;</span>
+                <input
+                  class="form-input"
+                  type="text"
+                  id="donor-search"
+                  value="Marie-Claire Fontaine"
+                  placeholder="Rechercher un constituant..."
+                  autocomplete="off"
+                >
+              </div>
+              <!-- Donor preview card (pre-filled state) -->
+              <div class="donor-preview">
+                <div class="donor-preview-avatar">MF</div>
+                <div class="donor-preview-info">
+                  <div class="donor-preview-name">Marie-Claire Fontaine</div>
+                  <div class="donor-preview-meta">m.fontaine@email.fr &mdash; 12 dons pr&eacute;c&eacute;dents &mdash; Total : &euro;7 500</div>
+                </div>
+                <button class="donor-preview-close" type="button" aria-label="Retirer le donateur">&times;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================== -->
+          <!--  Section: Informations du don   -->
+          <!-- ============================== -->
+          <div class="form-section">
+            <h2 class="form-section-title">Informations du don</h2>
+
+            <!-- Type + Date row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label form-label-required" for="don-type">Type de don</label>
+                <select class="form-select" id="don-type">
+                  <option value="ponctuel" selected>Ponctuel</option>
+                  <option value="recurrent">R&eacute;current</option>
+                  <option value="nature">En nature</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label form-label-required" for="don-date">Date</label>
+                <input class="form-input" type="date" id="don-date" value="2026-02-27">
+              </div>
+            </div>
+
+            <!-- Montant + Devise row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label form-label-required" for="don-montant">Montant</label>
+                <div class="currency-input-wrapper">
+                  <span class="currency-prefix">&euro;</span>
+                  <input class="form-input" type="number" id="don-montant" value="500" min="0" step="0.01">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="don-devise">Devise</label>
+                <select class="form-select" id="don-devise">
+                  <option value="EUR" selected>EUR &mdash; Euro</option>
+                  <option value="USD">USD &mdash; Dollar US</option>
+                  <option value="GBP">GBP &mdash; Livre sterling</option>
+                  <option value="CHF">CHF &mdash; Franc suisse</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Mode de paiement -->
+            <div class="form-group">
+              <label class="form-label form-label-required" for="don-paiement">Mode de paiement</label>
+              <select class="form-select" id="don-paiement">
+                <option value="virement" selected>Virement bancaire</option>
+                <option value="cheque">Ch&egrave;que</option>
+                <option value="cb">Carte bancaire</option>
+                <option value="sepa">Pr&eacute;l&egrave;vement SEPA</option>
+                <option value="especes">Esp&egrave;ces</option>
+              </select>
+            </div>
+
+            <!-- R&eacute;f&eacute;rence externe -->
+            <div class="form-group">
+              <label class="form-label" for="don-reference">R&eacute;f&eacute;rence externe</label>
+              <input class="form-input" type="text" id="don-reference" placeholder="Ex. : VIR-2026-0342 (optionnel)">
+              <p class="form-hint">Num&eacute;ro de r&eacute;f&eacute;rence bancaire, num&eacute;ro de ch&egrave;que, etc.</p>
+            </div>
+          </div>
+
+          <!-- ============================== -->
+          <!--     Section: Attribution        -->
+          <!-- ============================== -->
+          <div class="form-section">
+            <h2 class="form-section-title">Attribution</h2>
+
+            <!-- Campagne -->
+            <div class="form-group">
+              <label class="form-label" for="don-campagne">Campagne</label>
+              <select class="form-select" id="don-campagne">
+                <option value="">Aucune campagne</option>
+                <option value="hiver-2026" selected>Appel aux dons Hiver 2026</option>
+                <option value="gala-2026">Gala annuel 2026</option>
+                <option value="urgence-med">Urgence M&eacute;diterran&eacute;e</option>
+              </select>
+            </div>
+
+            <!-- Fonds avec table d'allocation -->
+            <div class="form-group">
+              <label class="form-label" for="don-fonds">R&eacute;partition des fonds</label>
+              <select class="form-select" id="don-fonds">
+                <option value="mixte" selected>R&eacute;partition mixte</option>
+                <option value="general">Fonds g&eacute;n&eacute;ral uniquement</option>
+                <option value="restreint">Fonds restreint uniquement</option>
+              </select>
+
+              <table class="allocation-table">
+                <thead>
+                  <tr>
+                    <th>Fonds</th>
+                    <th class="text-right">R&eacute;partition</th>
+                    <th class="text-right">Montant</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Fonds g&eacute;n&eacute;ral</td>
+                    <td class="text-right">60%</td>
+                    <td class="text-right cell-mono">&euro;300</td>
+                  </tr>
+                  <tr>
+                    <td>Fonds restreint M&eacute;diterran&eacute;e</td>
+                    <td class="text-right">40%</td>
+                    <td class="text-right cell-mono">&euro;200</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ============================== -->
+          <!--       Section: Options          -->
+          <!-- ============================== -->
+          <div class="form-section">
+            <h2 class="form-section-title">Options</h2>
+
+            <!-- Checkbox recu fiscal -->
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" checked>
+                <span>G&eacute;n&eacute;rer un re&ccedil;u fiscal</span>
+              </label>
+              <p class="form-hint">Un re&ccedil;u fiscal sera automatiquement g&eacute;n&eacute;r&eacute; et envoy&eacute; au donateur par email.</p>
+            </div>
+
+            <!-- Notes internes -->
+            <div class="form-group">
+              <label class="form-label" for="don-notes">Notes internes</label>
+              <textarea class="form-textarea" id="don-notes" rows="3" placeholder="Notes visibles uniquement par l'&eacute;quipe..."></textarea>
+            </div>
+          </div>
+
+          <!-- AI Suggestion Card -->
+          <div class="ai-card-form">
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <span class="ai-card-icon">&#10024;</span>
+                <span class="ai-card-label">Suggestion IA</span>
+              </div>
+              <p class="ai-card-text">Bas&eacute; sur l'historique de Marie-Claire Fontaine, le montant moyen de ses dons est de &euro;625 &mdash; ajuster ?</p>
+              <div class="ai-card-actions">
+                <button class="btn btn-primary btn-sm" type="button">Appliquer</button>
+                <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Footer -->
+          <div class="form-footer">
+            <div class="form-footer-left">
+              <button class="btn btn-secondary" type="button">Annuler</button>
+            </div>
+            <button class="btn btn-secondary" type="button">Sauvegarder et ajouter un autre</button>
+            <button class="btn btn-primary" type="submit">Sauvegarder le don</button>
+          </div>
+
+        </form>
+
+      </main>
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

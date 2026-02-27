@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marie-Claire Fontaine &mdash; Constituants &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: CON-002 Constituent detail ── */
+
+    /* Profile header with avatar + info */
+    .profile-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      color: var(--color-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-semi);
+      flex-shrink: 0;
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-name {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+      line-height: var(--leading-tight);
+    }
+
+    .profile-badges {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-1);
+    }
+
+    .profile-subtitle {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .profile-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-shrink: 0;
+    }
+
+    /* Detail info rows inside cards */
+    .detail-row {
+      display: flex;
+      align-items: baseline;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--color-neutral-100);
+      font-size: var(--text-sm);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      width: 140px;
+      flex-shrink: 0;
+      color: var(--color-text-secondary);
+      font-weight: var(--weight-medium);
+    }
+
+    .detail-value {
+      flex: 1;
+      color: var(--color-text);
+    }
+
+    .detail-value a {
+      color: var(--color-sky);
+    }
+
+    /* Tags inside detail card */
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 var(--space-2);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-neutral-200);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    /* Summary stats grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+
+    .summary-stat-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-1);
+    }
+
+    .summary-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+
+    .summary-stat-value--sm {
+      font-size: var(--text-lg);
+    }
+
+    /* AI card wider for detail context */
+    .ai-card--wide {
+      max-width: 100%;
+    }
+
+    /* Timeline icon colours */
+    .timeline-icon--green {
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+    }
+
+    .timeline-icon--sky {
+      background: var(--color-sky-50);
+      color: var(--color-sky);
+    }
+
+    .timeline-icon--amber {
+      background: var(--color-amber-50);
+      color: var(--color-amber);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--            Sidebar              -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+
+        <div class="sidebar-section">Principal</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9633;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+
+        <a href="list.html" class="nav-item active">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+          <span class="nav-item-badge">1 247</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9878;</span>
+          <span class="nav-item-label">Campagnes</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9883;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+
+        <div class="sidebar-section">Communication</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Emails</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9782;</span>
+          <span class="nav-item-label">Segments</span>
+        </a>
+
+        <div class="sidebar-section">Administration</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9432;</span>
+          <span class="nav-item-label">Aide &amp; Support</span>
+        </a>
+
+      </nav>
+
+      <!-- Footer / User -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Administratrice</div>
+        </div>
+      </div>
+
+    </aside>
+    <!-- end .sidebar -->
+
+    <!-- ============================== -->
+    <!--          Main wrapper           -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Association Solidarit&eacute; M&eacute;diterran&eacute;e</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Constituants</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Marie-Claire Fontaine</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher un constituant, un don, une campagne&hellip;"
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+      <!-- end .topbar -->
+
+      <!-- ── Main Content ── -->
+      <main class="main-content">
+
+        <!-- ============================== -->
+        <!--        Profile Header           -->
+        <!-- ============================== -->
+        <div class="profile-header">
+          <div class="profile-avatar">MF</div>
+          <div class="profile-info">
+            <h1 class="profile-name">Marie-Claire Fontaine</h1>
+            <div class="profile-badges">
+              <span class="badge badge-success">Donatrice</span>
+              <span class="badge badge-info">B&eacute;n&eacute;vole</span>
+            </div>
+            <p class="profile-subtitle">Membre depuis janvier 2019</p>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-primary" type="button">Enregistrer un don</button>
+            <button class="btn btn-secondary" type="button">Ajouter une note</button>
+            <button class="btn btn-secondary" type="button">Envoyer un email</button>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--              Tabs               -->
+        <!-- ============================== -->
+        <div class="tabs">
+          <button class="tab active" type="button">Informations</button>
+          <button class="tab" type="button">Activit&eacute;</button>
+          <button class="tab" type="button">Dons</button>
+          <button class="tab" type="button">Programmes</button>
+          <button class="tab" type="button">Communications</button>
+          <button class="tab" type="button">RGPD</button>
+        </div>
+
+        <!-- ============================== -->
+        <!--     Informations Tab Content    -->
+        <!-- ============================== -->
+
+        <!-- Two-column layout: Coordonnees + Relations -->
+        <div class="grid-2 mb-6">
+
+          <!-- Left card: Coordonnees -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Coordonn&eacute;es</h3>
+            </div>
+            <div class="card-body">
+              <div class="detail-row">
+                <span class="detail-label">Civilit&eacute;</span>
+                <span class="detail-value">Mme</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Pr&eacute;nom</span>
+                <span class="detail-value">Marie-Claire</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Nom</span>
+                <span class="detail-value">Fontaine</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Email</span>
+                <span class="detail-value"><a href="mailto:mc.fontaine@gmail.com">mc.fontaine@gmail.com</a></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">T&eacute;l&eacute;phone</span>
+                <span class="detail-value">06 12 34 56 78</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Adresse</span>
+                <span class="detail-value">24 Rue de la R&eacute;publique, 13001 Marseille</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Date de naissance</span>
+                <span class="detail-value">15/03/1978</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right card: Relations -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Relations</h3>
+            </div>
+            <div class="card-body">
+              <div class="detail-row">
+                <span class="detail-label">M&eacute;nage</span>
+                <span class="detail-value"><a href="#">Fontaine-Duval</a></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Organisation</span>
+                <span class="detail-value"><a href="#">Fondation Lumi&egrave;re Provence</a></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Tags</span>
+                <span class="detail-value">
+                  <div class="detail-tags">
+                    <span class="tag">Fid&egrave;le</span>
+                    <span class="tag">Gala</span>
+                    <span class="tag">Major Donor</span>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- end .grid-2 -->
+
+        <!-- ============================== -->
+        <!--       Donation Summary          -->
+        <!-- ============================== -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">R&eacute;sum&eacute; des dons</h3>
+          </div>
+          <div class="card-body">
+            <div class="summary-grid">
+              <div>
+                <div class="summary-stat-label">Total dons</div>
+                <div class="summary-stat-value">&euro;8&nbsp;750</div>
+              </div>
+              <div>
+                <div class="summary-stat-label">Nombre de dons</div>
+                <div class="summary-stat-value summary-stat-value--sm">14</div>
+              </div>
+              <div>
+                <div class="summary-stat-label">Don moyen</div>
+                <div class="summary-stat-value">&euro;625</div>
+              </div>
+              <div>
+                <div class="summary-stat-label">Dernier don</div>
+                <div class="summary-stat-value summary-stat-value--sm">24/02/2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--       AI Suggestion Card        -->
+        <!-- ============================== -->
+        <div class="ai-card ai-card--wide mb-6">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            Ce donateur n'a pas &eacute;t&eacute; contact&eacute; depuis 14 mois &mdash; sugg&eacute;rer un email de r&eacute;activation ?
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm" type="button">Appliquer</button>
+            <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--       Activity Timeline         -->
+        <!-- ============================== -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Activit&eacute; r&eacute;cente</h3>
+          </div>
+          <div class="card-body">
+            <div class="timeline">
+
+              <!-- Timeline item 1 -->
+              <div class="timeline-item">
+                <div class="timeline-icon timeline-icon--green">&#9829;</div>
+                <div class="timeline-content">
+                  <div class="timeline-title">Don de &euro;500 re&ccedil;u</div>
+                  <div class="timeline-meta">Campagne Hiver 2026 &mdash; 24 f&eacute;v. 2026</div>
+                </div>
+              </div>
+
+              <!-- Timeline item 2 -->
+              <div class="timeline-item">
+                <div class="timeline-icon timeline-icon--sky">&#9993;</div>
+                <div class="timeline-content">
+                  <div class="timeline-title">Email envoy&eacute;</div>
+                  <div class="timeline-meta">Remerciement don &mdash; 25 f&eacute;v. 2026</div>
+                </div>
+              </div>
+
+              <!-- Timeline item 3 -->
+              <div class="timeline-item">
+                <div class="timeline-icon timeline-icon--amber">&#9998;</div>
+                <div class="timeline-content">
+                  <div class="timeline-title">Note ajout&eacute;e</div>
+                  <div class="timeline-meta">&laquo;&nbsp;Int&eacute;ress&eacute;e par le gala annuel&nbsp;&raquo; &mdash; 20 jan. 2026</div>
+                </div>
+              </div>
+
+              <!-- Timeline item 4 -->
+              <div class="timeline-item">
+                <div class="timeline-icon timeline-icon--green">&#9829;</div>
+                <div class="timeline-content">
+                  <div class="timeline-title">Don de &euro;250 re&ccedil;u</div>
+                  <div class="timeline-meta">Campagne &Eacute;t&eacute; 2025 &mdash; 15 juil. 2025</div>
+                </div>
+              </div>
+
+            </div>
+            <!-- end .timeline -->
+          </div>
+        </div>
+        <!-- end activity card -->
+
+      </main>
+      <!-- end .main-content -->
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

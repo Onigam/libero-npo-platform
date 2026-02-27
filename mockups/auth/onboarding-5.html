@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Onboarding : Tout est pret !</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    .celebration-header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+    .celebration-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-4);
+    }
+    .celebration-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-3xl);
+      color: var(--color-text);
+      margin-bottom: var(--space-2);
+    }
+    .celebration-subtitle {
+      font-size: var(--text-md);
+      color: var(--color-text-secondary);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: var(--leading-relaxed);
+    }
+    .checklist-section {
+      margin-bottom: var(--space-8);
+    }
+    .checklist-section-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      margin-bottom: var(--space-3);
+    }
+    .checklist-item .checklist-detail {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--space-0-5);
+    }
+    .checklist-item.completed .checklist-detail {
+      color: var(--color-text-muted);
+    }
+    .checklist-action {
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .help-resources {
+      margin-top: var(--space-6);
+    }
+    .help-resources-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+    @media (max-width: 768px) {
+      .help-resources-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .help-resource-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: var(--space-5);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-normal) var(--ease-out);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .help-resource-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-card);
+      text-decoration: none;
+    }
+    .help-resource-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-3);
+      flex-shrink: 0;
+    }
+    .help-resource-icon--docs {
+      background: var(--color-sky-50);
+      color: var(--color-sky);
+    }
+    .help-resource-icon--video {
+      background: var(--color-amber-50);
+      color: var(--color-amber);
+    }
+    .help-resource-icon--support {
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+    }
+    .help-resource-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+    }
+    .help-resource-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+    .help-resource-meta {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--space-2);
+    }
+    .cta-section {
+      text-align: center;
+      margin-top: var(--space-10);
+    }
+    .btn-cta {
+      height: 52px;
+      padding: 0 var(--space-8);
+      font-size: var(--text-md);
+      font-weight: var(--weight-semi);
+      border-radius: var(--radius-md);
+    }
+  </style>
+</head>
+<body>
+  <div class="onboarding-layout">
+    <div class="onboarding-container" style="max-width: 700px;">
+
+      <!-- Logo -->
+      <div class="onboarding-logo">
+        <div class="auth-logo-mark">L</div>
+        <span class="auth-logo-text">Libero</span>
+      </div>
+
+      <!-- Wizard Progress: Step 5 of 5, all completed -->
+      <div class="wizard-progress">
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Organisation</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Equipe</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Donnees</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">RGPD</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step active">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Pret !</span>
+        </div>
+      </div>
+
+      <!-- Celebration Header -->
+      <div class="celebration-header">
+        <div class="celebration-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <h1 class="celebration-title">Tout est pret !</h1>
+        <p class="celebration-subtitle">Votre organisation <strong>Association Solidarite Mediterranee</strong> est configuree. Voici vos prochaines etapes.</p>
+      </div>
+
+      <!-- Checklist -->
+      <div class="checklist-section">
+        <div class="checklist-section-title">Recapitulatif de configuration</div>
+
+        <!-- Completed: Organisation -->
+        <div class="checklist-item completed">
+          <div class="checklist-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="checklist-text">Organisation configuree</div>
+            <div class="checklist-detail">Association Solidarite Mediterranee — France, EUR</div>
+          </div>
+        </div>
+
+        <!-- Completed: Equipe -->
+        <div class="checklist-item completed">
+          <div class="checklist-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="checklist-text">Equipe invitee — 2 membres</div>
+            <div class="checklist-detail">claire.dubois@solidarite-med.org, marc.benali@solidarite-med.org</div>
+          </div>
+        </div>
+
+        <!-- Pending: Importer constituants -->
+        <div class="checklist-item">
+          <div class="checklist-icon">
+            <span style="font-size: 10px;">&#9675;</span>
+          </div>
+          <div style="flex: 1;">
+            <div class="checklist-text">Importer vos constituants</div>
+            <div class="checklist-detail">Import CSV selectionne — en attente de telechargement du fichier</div>
+          </div>
+          <div class="checklist-action">
+            <a href="#" class="btn btn-secondary btn-sm">Importer maintenant</a>
+          </div>
+        </div>
+
+        <!-- Pending: Premiere campagne -->
+        <div class="checklist-item">
+          <div class="checklist-icon">
+            <span style="font-size: 10px;">&#9675;</span>
+          </div>
+          <div style="flex: 1;">
+            <div class="checklist-text">Creer votre premiere campagne</div>
+            <div class="checklist-detail">Lancez une campagne de collecte pour commencer a recevoir des dons</div>
+          </div>
+          <div class="checklist-action">
+            <a href="#" class="btn btn-secondary btn-sm">Creer une campagne</a>
+          </div>
+        </div>
+
+        <!-- Completed: RGPD -->
+        <div class="checklist-item completed">
+          <div class="checklist-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="checklist-text">Parametres RGPD valides</div>
+            <div class="checklist-detail">Residence : EU-West Paris — Retention : 36 mois — Archivage dons : 84 mois</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Help Resources -->
+      <div class="help-resources">
+        <div class="card" style="background: var(--color-neutral-50); border: 1px solid var(--color-border); box-shadow: none;">
+          <div class="card-header" style="margin-bottom: var(--space-4);">
+            <h3 class="card-title">Ressources pour bien demarrer</h3>
+          </div>
+          <div class="card-body">
+            <div class="help-resources-grid">
+
+              <!-- Documentation -->
+              <a href="#" class="help-resource-card">
+                <div class="help-resource-icon help-resource-icon--docs">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                  </svg>
+                </div>
+                <div class="help-resource-title">Documentation</div>
+                <div class="help-resource-desc">Guides complets pour toutes les fonctionnalites de Libero</div>
+                <div class="help-resource-meta">docs.libero.org</div>
+              </a>
+
+              <!-- Video -->
+              <a href="#" class="help-resource-card">
+                <div class="help-resource-icon help-resource-icon--video">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                </div>
+                <div class="help-resource-title">Video de demarrage</div>
+                <div class="help-resource-desc">Decouvrez les bases de Libero en quelques minutes</div>
+                <div class="help-resource-meta">3 min</div>
+              </a>
+
+              <!-- Support -->
+              <a href="#" class="help-resource-card">
+                <div class="help-resource-icon help-resource-icon--support">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </div>
+                <div class="help-resource-title">Support</div>
+                <div class="help-resource-desc">Notre equipe est disponible pour vous accompagner</div>
+                <div class="help-resource-meta">support@libero.org</div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Button -->
+      <div class="cta-section">
+        <button class="btn btn-primary btn-cta">
+          Acceder au tableau de bord
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

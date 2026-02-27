@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Onboarding : Inviter votre equipe</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    .onboarding-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: var(--space-8);
+      gap: var(--space-3);
+    }
+    .onboarding-actions-left {
+      margin-right: auto;
+    }
+    .invite-table-wrapper {
+      overflow-x: auto;
+    }
+    .invite-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+    .invite-table th {
+      background: var(--color-neutral-100);
+      padding: var(--space-3) var(--space-4);
+      text-align: left;
+      font-weight: var(--weight-semi);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .invite-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-neutral-100);
+      vertical-align: middle;
+    }
+    .invite-table tbody tr:hover {
+      background: var(--color-neutral-50);
+    }
+    .invite-table .form-input,
+    .invite-table .form-select {
+      height: 36px;
+      font-size: var(--text-sm);
+    }
+    .invite-email-input {
+      min-width: 260px;
+    }
+    .invite-role-select {
+      min-width: 200px;
+    }
+    .invite-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+    }
+    .invite-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+    }
+    .invite-status-dot--pending {
+      background: var(--color-amber);
+    }
+    .invite-status-dot--draft {
+      background: var(--color-neutral-400);
+    }
+    .add-member-row td {
+      padding-top: var(--space-4);
+    }
+    .btn-add-member {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .remove-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-md);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+    .remove-btn:hover {
+      background: var(--color-neutral-100);
+      color: var(--color-indigo);
+    }
+    .roles-sidebar {
+      margin-top: var(--space-6);
+    }
+    .role-desc-item {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+    .role-desc-item:last-child {
+      border-bottom: none;
+    }
+    .role-desc-badge {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .role-desc-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      margin-bottom: var(--space-0-5);
+    }
+    .role-desc-text {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+  </style>
+</head>
+<body>
+  <div class="onboarding-layout">
+    <div class="onboarding-container" style="max-width: 780px;">
+
+      <!-- Logo -->
+      <div class="onboarding-logo">
+        <div class="auth-logo-mark">L</div>
+        <span class="auth-logo-text">Libero</span>
+      </div>
+
+      <!-- Wizard Progress: Step 2 of 5 -->
+      <div class="wizard-progress">
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Organisation</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step active">
+          <div class="wizard-step-dot">2</div>
+          <span class="wizard-step-label">Equipe</span>
+        </div>
+        <div class="wizard-step-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-dot">3</div>
+          <span class="wizard-step-label">Donnees</span>
+        </div>
+        <div class="wizard-step-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-dot">4</div>
+          <span class="wizard-step-label">RGPD</span>
+        </div>
+        <div class="wizard-step-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-dot">5</div>
+          <span class="wizard-step-label">Pret !</span>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="onboarding-header">
+        <h1 class="onboarding-title">Inviter votre equipe</h1>
+        <p class="onboarding-subtitle">Ajoutez vos collaborateurs pour commencer a travailler ensemble sur Libero. Vous pourrez toujours en ajouter plus tard.</p>
+      </div>
+
+      <!-- Team Members Table -->
+      <div class="card">
+        <div class="card-body">
+          <div class="invite-table-wrapper">
+            <table class="invite-table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Statut</th>
+                  <th style="width: 40px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row 1: Pre-filled admin -->
+                <tr>
+                  <td>
+                    <input type="email" class="form-input invite-email-input" value="claire.dubois@solidarite-med.org">
+                  </td>
+                  <td>
+                    <select class="form-select invite-role-select">
+                      <option value="admin" selected>Administrateur</option>
+                      <option value="gestionnaire-collecte">Gestionnaire collecte</option>
+                      <option value="gestionnaire-subventions">Gestionnaire subventions</option>
+                      <option value="comptable">Comptable</option>
+                      <option value="lecteur">Lecteur seul</option>
+                    </select>
+                  </td>
+                  <td>
+                    <span class="invite-status">
+                      <span class="invite-status-dot invite-status-dot--pending"></span>
+                      Pret a envoyer
+                    </span>
+                  </td>
+                  <td>
+                    <button class="remove-btn" title="Supprimer">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </td>
+                </tr>
+                <!-- Row 2: Pre-filled gestionnaire -->
+                <tr>
+                  <td>
+                    <input type="email" class="form-input invite-email-input" value="marc.benali@solidarite-med.org">
+                  </td>
+                  <td>
+                    <select class="form-select invite-role-select">
+                      <option value="admin">Administrateur</option>
+                      <option value="gestionnaire-collecte" selected>Gestionnaire collecte</option>
+                      <option value="gestionnaire-subventions">Gestionnaire subventions</option>
+                      <option value="comptable">Comptable</option>
+                      <option value="lecteur">Lecteur seul</option>
+                    </select>
+                  </td>
+                  <td>
+                    <span class="invite-status">
+                      <span class="invite-status-dot invite-status-dot--pending"></span>
+                      Pret a envoyer
+                    </span>
+                  </td>
+                  <td>
+                    <button class="remove-btn" title="Supprimer">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </td>
+                </tr>
+                <!-- Row 3: Empty for new entry -->
+                <tr>
+                  <td>
+                    <input type="email" class="form-input invite-email-input" placeholder="prenom.nom@exemple.org">
+                  </td>
+                  <td>
+                    <select class="form-select invite-role-select">
+                      <option value="" selected>Selectionner un role</option>
+                      <option value="admin">Administrateur</option>
+                      <option value="gestionnaire-collecte">Gestionnaire collecte</option>
+                      <option value="gestionnaire-subventions">Gestionnaire subventions</option>
+                      <option value="comptable">Comptable</option>
+                      <option value="lecteur">Lecteur seul</option>
+                    </select>
+                  </td>
+                  <td>
+                    <span class="invite-status" style="color: var(--color-text-muted);">
+                      <span class="invite-status-dot invite-status-dot--draft"></span>
+                      Brouillon
+                    </span>
+                  </td>
+                  <td>
+                    <button class="remove-btn" title="Supprimer">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Add member button -->
+          <div style="margin-top: var(--space-4);">
+            <button class="btn btn-ghost btn-sm btn-add-member">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Ajouter un membre
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role Descriptions -->
+      <div class="card roles-sidebar" style="background: var(--color-neutral-50);">
+        <div class="card-header" style="margin-bottom: var(--space-3);">
+          <h4 class="card-title">Description des roles</h4>
+        </div>
+        <div class="card-body">
+          <div class="role-desc-item">
+            <div class="role-desc-badge">
+              <span class="badge badge-success">Admin</span>
+            </div>
+            <div>
+              <div class="role-desc-name">Administrateur</div>
+              <div class="role-desc-text">Acces complet a toutes les fonctionnalites. Gere les utilisateurs, la facturation, les parametres de l'organisation et les donnees RGPD.</div>
+            </div>
+          </div>
+          <div class="role-desc-item">
+            <div class="role-desc-badge">
+              <span class="badge badge-info">Collecte</span>
+            </div>
+            <div>
+              <div class="role-desc-name">Gestionnaire collecte</div>
+              <div class="role-desc-text">Gere les campagnes de collecte de fonds, les dons, les constituants et les recus fiscaux. Pas d'acces aux parametres systeme.</div>
+            </div>
+          </div>
+          <div class="role-desc-item">
+            <div class="role-desc-badge">
+              <span class="badge badge-warning">Subventions</span>
+            </div>
+            <div>
+              <div class="role-desc-name">Gestionnaire subventions</div>
+              <div class="role-desc-text">Gere les demandes de subventions, le suivi des financements institutionnels et les rapports bailleurs. Acces aux constituants en lecture.</div>
+            </div>
+          </div>
+          <div class="role-desc-item">
+            <div class="role-desc-badge">
+              <span class="badge badge-neutral">Comptable</span>
+            </div>
+            <div>
+              <div class="role-desc-name">Comptable</div>
+              <div class="role-desc-text">Acces aux rapports financiers, exports comptables et integration avec les logiciels de comptabilite. Lecture seule sur les dons et campagnes.</div>
+            </div>
+          </div>
+          <div class="role-desc-item">
+            <div class="role-desc-badge">
+              <span class="badge badge-neutral">Lecteur</span>
+            </div>
+            <div>
+              <div class="role-desc-name">Lecteur seul</div>
+              <div class="role-desc-text">Consultation uniquement. Peut voir les tableaux de bord, les rapports et les donnees mais ne peut rien modifier.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="onboarding-actions">
+        <button class="btn btn-ghost onboarding-actions-left">Passer cette etape</button>
+        <button class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Retour
+        </button>
+        <button class="btn btn-primary">
+          Envoyer les invitations
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
