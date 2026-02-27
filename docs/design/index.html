@@ -45,6 +45,7 @@
     .card-top { display: flex; align-items: center; justify-content: space-between; }
     .card-id { font-family: monospace; font-size: 11px; font-weight: 600; color: #1A5240; background: #F2F0EC; padding: 2px 8px; border-radius: 4px; }
     .card-must { font-size: 11px; font-weight: 600; color: #2E7D5E; }
+    .card-should { font-size: 11px; font-weight: 600; color: #D97706; }
     .card-title { font-family: Georgia, serif; font-size: 16px; color: #1C1B19; line-height: 1.3; }
     .card-desc { font-size: 13px; color: #6B6760; line-height: 1.5; }
     .card-arrow { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: #2E7D5E; margin-top: auto; padding-top: 12px; border-top: 1px solid #F2F0EC; }
@@ -73,9 +74,9 @@
 
   <!-- Stats -->
   <div class="stats">
-    <div class="stat"><div class="stat-num">61</div><div class="stat-label">Écrans</div></div>
-    <div class="stat"><div class="stat-num">15</div><div class="stat-label">Modules</div></div>
-    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">MUST couverts</div></div>
+    <div class="stat"><div class="stat-num">73</div><div class="stat-label">Écrans</div></div>
+    <div class="stat"><div class="stat-num">16</div><div class="stat-label">Modules</div></div>
+    <div class="stat"><div class="stat-num">MUST+SHOULD</div><div class="stat-label">Priorités couvertes</div></div>
     <div class="stat"><div class="stat-num">WCAG 2.1</div><div class="stat-label">AA conforme</div></div>
   </div>
 
@@ -98,15 +99,29 @@
     </a>
   </div>
 
+  <!-- ── DASHBOARD ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">📊</span>
+      <h2 class="module-title">Dashboard</h2>
+      <span class="module-count">2 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="dashboard.html" class="card"><div class="card-top"><span class="card-id">DASH-001</span><span class="card-must">MUST</span></div><div class="card-title">Tableau de bord</div><div class="card-desc">Vue d'ensemble : stats, campagnes, AI insights, activité récente.</div><div class="card-arrow">Voir →</div></a>
+      <a href="dashboard-customize.html" class="card"><div class="card-top"><span class="card-id">DASH-002</span><span class="card-should">SHOULD</span></div><div class="card-title">Personnalisation</div><div class="card-desc">Mode édition — galerie de widgets, drag & drop, AI suggestion.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
   <!-- ── AUTH ── -->
   <div class="module">
     <div class="module-header">
       <span class="module-emoji">🔐</span>
       <h2 class="module-title">Authentification</h2>
-      <span class="module-count">8 écrans</span>
+      <span class="module-count">9 écrans</span>
     </div>
     <div class="screens">
       <a href="auth/login.html" class="card"><div class="card-top"><span class="card-id">AUTH-001</span><span class="card-must">MUST</span></div><div class="card-title">Connexion</div><div class="card-desc">Email + mot de passe, lien SSO, mot de passe oublié.</div><div class="card-arrow">Voir →</div></a>
+      <a href="auth/sso.html" class="card"><div class="card-top"><span class="card-id">AUTH-002</span><span class="card-should">SHOULD</span></div><div class="card-title">Connexion SSO</div><div class="card-desc">Google Workspace, Microsoft Entra, SAML — auto-détection du provider.</div><div class="card-arrow">Voir →</div></a>
       <a href="auth/forgot-password.html" class="card"><div class="card-top"><span class="card-id">AUTH-003</span><span class="card-must">MUST</span></div><div class="card-title">Mot de passe oublié</div><div class="card-desc">Saisie email pour recevoir le lien de réinitialisation.</div><div class="card-arrow">Voir →</div></a>
       <a href="auth/reset-password.html" class="card"><div class="card-top"><span class="card-id">AUTH-004</span><span class="card-must">MUST</span></div><div class="card-title">Réinitialisation</div><div class="card-desc">Nouveau mot de passe avec indicateur de force.</div><div class="card-arrow">Voir →</div></a>
       <a href="auth/onboarding-1.html" class="card"><div class="card-top"><span class="card-id">AUTH-005</span><span class="card-must">MUST</span></div><div class="card-title">Onboarding 1 — Organisation</div><div class="card-desc">Informations légales, pays, devise, logo.</div><div class="card-arrow">Voir →</div></a>
@@ -158,12 +173,13 @@
     <div class="module-header">
       <span class="module-emoji">📣</span>
       <h2 class="module-title">Campagnes</h2>
-      <span class="module-count">3 écrans</span>
+      <span class="module-count">4 écrans</span>
     </div>
     <div class="screens">
       <a href="campaigns/list.html" class="card"><div class="card-top"><span class="card-id">CAMP-001</span><span class="card-must">MUST</span></div><div class="card-title">Liste des campagnes</div><div class="card-desc">Barres de progression, objectifs, statuts, filtres.</div><div class="card-arrow">Voir →</div></a>
       <a href="campaigns/detail.html" class="card"><div class="card-top"><span class="card-id">CAMP-002</span><span class="card-must">MUST</span></div><div class="card-title">Détail campagne</div><div class="card-desc">KPIs temps réel, dons liés, communications, AI insight.</div><div class="card-arrow">Voir →</div></a>
       <a href="campaigns/new.html" class="card"><div class="card-top"><span class="card-id">CAMP-003</span><span class="card-must">MUST</span></div><div class="card-title">Nouvelle campagne</div><div class="card-desc">Formulaire : nom, type, dates, objectif, fonds, parent.</div><div class="card-arrow">Voir →</div></a>
+      <a href="campaigns/stats.html" class="card"><div class="card-top"><span class="card-id">CAMP-004</span><span class="card-should">SHOULD</span></div><div class="card-title">Statistiques campagne</div><div class="card-desc">KPIs, évolution dons, répartition canaux, top donateurs, AI insight.</div><div class="card-arrow">Voir →</div></a>
     </div>
   </div>
 
@@ -232,12 +248,13 @@
     <div class="module-header">
       <span class="module-emoji">✉️</span>
       <h2 class="module-title">Communications</h2>
-      <span class="module-count">3 écrans</span>
+      <span class="module-count">4 écrans</span>
     </div>
     <div class="screens">
       <a href="communications/list.html" class="card"><div class="card-top"><span class="card-id">COM-001</span><span class="card-must">MUST</span></div><div class="card-title">Liste des envois</div><div class="card-desc">Historique emails, taux ouverture/clic, statuts, AI alert.</div><div class="card-arrow">Voir →</div></a>
       <a href="communications/compose.html" class="card"><div class="card-top"><span class="card-id">COM-002</span><span class="card-must">MUST</span></div><div class="card-title">Composer un email</div><div class="card-desc">Segment builder, WYSIWYG, preview desktop/mobile, planification.</div><div class="card-arrow">Voir →</div></a>
       <a href="communications/constituent-history.html" class="card"><div class="card-top"><span class="card-id">COM-004</span><span class="card-must">MUST</span></div><div class="card-title">Historique constituant</div><div class="card-desc">Timeline des communications d'un constituant.</div><div class="card-arrow">Voir →</div></a>
+      <a href="communications/detail.html" class="card"><div class="card-top"><span class="card-id">COM-003</span><span class="card-should">SHOULD</span></div><div class="card-title">Détail d'un envoi</div><div class="card-desc">Stats ouvertures/clics, liste destinataires, aperçu email, 24h chart.</div><div class="card-arrow">Voir →</div></a>
     </div>
   </div>
 
@@ -246,11 +263,12 @@
     <div class="module-header">
       <span class="module-emoji">💰</span>
       <h2 class="module-title">Finance</h2>
-      <span class="module-count">2 écrans</span>
+      <span class="module-count">3 écrans</span>
     </div>
     <div class="screens">
       <a href="finance/gl-export.html" class="card"><div class="card-top"><span class="card-id">FIN-001</span><span class="card-must">MUST</span></div><div class="card-title">Export Grand Livre</div><div class="card-desc">Période, batch, format (CSV/Xero/QuickBooks), aperçu écritures.</div><div class="card-arrow">Voir →</div></a>
       <a href="finance/restricted-funds.html" class="card"><div class="card-top"><span class="card-id">FIN-003</span><span class="card-must">MUST</span></div><div class="card-title">Fonds restreints</div><div class="card-desc">Soldes, % utilisé, alertes expiration, AI suggestion.</div><div class="card-arrow">Voir →</div></a>
+      <a href="finance/reconciliation.html" class="card"><div class="card-top"><span class="card-id">FIN-002</span><span class="card-should">SHOULD</span></div><div class="card-title">Réconciliation bancaire</div><div class="card-desc">Import relevé, suggestions matching AI, rapprochement en masse.</div><div class="card-arrow">Voir →</div></a>
     </div>
   </div>
 
@@ -273,13 +291,14 @@
     <div class="module-header">
       <span class="module-emoji">⚙️</span>
       <h2 class="module-title">Administration</h2>
-      <span class="module-count">4 écrans</span>
+      <span class="module-count">5 écrans</span>
     </div>
     <div class="screens">
       <a href="admin/organization.html" class="card"><div class="card-top"><span class="card-id">ADM-001</span><span class="card-must">MUST</span></div><div class="card-title">Paramètres organisation</div><div class="card-desc">Informations légales, logo, reçus fiscaux, locale.</div><div class="card-arrow">Voir →</div></a>
       <a href="admin/users.html" class="card"><div class="card-top"><span class="card-id">ADM-002</span><span class="card-must">MUST</span></div><div class="card-title">Gestion utilisateurs</div><div class="card-desc">Invitations, rôles, statuts actif/invité/désactivé.</div><div class="card-arrow">Voir →</div></a>
       <a href="admin/integrations.html" class="card"><div class="card-top"><span class="card-id">ADM-004</span><span class="card-must">MUST</span></div><div class="card-title">Intégrations</div><div class="card-desc">Stripe, Xero, Mailchimp, Google Workspace et plus.</div><div class="card-arrow">Voir →</div></a>
       <a href="admin/billing.html" class="card"><div class="card-top"><span class="card-id">ADM-005</span><span class="card-must">MUST</span></div><div class="card-title">Facturation</div><div class="card-desc">Plan, sièges, prochaine facture, historique, paiement.</div><div class="card-arrow">Voir →</div></a>
+      <a href="admin/roles.html" class="card"><div class="card-top"><span class="card-id">ADM-003</span><span class="card-should">SHOULD</span></div><div class="card-title">Rôles & permissions</div><div class="card-desc">Matrice de permissions par module et rôle, lecture seule / écriture.</div><div class="card-arrow">Voir →</div></a>
     </div>
   </div>
 
@@ -288,12 +307,29 @@
     <div class="module-header">
       <span class="module-emoji">📋</span>
       <h2 class="module-title">Rapports</h2>
-      <span class="module-count">3 écrans</span>
+      <span class="module-count">4 écrans</span>
     </div>
     <div class="screens">
       <a href="reports/library.html" class="card"><div class="card-top"><span class="card-id">REP-001</span><span class="card-must">MUST</span></div><div class="card-title">Bibliothèque de rapports</div><div class="card-desc">Rapports standard (LYBUNT, SYBUNT…) + rapports custom.</div><div class="card-arrow">Voir →</div></a>
       <a href="reports/builder.html" class="card"><div class="card-top"><span class="card-id">REP-002</span><span class="card-must">MUST</span></div><div class="card-title">Générateur de rapports</div><div class="card-desc">3 panneaux : sélecteur champs / filtres / aperçu live.</div><div class="card-arrow">Voir →</div></a>
       <a href="reports/view.html" class="card"><div class="card-top"><span class="card-id">REP-003</span><span class="card-must">MUST</span></div><div class="card-title">Vue d'un rapport</div><div class="card-desc">Résultats tabulés, visualisation, export CSV/Excel/PDF.</div><div class="card-arrow">Voir →</div></a>
+      <a href="reports/scheduled.html" class="card"><div class="card-top"><span class="card-id">REP-004</span><span class="card-should">SHOULD</span></div><div class="card-title">Rapports planifiés</div><div class="card-desc">Fréquence, destinataires, format, statut actif/pausé, exécution.</div><div class="card-arrow">Voir →</div></a>
+    </div>
+  </div>
+
+  <!-- ── MIGRATION ── -->
+  <div class="module">
+    <div class="module-header">
+      <span class="module-emoji">🚚</span>
+      <h2 class="module-title">Migration</h2>
+      <span class="module-count">5 écrans</span>
+    </div>
+    <div class="screens">
+      <a href="migration/step-1.html" class="card"><div class="card-top"><span class="card-id">MIG-001</span><span class="card-should">SHOULD</span></div><div class="card-title">Wizard — Étape 1 : Source</div><div class="card-desc">Salesforce OAuth, export CSV, ou autre CRM — connexion + détection données.</div><div class="card-arrow">Voir →</div></a>
+      <a href="migration/step-2.html" class="card"><div class="card-top"><span class="card-id">MIG-002</span><span class="card-should">SHOULD</span></div><div class="card-title">Wizard — Étape 2 : Mapping</div><div class="card-desc">Correspondance champs Salesforce → Libero, score de confiance, champs custom.</div><div class="card-arrow">Voir →</div></a>
+      <a href="migration/step-3.html" class="card"><div class="card-top"><span class="card-id">MIG-003</span><span class="card-should">SHOULD</span></div><div class="card-title">Wizard — Étape 3 : Validation</div><div class="card-desc">Rapport erreurs bloquantes vs avertissements, corrections avant import.</div><div class="card-arrow">Voir →</div></a>
+      <a href="migration/step-4.html" class="card"><div class="card-top"><span class="card-id">MIG-004</span><span class="card-should">SHOULD</span></div><div class="card-title">Wizard — Étape 4 : Import</div><div class="card-desc">Progression temps réel par type d'objet, log live, ETA, pause.</div><div class="card-arrow">Voir →</div></a>
+      <a href="migration/step-5.html" class="card"><div class="card-top"><span class="card-id">MIG-005</span><span class="card-should">SHOULD</span></div><div class="card-title">Wizard — Étape 5 : Terminé</div><div class="card-desc">Bilan import, checklist post-migration (RGPD, doublons, reçus), CTA dashboard.</div><div class="card-arrow">Voir →</div></a>
     </div>
   </div>
 
@@ -313,7 +349,7 @@
   </div>
 
   <footer class="footer">
-    Libero NPO Platform · Design System v2.0 · 61 écrans · Février 2026
+    Libero NPO Platform · Design System v2.1 · 73 écrans · MUST + SHOULD · Février 2026
   </footer>
 
 </div>
