@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saisie des heures &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: VOL-004 Hours Entry Table ── */
+
+    /* Topbar search shortcut badge */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+
+    /* Sidebar org logo */
+    .sidebar-footer-org-logo {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+
+    /* Hours input — small inline input for editable cells */
+    .hours-input {
+      width: 80px;
+      height: 28px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0 var(--space-2);
+      transition: border-color var(--duration-normal) var(--ease-out),
+                  box-shadow var(--duration-normal) var(--ease-out);
+    }
+
+    .hours-input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .hours-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    /* Ecart (variance) coloring */
+    .ecart-positive {
+      color: var(--color-primary-dark);
+      font-weight: var(--weight-medium);
+    }
+
+    .ecart-negative {
+      color: var(--color-amber);
+      font-weight: var(--weight-medium);
+    }
+
+    /* Summary row in footer card */
+    .summary-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+      flex-wrap: wrap;
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .summary-item-label {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .summary-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-md);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .summary-highlight {
+      font-family: var(--font-mono);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-primary-dark);
+    }
+
+    /* Mission selector summary line */
+    .mission-summary {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-neutral-100);
+    }
+
+    /* Volunteer cell with avatar + name */
+    .volunteer-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    /* Action icon button (ellipsis) */
+    .action-icon {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      background: var(--color-white);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .action-icon:hover {
+      background: var(--color-neutral-50);
+      border-color: var(--color-neutral-300);
+      color: var(--color-text);
+    }
+
+    /* Inline action buttons for review rows */
+    .inline-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="../constituents/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9775;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="../donations/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="../grants/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="../programs/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9670;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9996;</span>
+          <span class="nav-item-label">B&#233;n&#233;voles</span>
+        </a>
+        <a href="../impact/dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9678;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9776;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&#232;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-org-logo">ASM</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Association Solidarit&#233; M&#233;diterran&#233;e</div>
+          <div class="sidebar-footer-role">Plan Professionnel</div>
+        </div>
+        <div class="sidebar-footer-avatar">CD</div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <a href="list.html">B&#233;n&#233;voles</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Saisie des heures</span>
+        </div>
+
+        <div class="topbar-search">
+          <input
+            type="text"
+            class="topbar-search-input"
+            placeholder="Rechercher..."
+          >
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- ── Main Content ── -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Saisie des heures</h1>
+            <p class="page-subtitle">Enregistrez et validez les heures des b&#233;n&#233;voles.</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Exporter le rapport</button>
+            <button class="btn btn-primary" type="button">Valider la s&#233;lection</button>
+          </div>
+        </div>
+
+        <!-- Mission Selector Card -->
+        <div class="card mb-4">
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="mission-select">Mission</label>
+              <select class="form-select" id="mission-select">
+                <option selected>Collecte alimentaire &mdash; 22/02/2026</option>
+                <option>Tri v&#234;tements &mdash; 15/02/2026</option>
+                <option>Cours FLE &mdash; 10/02/2026</option>
+                <option>Atelier jardin &mdash; 08/02/2026</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="period-select">P&#233;riode</label>
+              <select class="form-select" id="period-select">
+                <option selected>F&#233;vrier 2026</option>
+                <option>Janvier 2026</option>
+                <option>D&#233;cembre 2025</option>
+                <option>Novembre 2025</option>
+              </select>
+            </div>
+          </div>
+          <div class="mission-summary">
+            5 b&#233;n&#233;voles assign&#233;s &middot; Taux horaire de r&#233;f&#233;rence : &#8364;20,00/h
+          </div>
+        </div>
+
+        <!-- Hours Entry Table -->
+        <div class="card">
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>B&#201;N&#201;VOLE</th>
+                  <th>HEURES PR&#201;VUES</th>
+                  <th>HEURES R&#201;ELLES</th>
+                  <th>&#201;CART</th>
+                  <th>STATUT</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <!-- Row 1: Sophie Martin — Validé -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-green">SM</div>
+                      <span class="cell-name">Sophie Martin</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">4h00</td>
+                  <td class="cell-mono">4h30</td>
+                  <td class="cell-mono ecart-positive">+0h30</td>
+                  <td><span class="badge badge-success">Valid&#233;</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Sophie Martin">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 2: Karim Bouaziz — Validé -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-sky">KB</div>
+                      <span class="cell-name">Karim Bouaziz</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">4h00</td>
+                  <td class="cell-mono">4h00</td>
+                  <td class="cell-mono">0h00</td>
+                  <td><span class="badge badge-success">Valid&#233;</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Karim Bouaziz">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 3: Ahmed Benali — Soumis (pending review) -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-amber">AB</div>
+                      <span class="cell-name">Ahmed Benali</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">4h00</td>
+                  <td class="cell-mono">3h30</td>
+                  <td class="cell-mono ecart-negative">-0h30</td>
+                  <td><span class="badge badge-info">Soumis</span></td>
+                  <td>
+                    <div class="inline-actions">
+                      <button class="btn btn-sm btn-primary" type="button">&#10003; Valider</button>
+                      <button class="btn btn-sm btn-ghost" type="button">&#10005;</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 4: Isabelle Roux — Brouillon (editable input) -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-green">IR</div>
+                      <span class="cell-name">Isabelle Roux</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">4h00</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="hours-input"
+                      value="3h45"
+                      aria-label="Heures r&#233;elles pour Isabelle Roux"
+                    >
+                  </td>
+                  <td class="cell-mono"></td>
+                  <td><span class="badge badge-neutral">Brouillon</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Isabelle Roux">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 5: Lucas Petit — Non saisi (empty input) -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-amber">LP</div>
+                      <span class="cell-name">Lucas Petit</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">4h00</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="hours-input"
+                      placeholder="0h00"
+                      aria-label="Heures r&#233;elles pour Lucas Petit"
+                    >
+                  </td>
+                  <td class="cell-mono"></td>
+                  <td><span class="badge badge-neutral">Non saisi</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Lucas Petit">&#8943;</button></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+          <!-- end .data-table-wrapper -->
+        </div>
+        <!-- end .card (table card) -->
+
+        <!-- Footer Summary Card -->
+        <div class="card mt-4">
+          <div class="summary-row">
+            <div class="summary-item">
+              <span class="summary-item-label">Total heures pr&#233;vues</span>
+              <span class="summary-value">20h00</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-item-label">Total heures r&#233;elles</span>
+              <span class="summary-value">15h45</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-item-label">Heures valid&#233;es</span>
+              <span class="summary-value">8h30</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-item-label">Valeur mon&#233;taire totale</span>
+              <span class="summary-highlight">&#8364;315,00</span>
+            </div>
+          </div>
+        </div>
+        <!-- end .card (summary card) -->
+
+      </main>
+      <!-- end .main-content -->
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

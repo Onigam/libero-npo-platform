@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B&#233;n&#233;voles &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: VOL-001 Volunteers list ── */
+
+    /* Topbar search shortcut badge */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+
+    /* Sidebar org logo */
+    .sidebar-footer-org-logo {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+
+    /* Volunteer cell with avatar + name + email */
+    .volunteer-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .volunteer-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* Skills badges cell */
+    .skills-cell {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+
+    /* DBS cell layout */
+    .dbs-cell {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .dbs-expiry {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    /* Action icon button (ellipsis) */
+    .action-icon {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      background: var(--color-white);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .action-icon:hover {
+      background: var(--color-neutral-50);
+      border-color: var(--color-neutral-300);
+      color: var(--color-text);
+    }
+
+    /* Alert layout with action button */
+    .alert-actions {
+      flex-shrink: 0;
+    }
+
+    /* Filter bar with search */
+    .filter-search {
+      height: 28px;
+      padding: 0 var(--space-3);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-xs);
+      font-family: var(--font-body);
+      color: var(--color-text);
+      min-width: 180px;
+      transition: border-color var(--duration-normal) var(--ease-out);
+    }
+
+    .filter-search::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .filter-search:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    /* Wider AI card for list context */
+    .ai-card--wide {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="../constituents/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9775;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="../donations/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="../grants/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="../programs/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9670;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9996;</span>
+          <span class="nav-item-label">B&#233;n&#233;voles</span>
+        </a>
+        <a href="../impact/dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9678;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9776;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&#232;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-org-logo">ASM</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Association Solidarit&#233; M&#233;diterran&#233;e</div>
+          <div class="sidebar-footer-role">Plan Professionnel</div>
+        </div>
+        <div class="sidebar-footer-avatar">CD</div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <span class="topbar-breadcrumb-current">B&#233;n&#233;voles</span>
+        </div>
+
+        <div class="topbar-search">
+          <input
+            type="text"
+            class="topbar-search-input"
+            placeholder="Rechercher..."
+          >
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- ── Main Content ── -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">B&#233;n&#233;voles</h1>
+            <p class="page-subtitle">G&#233;rez vos b&#233;n&#233;voles, comp&#233;tences et disponibilit&#233;s.</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Exporter</button>
+            <button class="btn btn-primary" type="button">+ Ajouter un b&#233;n&#233;vole</button>
+          </div>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="alert alert-warning mb-4">
+          <span class="alert-icon">&#9888;</span>
+          <div class="alert-content">
+            3 b&#233;n&#233;voles ont leur v&#233;rification DBS expir&#233;e &mdash; action requise.
+          </div>
+          <div class="alert-actions">
+            <button class="btn btn-sm btn-secondary" type="button">Voir les alertes</button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar mb-4">
+          <button class="filter-chip" type="button">Tous</button>
+          <button class="filter-chip active" type="button">Actifs</button>
+          <button class="filter-chip" type="button">En pause</button>
+          <button class="filter-chip" type="button">Archiv&#233;s</button>
+          <input
+            type="search"
+            class="filter-search"
+            placeholder="Rechercher un b&#233;n&#233;vole..."
+            aria-label="Rechercher un b&#233;n&#233;vole"
+          >
+        </div>
+
+        <!-- Data Table -->
+        <div class="card">
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>B&#201;N&#201;VOLE</th>
+                  <th>COMP&#201;TENCES</th>
+                  <th>STATUT DBS</th>
+                  <th>HEURES (ANN&#201;E)</th>
+                  <th>PROCHAINE MISSION</th>
+                  <th>STATUT</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <!-- Row 1: Sophie Martin -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-green">SM</div>
+                      <div class="volunteer-info">
+                        <span class="cell-name">Sophie Martin</span>
+                        <span class="cell-secondary">s.martin@free.fr</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skills-cell">
+                      <span class="badge badge-neutral">Cuisine</span>
+                      <span class="badge badge-neutral">Animation</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dbs-cell">
+                      <span class="badge badge-success">&#10003; Valide</span>
+                      <span class="dbs-expiry">exp. 15/09/2027</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">142h</td>
+                  <td>Collecte alimentaire 08/03</td>
+                  <td><span class="badge badge-success">Actif</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Sophie Martin">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 2: Karim Bouaziz -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-sky">KB</div>
+                      <div class="volunteer-info">
+                        <span class="cell-name">Karim Bouaziz</span>
+                        <span class="cell-secondary">k.bouaziz@gmail.com</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skills-cell">
+                      <span class="badge badge-neutral">Logistique</span>
+                      <span class="badge badge-neutral">Manutention</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dbs-cell">
+                      <span class="badge badge-success">&#10003; Valide</span>
+                      <span class="dbs-expiry">exp. 22/06/2026</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">98h</td>
+                  <td>Tri v&#234;tements 05/03</td>
+                  <td><span class="badge badge-success">Actif</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Karim Bouaziz">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 3: Marie-Claire Fontaine -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-indigo">MF</div>
+                      <div class="volunteer-info">
+                        <span class="cell-name">Marie-Claire Fontaine</span>
+                        <span class="cell-secondary">mc.fontaine@gmail.com</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skills-cell">
+                      <span class="badge badge-neutral">Enseignement</span>
+                      <span class="badge badge-neutral">FLE</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dbs-cell">
+                      <span class="badge badge-warning">&#9888; Expir&#233;</span>
+                      <span class="dbs-expiry">exp. 01/01/2026</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">76h</td>
+                  <td>Cours FLE 10/03</td>
+                  <td><span class="badge badge-success">Actif</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Marie-Claire Fontaine">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 4: Ahmed Benali -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-amber">AB</div>
+                      <div class="volunteer-info">
+                        <span class="cell-name">Ahmed Benali</span>
+                        <span class="cell-secondary">a.benali@outlook.fr</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skills-cell">
+                      <span class="badge badge-neutral">Jardinage</span>
+                      <span class="badge badge-neutral">Bricolage</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dbs-cell">
+                      <span class="badge badge-success">&#10003; Valide</span>
+                      <span class="dbs-expiry">exp. 30/11/2027</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">64h</td>
+                  <td>Atelier jardin 15/03</td>
+                  <td><span class="badge badge-success">Actif</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Ahmed Benali">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 5: Isabelle Roux -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-green">IR</div>
+                      <div class="volunteer-info">
+                        <span class="cell-name">Isabelle Roux</span>
+                        <span class="cell-secondary">i.roux@laposte.net</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skills-cell">
+                      <span class="badge badge-neutral">Accueil</span>
+                      <span class="badge badge-neutral">&#201;coute</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dbs-cell">
+                      <span class="badge badge-warning">&#9888; Expir&#233;</span>
+                      <span class="dbs-expiry">exp. 15/12/2025</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">53h</td>
+                  <td>Permanence 06/03</td>
+                  <td><span class="badge badge-success">Actif</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Isabelle Roux">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 6: Thomas Nguyen -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-sky">TN</div>
+                      <div class="volunteer-info">
+                        <span class="cell-name">Thomas Nguyen</span>
+                        <span class="cell-secondary">t.nguyen@sfr.fr</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skills-cell">
+                      <span class="badge badge-neutral">Transport</span>
+                      <span class="badge badge-neutral">Permis B</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dbs-cell">
+                      <span class="badge badge-success">&#10003; Valide</span>
+                      <span class="dbs-expiry">exp. 04/08/2027</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">41h</td>
+                  <td>Livraison 12/03</td>
+                  <td><span class="badge badge-neutral">En pause</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Thomas Nguyen">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 7: Fatima El Amrani -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-indigo">FE</div>
+                      <div class="volunteer-info">
+                        <span class="cell-name">Fatima El Amrani</span>
+                        <span class="cell-secondary">f.elamrani@yahoo.fr</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skills-cell">
+                      <span class="badge badge-neutral">Administration</span>
+                      <span class="badge badge-neutral">Comptabilit&#233;</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dbs-cell">
+                      <span class="badge badge-error">Manquant</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">28h</td>
+                  <td class="cell-secondary">&mdash;</td>
+                  <td><span class="badge badge-neutral">En pause</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Fatima El Amrani">&#8943;</button></td>
+                </tr>
+
+                <!-- Row 8: Lucas Petit -->
+                <tr>
+                  <td>
+                    <div class="volunteer-cell">
+                      <div class="avatar avatar-sm avatar-amber">LP</div>
+                      <div class="volunteer-info">
+                        <span class="cell-name">Lucas Petit</span>
+                        <span class="cell-secondary">l.petit@proton.me</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skills-cell">
+                      <span class="badge badge-neutral">Communication</span>
+                      <span class="badge badge-neutral">R&#233;seaux sociaux</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dbs-cell">
+                      <span class="badge badge-warning">&#9888; Expir&#233;</span>
+                      <span class="dbs-expiry">exp. 20/02/2026</span>
+                    </div>
+                  </td>
+                  <td class="cell-mono">112h</td>
+                  <td>&#201;v&#233;nement 20/03</td>
+                  <td><span class="badge badge-success">Actif</span></td>
+                  <td><button class="action-icon" type="button" aria-label="Actions pour Lucas Petit">&#8943;</button></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+          <!-- end .data-table-wrapper -->
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <span class="pagination-info">Affichage 1&ndash;8 sur 24 b&#233;n&#233;voles</span>
+            <div class="pagination-controls">
+              <button class="pagination-btn" disabled aria-label="Page pr&#233;c&#233;dente">&lsaquo;</button>
+              <button class="pagination-btn active">1</button>
+              <button class="pagination-btn">2</button>
+              <button class="pagination-btn">3</button>
+              <button class="pagination-btn" aria-label="Page suivante">&rsaquo;</button>
+            </div>
+          </div>
+
+        </div>
+        <!-- end .card (table card) -->
+
+        <!-- AI Suggestion Card -->
+        <div class="ai-card ai-card--wide mt-6">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            5 b&#233;n&#233;voles ont leur v&#233;rification DBS qui expire dans 30 jours &mdash; envoyer un rappel ?
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm" type="button">Appliquer</button>
+            <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+          </div>
+        </div>
+
+      </main>
+      <!-- end .main-content -->
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

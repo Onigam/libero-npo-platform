@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Export Grand Livre — Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for finance/gl-export (FIN-001) ── */
+
+    .export-config {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .export-config .form-group {
+      margin-bottom: 0;
+    }
+
+    .export-config .form-select {
+      height: 40px;
+    }
+
+    .cell-amount {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .cell-account {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+    }
+
+    .debit { color: var(--color-text); }
+    .credit { color: var(--color-primary-dark); }
+
+    .preview-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-4);
+      font-size: var(--text-sm);
+    }
+
+    .preview-summary-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .preview-summary-value {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+    }
+
+    .history-section {
+      margin-top: var(--space-8);
+    }
+
+    .history-section-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-4);
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      color: var(--color-sky);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      padding: 0;
+    }
+
+    .download-btn:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Rapports</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="#">Finance</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Export Grand Livre</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher..." aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">&#128276;</button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Export Grand Livre</h1>
+            <p class="page-subtitle">G&eacute;n&eacute;rez les &eacute;critures comptables pour votre logiciel de comptabilit&eacute;</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">&#9881; Mapping fonds / codes</button>
+          </div>
+        </div>
+
+        <!-- Warning for unallocated donations -->
+        <div class="alert alert-warning mb-4">
+          <span class="alert-icon">&#9888;</span>
+          <div class="alert-content">
+            <strong>3 dons non affect&eacute;s &agrave; un fonds.</strong> Ces &eacute;critures seront regroup&eacute;es dans le compte g&eacute;n&eacute;ral &laquo; Dons non affect&eacute;s &raquo; (754000). <a href="#" style="color: inherit; text-decoration: underline;">Voir les dons</a>
+          </div>
+        </div>
+
+        <!-- Export Configuration -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">Param&egrave;tres de l'export</h3>
+          </div>
+          <div class="export-config">
+            <div class="form-group">
+              <label class="form-label" for="period">P&eacute;riode</label>
+              <select class="form-select" id="period">
+                <option selected>F&eacute;vrier 2026</option>
+                <option>Janvier 2026</option>
+                <option>D&eacute;cembre 2025</option>
+                <option>T4 2025</option>
+                <option>Ann&eacute;e 2025</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="batch">Batch</label>
+              <select class="form-select" id="batch">
+                <option selected>Toutes les &eacute;critures</option>
+                <option>Dons uniquement</option>
+                <option>Subventions uniquement</option>
+                <option>Charges programmes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="format">Format d'export</label>
+              <select class="form-select" id="format">
+                <option selected>CSV (standard)</option>
+                <option>Xero</option>
+                <option>QuickBooks (IIF)</option>
+                <option>FEC (normes fran&ccedil;aises)</option>
+              </select>
+            </div>
+            <div class="form-group" style="display: flex; align-items: flex-end;">
+              <button class="btn btn-primary w-full" type="button">G&eacute;n&eacute;rer l'aper&ccedil;u</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Summary -->
+        <div class="preview-summary">
+          <div class="preview-summary-item">
+            <span>&#128196; &Eacute;critures :</span>
+            <span class="preview-summary-value">47</span>
+          </div>
+          <div class="preview-summary-item">
+            <span>Total d&eacute;bits :</span>
+            <span class="preview-summary-value">&euro;89 340,00</span>
+          </div>
+          <div class="preview-summary-item">
+            <span>Total cr&eacute;dits :</span>
+            <span class="preview-summary-value">&euro;89 340,00</span>
+          </div>
+          <div class="preview-summary-item">
+            <span class="badge badge-success">&#10003; &Eacute;quilibr&eacute;</span>
+          </div>
+        </div>
+
+        <!-- Preview Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>N&deg; pi&egrave;ce</th>
+                <th>Compte</th>
+                <th>Libell&eacute;</th>
+                <th class="text-right">D&eacute;bit</th>
+                <th class="text-right">Cr&eacute;dit</th>
+                <th>Fonds</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cell-secondary">24/02/2026</td>
+                <td class="cell-account">DON-2026-0247</td>
+                <td class="cell-account">512000</td>
+                <td>Don M.-C. Fontaine &mdash; virement</td>
+                <td class="cell-amount text-right debit">&euro;500,00</td>
+                <td class="cell-amount text-right credit">&mdash;</td>
+                <td><span class="badge badge-info">Hiver 2026</span></td>
+              </tr>
+              <tr>
+                <td class="cell-secondary">24/02/2026</td>
+                <td class="cell-account">DON-2026-0247</td>
+                <td class="cell-account">754100</td>
+                <td>Produit don &mdash; Fonds Hiver 2026</td>
+                <td class="cell-amount text-right debit">&mdash;</td>
+                <td class="cell-amount text-right credit">&euro;500,00</td>
+                <td><span class="badge badge-info">Hiver 2026</span></td>
+              </tr>
+              <tr>
+                <td class="cell-secondary">23/02/2026</td>
+                <td class="cell-account">DON-2026-0243</td>
+                <td class="cell-account">512000</td>
+                <td>Don P. Lef&egrave;vre &mdash; ch&egrave;que</td>
+                <td class="cell-amount text-right debit">&euro;2 000,00</td>
+                <td class="cell-amount text-right credit">&mdash;</td>
+                <td><span class="badge badge-neutral">Gala 2026</span></td>
+              </tr>
+              <tr>
+                <td class="cell-secondary">23/02/2026</td>
+                <td class="cell-account">DON-2026-0243</td>
+                <td class="cell-account">754000</td>
+                <td>Produit don &mdash; Gala annuel</td>
+                <td class="cell-amount text-right debit">&mdash;</td>
+                <td class="cell-amount text-right credit">&euro;2 000,00</td>
+                <td><span class="badge badge-neutral">Gala 2026</span></td>
+              </tr>
+              <tr>
+                <td class="cell-secondary">22/02/2026</td>
+                <td class="cell-account">DON-2026-0238</td>
+                <td class="cell-account">512000</td>
+                <td>Don Entreprise ACME SAS &mdash; virement</td>
+                <td class="cell-amount text-right debit">&euro;5 000,00</td>
+                <td class="cell-amount text-right credit">&mdash;</td>
+                <td><span class="badge badge-info">Hiver 2026</span></td>
+              </tr>
+              <tr>
+                <td class="cell-secondary">22/02/2026</td>
+                <td class="cell-account">DON-2026-0238</td>
+                <td class="cell-account">754100</td>
+                <td>Produit don entreprise &mdash; Fonds Hiver 2026</td>
+                <td class="cell-amount text-right debit">&mdash;</td>
+                <td class="cell-amount text-right credit">&euro;5 000,00</td>
+                <td><span class="badge badge-info">Hiver 2026</span></td>
+              </tr>
+              <tr>
+                <td class="cell-secondary">20/02/2026</td>
+                <td class="cell-account">DON-2026-0234</td>
+                <td class="cell-account">512000</td>
+                <td>Don S. Martin &mdash; SEPA r&eacute;current</td>
+                <td class="cell-amount text-right debit">&euro;150,00</td>
+                <td class="cell-amount text-right credit">&mdash;</td>
+                <td><span class="badge badge-info">Hiver 2026</span></td>
+              </tr>
+              <tr>
+                <td class="cell-secondary">20/02/2026</td>
+                <td class="cell-account">DON-2026-0234</td>
+                <td class="cell-account">754100</td>
+                <td>Produit don r&eacute;current &mdash; Fonds Hiver 2026</td>
+                <td class="cell-amount text-right debit">&mdash;</td>
+                <td class="cell-amount text-right credit">&euro;150,00</td>
+                <td><span class="badge badge-info">Hiver 2026</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination + Download -->
+        <div class="pagination">
+          <span class="pagination-info">Affichage 1-8 sur 47 &eacute;critures</span>
+          <div class="pagination-controls">
+            <button class="btn btn-primary" type="button">&#128190; T&eacute;l&eacute;charger (CSV)</button>
+          </div>
+        </div>
+
+        <!-- Export History -->
+        <div class="history-section">
+          <h3 class="history-section-title">Historique des exports</h3>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date d'export</th>
+                  <th>P&eacute;riode</th>
+                  <th>Format</th>
+                  <th class="text-right">&Eacute;critures</th>
+                  <th>Utilisateur</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-secondary">01/02/2026 &agrave; 14h32</td>
+                  <td>Janvier 2026</td>
+                  <td><span class="badge badge-neutral">CSV</span></td>
+                  <td class="cell-amount text-right">52</td>
+                  <td>Claire Dubois</td>
+                  <td class="text-center"><button class="download-btn" type="button">&#8595; T&eacute;l&eacute;charger</button></td>
+                </tr>
+                <tr>
+                  <td class="cell-secondary">02/01/2026 &agrave; 09h15</td>
+                  <td>D&eacute;cembre 2025</td>
+                  <td><span class="badge badge-neutral">Xero</span></td>
+                  <td class="cell-amount text-right">78</td>
+                  <td>Claire Dubois</td>
+                  <td class="text-center"><button class="download-btn" type="button">&#8595; T&eacute;l&eacute;charger</button></td>
+                </tr>
+                <tr>
+                  <td class="cell-secondary">15/12/2025 &agrave; 16h48</td>
+                  <td>T4 2025</td>
+                  <td><span class="badge badge-neutral">FEC</span></td>
+                  <td class="cell-amount text-right">214</td>
+                  <td>Claire Dubois</td>
+                  <td class="text-center"><button class="download-btn" type="button">&#8595; T&eacute;l&eacute;charger</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>

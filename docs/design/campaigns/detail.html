@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appel aux dons Hiver 2026 &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for campaigns/detail (CAMP-002) ── */
+
+    /* Page header with badge inline */
+    .page-header-title-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    /* Progress section */
+    .progress-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .progress--lg {
+      height: 12px;
+    }
+
+    .progress-meta {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .progress-meta-amount {
+      font-family: var(--font-mono);
+      font-size: var(--text-md);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .progress-meta-pct {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-primary-dark);
+    }
+
+    /* Full-width AI card override */
+    .ai-card-fullwidth {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Dons &amp; Campagnes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Campagnes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Appel aux dons Hiver 2026</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher..."
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- ============================================================
+             PAGE HEADER
+             ============================================================ -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-header-title-row">
+              <h1 class="page-title">Appel aux dons Hiver 2026</h1>
+              <span class="badge badge-success"><span class="badge-icon">&#10003;</span> Active</span>
+            </div>
+            <p class="page-subtitle">Campagne email &mdash; 15 jan. 2026 au 15 mars 2026</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Modifier</button>
+            <button class="btn btn-secondary" type="button">Envoyer une communication</button>
+            <button class="btn btn-destructive" type="button">Cl&ocirc;turer</button>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             PROGRESS BAR SECTION
+             ============================================================ -->
+        <div class="card mb-6">
+          <div class="progress-section">
+            <div class="progress progress--lg">
+              <div class="progress-fill" style="width: 68%;"></div>
+            </div>
+            <div class="progress-meta">
+              <span class="progress-meta-amount">&euro;34&nbsp;200 collect&eacute;s sur &euro;50&nbsp;000</span>
+              <span class="progress-meta-pct">68% atteint</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             STAT WIDGETS
+             ============================================================ -->
+        <div class="grid-4 mb-6">
+
+          <!-- Stat 1: Donateurs -->
+          <div class="stat-widget">
+            <div class="stat-widget-label">Donateurs</div>
+            <div class="stat-widget-value">89</div>
+            <div class="stat-widget-trend stat-widget-trend--up">&#9650; +12 ce mois</div>
+          </div>
+
+          <!-- Stat 2: Don moyen -->
+          <div class="stat-widget">
+            <div class="stat-widget-label">Don moyen</div>
+            <div class="stat-widget-value">&euro;384</div>
+            <div class="stat-widget-trend stat-widget-trend--up">&#9650; +8%</div>
+          </div>
+
+          <!-- Stat 3: Co&ucirc;t campagne -->
+          <div class="stat-widget">
+            <div class="stat-widget-label">Co&ucirc;t campagne</div>
+            <div class="stat-widget-value">&euro;1&nbsp;200</div>
+          </div>
+
+          <!-- Stat 4: ROI -->
+          <div class="stat-widget">
+            <div class="stat-widget-label">ROI</div>
+            <div class="stat-widget-value">28,5x</div>
+          </div>
+
+        </div>
+
+        <!-- ============================================================
+             TABS SECTION
+             ============================================================ -->
+        <div class="card">
+
+          <div class="tabs">
+            <button class="tab active" type="button">Dons (89)</button>
+            <button class="tab" type="button">Statistiques</button>
+            <button class="tab" type="button">Communications (4)</button>
+          </div>
+
+          <!-- Active tab content: Dons -->
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Donateur</th>
+                  <th class="text-right">Montant</th>
+                  <th>Type</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>24/02/2026</td>
+                  <td class="cell-name">Marie-Claire Fontaine</td>
+                  <td class="text-right cell-mono">&euro;500,00</td>
+                  <td><span class="badge badge-info"><span class="badge-icon">&#9679;</span> Ponctuel</span></td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Confirm&eacute;</span></td>
+                </tr>
+                <tr>
+                  <td>23/02/2026</td>
+                  <td class="cell-name">Pierre Lef&egrave;vre</td>
+                  <td class="text-right cell-mono">&euro;2&nbsp;000,00</td>
+                  <td><span class="badge badge-info"><span class="badge-icon">&#9679;</span> Ponctuel</span></td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Confirm&eacute;</span></td>
+                </tr>
+                <tr>
+                  <td>20/02/2026</td>
+                  <td class="cell-name">Sophie Martin</td>
+                  <td class="text-right cell-mono">&euro;150,00</td>
+                  <td><span class="badge badge-warning"><span class="badge-icon">&#8635;</span> R&eacute;current</span></td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Confirm&eacute;</span></td>
+                </tr>
+                <tr>
+                  <td>18/02/2026</td>
+                  <td class="cell-name">Fran&ccedil;ois Dupont</td>
+                  <td class="text-right cell-mono">&euro;75,00</td>
+                  <td><span class="badge badge-info"><span class="badge-icon">&#9679;</span> Ponctuel</span></td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Confirm&eacute;</span></td>
+                </tr>
+                <tr>
+                  <td>15/02/2026</td>
+                  <td class="cell-name">Nadia Berger</td>
+                  <td class="text-right cell-mono">&euro;200,00</td>
+                  <td><span class="badge badge-info"><span class="badge-icon">&#9679;</span> Ponctuel</span></td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Confirm&eacute;</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <span class="pagination-info">Affichage 1-25 sur 89</span>
+            <div class="pagination-controls">
+              <button class="pagination-btn" disabled type="button">&#8249;</button>
+              <button class="pagination-btn active" type="button">1</button>
+              <button class="pagination-btn" type="button">2</button>
+              <button class="pagination-btn" type="button">3</button>
+              <button class="pagination-btn" type="button">4</button>
+              <button class="pagination-btn" type="button">&#8250;</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============================================================
+             AI SUGGESTION CARD
+             ============================================================ -->
+        <div class="ai-card ai-card-fullwidth mt-6">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            Le taux de r&eacute;ponse est inf&eacute;rieur de 15% &agrave; votre campagne &Eacute;t&eacute; 2025 &mdash; analyser les profils non-r&eacute;pondants et sugg&eacute;rer une relance cibl&eacute;e ?
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm" type="button">Analyser</button>
+            <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

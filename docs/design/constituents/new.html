@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nouveau constituant &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: CON-007 New constituent ── */
+
+    /* Duplicate detection inline warning */
+    .duplicate-alert {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      background: var(--color-amber-50);
+      border: 1px solid #FDE68A;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-6);
+    }
+
+    .duplicate-alert-icon {
+      font-size: var(--text-lg);
+      flex-shrink: 0;
+      color: var(--color-amber);
+    }
+
+    .duplicate-alert-content {
+      flex: 1;
+    }
+
+    .duplicate-alert-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: #92400E;
+      margin-bottom: var(--space-1);
+    }
+
+    .duplicate-alert-text {
+      font-size: var(--text-xs);
+      color: #92400E;
+      margin-bottom: var(--space-3);
+    }
+
+    .duplicate-match {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      background: var(--color-white);
+      border: 1px solid #FDE68A;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-2);
+    }
+
+    .duplicate-match-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--color-amber);
+      color: var(--color-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      flex-shrink: 0;
+    }
+
+    .duplicate-match-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .duplicate-match-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .duplicate-match-detail {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .duplicate-match-confidence {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-amber);
+    }
+
+    .duplicate-match-actions {
+      display: flex;
+      gap: var(--space-2);
+      flex-shrink: 0;
+    }
+
+    /* Tags input */
+    .tags-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      min-height: 40px;
+      align-items: center;
+      cursor: text;
+    }
+
+    .tags-input:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      height: 24px;
+      padding: 0 var(--space-2);
+      background: var(--color-primary-50);
+      border: 1px solid var(--color-primary-100);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-xs);
+      color: var(--color-primary-dark);
+      white-space: nowrap;
+    }
+
+    .tag-chip-remove {
+      font-size: 10px;
+      cursor: pointer;
+      opacity: 0.7;
+      line-height: 1;
+    }
+
+    .tag-chip-remove:hover {
+      opacity: 1;
+    }
+
+    .tags-input-field {
+      border: none;
+      outline: none;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      flex: 1;
+      min-width: 100px;
+      background: transparent;
+    }
+
+    .tags-input-field::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    /* Form actions bar */
+    .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--space-6);
+    }
+
+    .form-actions-right {
+      display: flex;
+      gap: var(--space-3);
+    }
+
+    /* AI card adjustments */
+    .ai-card--wide {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--            Sidebar              -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <div class="sidebar-section">Principal</div>
+
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9633;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+
+        <a href="list.html" class="nav-item active">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+          <span class="nav-item-badge">1 247</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9878;</span>
+          <span class="nav-item-label">Campagnes</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9883;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+
+        <div class="sidebar-section">Communication</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Emails</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9782;</span>
+          <span class="nav-item-label">Segments</span>
+        </a>
+
+        <div class="sidebar-section">Administration</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9432;</span>
+          <span class="nav-item-label">Aide &amp; Support</span>
+        </a>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Administratrice</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--          Main wrapper           -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Association Solidarit&eacute; M&eacute;diterran&eacute;e</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Constituants</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Nouveau constituant</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher un constituant, un don, une campagne&hellip;"
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content main-content--form">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Nouveau constituant</h1>
+            <p class="page-subtitle">Cr&eacute;er un nouveau constituant individuel</p>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             DUPLICATE DETECTION WARNING (inline)
+             ============================================================ -->
+        <div class="duplicate-alert">
+          <span class="duplicate-alert-icon">&#9888;</span>
+          <div class="duplicate-alert-content">
+            <div class="duplicate-alert-title">Doublon potentiel d&eacute;tect&eacute;</div>
+            <p class="duplicate-alert-text">
+              Un constituant existant correspond aux informations saisies. V&eacute;rifiez avant de continuer.
+            </p>
+
+            <!-- Matching record -->
+            <div class="duplicate-match">
+              <div class="duplicate-match-avatar">MF</div>
+              <div class="duplicate-match-info">
+                <div class="duplicate-match-name">Marie-Claire Fontaine</div>
+                <div class="duplicate-match-detail">mc.fontaine@gmail.com &middot; 06 12 34 56 78</div>
+              </div>
+              <span class="duplicate-match-confidence">Confiance : 87%</span>
+              <div class="duplicate-match-actions">
+                <a href="detail.html" class="btn btn-secondary btn-sm">Voir la fiche</a>
+                <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             AI SUGGESTION
+             ============================================================ -->
+        <div class="ai-card ai-card--wide mb-6">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            Source d'acquisition d&eacute;tect&eacute;e : le nom &laquo;&nbsp;Fontaine&nbsp;&raquo; appara&icirc;t dans les participants du Gala 2025 &mdash; pr&eacute;-remplir la source ?
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm" type="button">Appliquer</button>
+            <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             CREATION FORM
+             ============================================================ -->
+        <form action="#" method="post" novalidate>
+
+          <!-- Section: Identite -->
+          <div class="form-section">
+            <h3 class="form-section-title">Identit&eacute;</h3>
+
+            <div class="form-group">
+              <label class="form-label" for="civilite">Civilit&eacute;</label>
+              <select class="form-select" id="civilite" name="civilite">
+                <option value="">S&eacute;lectionner&hellip;</option>
+                <option value="mme" selected>Mme</option>
+                <option value="m">M.</option>
+                <option value="mx">Mx</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label form-label-required" for="prenom">Pr&eacute;nom</label>
+                <input class="form-input" type="text" id="prenom" name="prenom" placeholder="Pr&eacute;nom" value="Marie-Claire" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label form-label-required" for="nom">Nom</label>
+                <input class="form-input" type="text" id="nom" name="nom" placeholder="Nom de famille" value="Fontaine" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Coordonnees -->
+          <div class="form-section">
+            <h3 class="form-section-title">Coordonn&eacute;es</h3>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label form-label-required" for="email">Email</label>
+                <input class="form-input" type="email" id="email" name="email" placeholder="email@exemple.org" value="mc.fontaine@gmail.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="telephone">T&eacute;l&eacute;phone</label>
+                <input class="form-input" type="tel" id="telephone" name="telephone" placeholder="06 00 00 00 00" value="06 12 34 56 78">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="adresse">Adresse</label>
+              <input class="form-input" type="text" id="adresse" name="adresse" placeholder="Num&eacute;ro et rue">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="code-postal">Code postal</label>
+                <input class="form-input" type="text" id="code-postal" name="code_postal" placeholder="13001">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ville">Ville</label>
+                <input class="form-input" type="text" id="ville" name="ville" placeholder="Marseille">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Classification -->
+          <div class="form-section">
+            <h3 class="form-section-title">Classification</h3>
+
+            <div class="form-group">
+              <label class="form-label" for="tags">Tags</label>
+              <div class="tags-input">
+                <span class="tag-chip">Gala <span class="tag-chip-remove">&times;</span></span>
+                <span class="tag-chip">Prospect <span class="tag-chip-remove">&times;</span></span>
+                <input class="tags-input-field" type="text" placeholder="Ajouter un tag&hellip;">
+              </div>
+              <span class="form-hint">Appuyez sur Entr&eacute;e pour ajouter un tag</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="source">Source d'acquisition</label>
+              <select class="form-select" id="source" name="source">
+                <option value="">S&eacute;lectionner&hellip;</option>
+                <option value="site-web">Site web</option>
+                <option value="evenement">&#201;v&eacute;nement</option>
+                <option value="bouche-a-oreille">Bouche &agrave; oreille</option>
+                <option value="reseaux-sociaux">R&eacute;seaux sociaux</option>
+                <option value="partenaire">Partenaire</option>
+                <option value="campagne-email">Campagne email</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="notes">Notes initiales</label>
+              <textarea class="form-textarea" id="notes" name="notes" rows="3" placeholder="Informations compl&eacute;mentaires sur ce constituant&hellip;"></textarea>
+            </div>
+          </div>
+
+          <!-- Section: Relations (optional) -->
+          <div class="form-section">
+            <h3 class="form-section-title">Relations (optionnel)</h3>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="menage">M&eacute;nage</label>
+                <select class="form-select" id="menage" name="menage">
+                  <option value="">Aucun m&eacute;nage</option>
+                  <option value="fontaine-duval">Fontaine-Duval</option>
+                  <option value="benali">Benali</option>
+                  <option value="new">+ Cr&eacute;er un nouveau m&eacute;nage</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="organisation">Organisation li&eacute;e</label>
+                <select class="form-select" id="organisation" name="organisation">
+                  <option value="">Aucune organisation</option>
+                  <option value="fondation-lumiere">Fondation Lumi&egrave;re Provence</option>
+                  <option value="mairie-marseille">Mairie de Marseille</option>
+                  <option value="croix-rouge">Croix-Rouge fran&ccedil;aise</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <a href="list.html" class="btn btn-ghost">Annuler</a>
+            <div class="form-actions-right">
+              <button class="btn btn-secondary" type="submit" name="action" value="save-and-add-donation">
+                Sauvegarder et ajouter un don
+              </button>
+              <button class="btn btn-primary" type="submit" name="action" value="save">
+                Sauvegarder
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+      </main>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

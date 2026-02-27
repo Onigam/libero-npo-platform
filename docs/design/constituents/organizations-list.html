@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organisations &mdash; Constituants &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: CON-004 Organizations list ── */
+
+    .page-header-left .page-title {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+    }
+
+    .page-title-thin {
+      font-weight: var(--weight-regular);
+      color: var(--color-text-secondary);
+      font-family: var(--font-heading);
+    }
+
+    /* Type badges colour coding */
+    .badge-fondation {
+      background: var(--color-sky-50);
+      color: #1E5A7E;
+    }
+
+    .badge-entreprise {
+      background: var(--color-primary-50);
+      color: var(--color-primary-dark);
+    }
+
+    .badge-admin {
+      background: var(--color-amber-50);
+      color: #92400E;
+    }
+
+    .badge-association {
+      background: var(--color-indigo-50);
+      color: var(--color-indigo);
+    }
+
+    /* Action icon */
+    .action-icon {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      background: var(--color-white);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+      text-decoration: none;
+    }
+
+    .action-icon:hover {
+      background: var(--color-neutral-50);
+      border-color: var(--color-neutral-300);
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    /* Org avatar */
+    .org-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-white);
+      flex-shrink: 0;
+    }
+
+    .org-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .org-cell-info {
+      min-width: 0;
+    }
+
+    .org-cell-name {
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .org-cell-sector {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    /* Checkbox alignment */
+    .data-table th:first-child,
+    .data-table td:first-child {
+      width: 40px;
+      text-align: center;
+    }
+
+    .data-table input[type="checkbox"] {
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--            Sidebar              -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <div class="sidebar-section">Principal</div>
+
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9633;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+
+        <a href="list.html" class="nav-item active">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+          <span class="nav-item-badge">1 247</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9878;</span>
+          <span class="nav-item-label">Campagnes</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9883;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+
+        <div class="sidebar-section">Communication</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Emails</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9782;</span>
+          <span class="nav-item-label">Segments</span>
+        </a>
+
+        <div class="sidebar-section">Administration</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9432;</span>
+          <span class="nav-item-label">Aide &amp; Support</span>
+        </a>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Administratrice</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--          Main wrapper           -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Association Solidarit&eacute; M&eacute;diterran&eacute;e</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Constituants</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Organisations</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher un constituant, un don, une campagne&hellip;"
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">
+              Constituants <span class="page-title-thin">&mdash; Organisations</span>
+            </h1>
+            <p class="page-subtitle">89 organisations</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Exporter</button>
+            <button class="btn btn-primary" type="button">+ Nouvelle organisation</button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar mb-4">
+          <button class="filter-chip active" type="button">Toutes</button>
+          <button class="filter-chip" type="button">Fondations</button>
+          <button class="filter-chip" type="button">Entreprises</button>
+          <button class="filter-chip" type="button">Administrations</button>
+          <button class="filter-chip" type="button">Associations</button>
+        </div>
+
+        <!-- Data Table -->
+        <div class="card">
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" aria-label="S&eacute;lectionner tout"></th>
+                  <th>Organisation</th>
+                  <th>Type</th>
+                  <th>Contact principal</th>
+                  <th class="text-right">Total contributions</th>
+                  <th>Subventions actives</th>
+                  <th>Derni&egrave;re interaction</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <!-- Row 1 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Fondation de France"></td>
+                  <td>
+                    <div class="org-cell">
+                      <div class="org-avatar" style="background: var(--color-sky);">FF</div>
+                      <div class="org-cell-info">
+                        <div class="org-cell-name">Fondation de France</div>
+                        <div class="org-cell-sector">Philanthropie</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-fondation"><span class="badge-icon">&#9733;</span> Fondation</span></td>
+                  <td>Anne-Marie Leclerc</td>
+                  <td class="text-right cell-mono">&euro;85&nbsp;000</td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> 2 actives</span></td>
+                  <td class="cell-secondary">12/02/2026</td>
+                  <td><a href="organization-detail.html" class="action-icon" title="Voir la fiche" aria-label="Voir Fondation de France">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner R&eacute;gion Sud"></td>
+                  <td>
+                    <div class="org-cell">
+                      <div class="org-avatar" style="background: var(--color-amber);">RS</div>
+                      <div class="org-cell-info">
+                        <div class="org-cell-name">R&eacute;gion Sud &mdash; Provence-Alpes-C&ocirc;te d'Azur</div>
+                        <div class="org-cell-sector">Collectivit&eacute; territoriale</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-admin"><span class="badge-icon">&#9878;</span> Administration</span></td>
+                  <td>Philippe Roux</td>
+                  <td class="text-right cell-mono">&euro;120&nbsp;000</td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> 1 active</span></td>
+                  <td class="cell-secondary">08/02/2026</td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir R&eacute;gion Sud">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Fondation Lumi&egrave;re Provence"></td>
+                  <td>
+                    <div class="org-cell">
+                      <div class="org-avatar" style="background: var(--color-sky);">FL</div>
+                      <div class="org-cell-info">
+                        <div class="org-cell-name">Fondation Lumi&egrave;re Provence</div>
+                        <div class="org-cell-sector">Philanthropie</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-fondation"><span class="badge-icon">&#9733;</span> Fondation</span></td>
+                  <td>Claire Dubois</td>
+                  <td class="text-right cell-mono">&euro;45&nbsp;000</td>
+                  <td><span class="badge badge-warning"><span class="badge-icon">&#9888;</span> 1 en attente</span></td>
+                  <td class="cell-secondary">25/01/2026</td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Fondation Lumi&egrave;re Provence">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Groupe M&eacute;ridien SA"></td>
+                  <td>
+                    <div class="org-cell">
+                      <div class="org-avatar" style="background: var(--color-primary);">GM</div>
+                      <div class="org-cell-info">
+                        <div class="org-cell-name">Groupe M&eacute;ridien SA</div>
+                        <div class="org-cell-sector">Services &amp; conseil</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-entreprise"><span class="badge-icon">&#9670;</span> Entreprise</span></td>
+                  <td>Marc Delacroix</td>
+                  <td class="text-right cell-mono">&euro;12&nbsp;500</td>
+                  <td><span class="badge badge-neutral"><span class="badge-icon">&mdash;</span> Aucune</span></td>
+                  <td class="cell-secondary">03/02/2026</td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Groupe M&eacute;ridien SA">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 5 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Croix-Rouge fran&ccedil;aise"></td>
+                  <td>
+                    <div class="org-cell">
+                      <div class="org-avatar" style="background: var(--color-indigo);">CR</div>
+                      <div class="org-cell-info">
+                        <div class="org-cell-name">Croix-Rouge fran&ccedil;aise &mdash; D&eacute;l&eacute;gation 13</div>
+                        <div class="org-cell-sector">Humanitaire</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-association"><span class="badge-icon">&#9775;</span> Association</span></td>
+                  <td>Nathalie Girard</td>
+                  <td class="text-right cell-mono">&euro;0</td>
+                  <td><span class="badge badge-neutral"><span class="badge-icon">&mdash;</span> Aucune</span></td>
+                  <td class="cell-secondary">18/01/2026</td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Croix-Rouge fran&ccedil;aise">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 6 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Mairie de Marseille"></td>
+                  <td>
+                    <div class="org-cell">
+                      <div class="org-avatar" style="background: var(--color-amber);">MM</div>
+                      <div class="org-cell-info">
+                        <div class="org-cell-name">Mairie de Marseille</div>
+                        <div class="org-cell-sector">Collectivit&eacute; territoriale</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-admin"><span class="badge-icon">&#9878;</span> Administration</span></td>
+                  <td>Karim Bensalem</td>
+                  <td class="text-right cell-mono">&euro;35&nbsp;000</td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> 1 active</span></td>
+                  <td class="cell-secondary">20/02/2026</td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir Mairie de Marseille">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 7 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner BNP Paribas Foundation"></td>
+                  <td>
+                    <div class="org-cell">
+                      <div class="org-avatar" style="background: var(--color-primary);">BP</div>
+                      <div class="org-cell-info">
+                        <div class="org-cell-name">BNP Paribas Foundation</div>
+                        <div class="org-cell-sector">Banque &amp; finance</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-fondation"><span class="badge-icon">&#9733;</span> Fondation</span></td>
+                  <td>Sylvie Moreau</td>
+                  <td class="text-right cell-mono">&euro;25&nbsp;000</td>
+                  <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> 1 active</span></td>
+                  <td class="cell-secondary">15/02/2026</td>
+                  <td><a href="#" class="action-icon" title="Voir la fiche" aria-label="Voir BNP Paribas Foundation">&#128065;</a></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <span class="pagination-info">Affichage 1&ndash;25 sur 89</span>
+            <div class="pagination-controls">
+              <button class="pagination-btn" disabled aria-label="Page pr&eacute;c&eacute;dente">&lsaquo;</button>
+              <button class="pagination-btn active">1</button>
+              <button class="pagination-btn">2</button>
+              <button class="pagination-btn">3</button>
+              <button class="pagination-btn">4</button>
+              <button class="pagination-btn" aria-label="Page suivante">&rsaquo;</button>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

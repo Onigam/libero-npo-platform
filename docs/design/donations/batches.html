@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batches de dons &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for donations/batches (DON-005) ── */
+
+    /* Amount column styling */
+    .cell-amount {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* View action button */
+    .action-view {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .action-view:hover {
+      background: var(--color-neutral-100);
+      color: var(--color-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Dons &amp; Campagnes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Batches</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher..."
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Batches de dons</h1>
+            <p class="page-subtitle">Gestion des lots pour export comptable</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Exporter</button>
+            <button class="btn btn-primary" type="button">+ Nouveau batch</button>
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID Batch</th>
+                <th>P&eacute;riode</th>
+                <th class="text-right">Nb dons</th>
+                <th class="text-right">Total</th>
+                <th>Cr&eacute;&eacute; par</th>
+                <th>Statut</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1 -->
+              <tr>
+                <td class="cell-mono">BATCH-2026-012</td>
+                <td>F&eacute;vrier 2026</td>
+                <td class="text-right">42</td>
+                <td class="cell-amount text-right">&euro;15&nbsp;840,00</td>
+                <td class="cell-name">Claire Dubois</td>
+                <td><span class="badge badge-info"><span class="badge-icon">&#9998;</span> Ouvert</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le batch" title="Voir le batch">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr>
+                <td class="cell-mono">BATCH-2026-011</td>
+                <td>Janvier 2026</td>
+                <td class="text-right">58</td>
+                <td class="cell-amount text-right">&euro;22&nbsp;150,00</td>
+                <td class="cell-name">Claire Dubois</td>
+                <td><span class="badge badge-warning"><span class="badge-icon">&#9203;</span> Soumis</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le batch" title="Voir le batch">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr>
+                <td class="cell-mono">BATCH-2026-010</td>
+                <td>D&eacute;cembre 2025</td>
+                <td class="text-right">64</td>
+                <td class="cell-amount text-right">&euro;31&nbsp;200,00</td>
+                <td class="cell-name">Marc Benali</td>
+                <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Post&eacute;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le batch" title="Voir le batch">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr>
+                <td class="cell-mono">BATCH-2025-009</td>
+                <td>Novembre 2025</td>
+                <td class="text-right">35</td>
+                <td class="cell-amount text-right">&euro;12&nbsp;600,00</td>
+                <td class="cell-name">Marc Benali</td>
+                <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Post&eacute;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le batch" title="Voir le batch">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 5 -->
+              <tr>
+                <td class="cell-mono">BATCH-2025-008</td>
+                <td>Octobre 2025</td>
+                <td class="text-right">29</td>
+                <td class="cell-amount text-right">&euro;9&nbsp;430,00</td>
+                <td class="cell-name">Claire Dubois</td>
+                <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Post&eacute;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le batch" title="Voir le batch">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 6 -->
+              <tr>
+                <td class="cell-mono">BATCH-2025-007</td>
+                <td>Septembre 2025</td>
+                <td class="text-right">41</td>
+                <td class="cell-amount text-right">&euro;18&nbsp;760,00</td>
+                <td class="cell-name">Claire Dubois</td>
+                <td><span class="badge badge-success"><span class="badge-icon">&#10003;</span> Post&eacute;</span></td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le batch" title="Voir le batch">&#128065;</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <span class="pagination-info">Affichage 1-6 sur 12</span>
+          <div class="pagination-controls">
+            <button class="pagination-btn" disabled aria-label="Page pr&eacute;c&eacute;dente">&#8249;</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn" aria-label="Page suivante">&#8250;</button>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

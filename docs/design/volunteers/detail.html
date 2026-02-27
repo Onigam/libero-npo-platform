@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sophie Martin &mdash; B&#233;n&#233;voles &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: VOL-002 Volunteer detail ── */
+
+    /* Detail two-column grid */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-6);
+    }
+
+    .detail-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    /* Profile header with avatar + info */
+    .profile-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-5);
+      margin-bottom: var(--space-2);
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-name {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+      line-height: var(--leading-tight);
+    }
+
+    .profile-subtitle {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-2);
+    }
+
+    .profile-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-shrink: 0;
+    }
+
+    /* Detail info rows inside cards */
+    .detail-row {
+      display: flex;
+      align-items: baseline;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--color-neutral-100);
+      font-size: var(--text-sm);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      width: 160px;
+      flex-shrink: 0;
+      color: var(--color-text-secondary);
+      font-weight: var(--weight-medium);
+    }
+
+    .detail-value {
+      flex: 1;
+      color: var(--color-text);
+    }
+
+    .detail-value a {
+      color: var(--color-sky);
+    }
+
+    /* Skill tags */
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      align-items: center;
+    }
+
+    .skill-add-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed var(--color-neutral-300);
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      font-size: var(--text-md);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .skill-add-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-50);
+    }
+
+    /* Availability grid */
+    .availability-grid {
+      display: grid;
+      grid-template-columns: auto repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    .availability-header {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-text-secondary);
+      text-align: center;
+      padding: var(--space-2) var(--space-1);
+    }
+
+    .availability-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      padding-right: var(--space-3);
+      white-space: nowrap;
+    }
+
+    .availability-cell {
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--color-neutral-100);
+    }
+
+    .availability-cell--available {
+      background: var(--color-primary-50);
+      border: 1px solid var(--color-primary-100);
+    }
+
+    /* Mission list rows */
+    .mission-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-neutral-100);
+      font-size: var(--text-sm);
+    }
+
+    .mission-row:last-child {
+      border-bottom: none;
+    }
+
+    .mission-row:first-child {
+      padding-top: 0;
+    }
+
+    .mission-name {
+      flex: 1;
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+      min-width: 0;
+    }
+
+    .mission-date,
+    .mission-hours {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    /* DBS verification card */
+    .dbs-status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: var(--space-4) 0;
+    }
+
+    .dbs-icon {
+      font-size: 36px;
+      margin-bottom: var(--space-3);
+    }
+
+    .dbs-valid {
+      font-size: var(--text-md);
+      font-weight: var(--weight-semi);
+      color: var(--color-primary);
+      margin-bottom: var(--space-4);
+    }
+
+    .dbs-details {
+      width: 100%;
+      text-align: left;
+    }
+
+    .dbs-row {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-1-5) 0;
+      font-size: var(--text-xs);
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    .dbs-row:last-child {
+      border-bottom: none;
+    }
+
+    .dbs-row-label {
+      color: var(--color-text-secondary);
+    }
+
+    .dbs-row-value {
+      color: var(--color-text);
+      font-weight: var(--weight-medium);
+    }
+
+    /* Hours summary widget */
+    .hours-big {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+      line-height: 1.1;
+    }
+
+    .hours-label {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-3);
+    }
+
+    .hours-secondary {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-2);
+    }
+
+    .hours-value-line {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-primary-dark);
+      margin-bottom: var(--space-4);
+    }
+
+    .hours-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-2);
+    }
+
+    /* Topbar search shortcut badge */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+
+    /* Sidebar org logo */
+    .sidebar-footer-org-logo {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+
+    /* AI card full-width override */
+    .detail-col .ai-card {
+      max-width: 100%;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="../constituents/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9775;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="../donations/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="../grants/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="../programs/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9670;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9996;</span>
+          <span class="nav-item-label">B&#233;n&#233;voles</span>
+        </a>
+        <a href="../impact/dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9678;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9776;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&#232;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-org-logo">ASM</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Association Solidarit&#233; M&#233;diterran&#233;e</div>
+          <div class="sidebar-footer-role">Claire Dubois</div>
+        </div>
+        <div class="sidebar-footer-avatar">CD</div>
+      </div>
+
+    </aside>
+    <!-- end .sidebar -->
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">B&#233;n&#233;voles</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Sophie Martin</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            type="text"
+            class="topbar-search-input"
+            placeholder="Rechercher..."
+          >
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+      <!-- end .topbar -->
+
+      <!-- ── Main Content ── -->
+      <main class="main-content">
+
+        <!-- ============================== -->
+        <!--        Profile Header           -->
+        <!-- ============================== -->
+        <div class="profile-header">
+          <div class="avatar avatar-xl avatar-green">SM</div>
+          <div class="profile-info">
+            <h1 class="profile-name">Sophie Martin</h1>
+            <p class="profile-subtitle">B&#233;n&#233;vole active depuis mars 2023</p>
+            <span class="badge badge-success">Active</span>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-secondary" type="button">Assigner &#224; une mission</button>
+            <button class="btn btn-primary" type="button">Modifier</button>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--              Tabs               -->
+        <!-- ============================== -->
+        <div class="tabs">
+          <button class="tab active" type="button">Infos</button>
+          <button class="tab" type="button">Missions</button>
+          <button class="tab" type="button">Heures</button>
+          <button class="tab" type="button">Formations</button>
+        </div>
+
+        <!-- ============================== -->
+        <!--     Two-column detail grid      -->
+        <!-- ============================== -->
+        <div class="detail-grid">
+
+          <!-- ──────────────────────────────────────────
+               LEFT COLUMN (2fr)
+               ────────────────────────────────────────── -->
+          <div class="detail-col">
+
+            <!-- Card: Informations personnelles -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Informations personnelles</h3>
+              </div>
+              <div class="card-body">
+                <div class="detail-row">
+                  <span class="detail-label">Email</span>
+                  <span class="detail-value"><a href="mailto:sophie.martin@email.fr">sophie.martin@email.fr</a></span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">T&#233;l&#233;phone</span>
+                  <span class="detail-value">+33 6 12 34 56 78</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Adresse</span>
+                  <span class="detail-value">15 rue des Oliviers, 13001 Marseille</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Contact urgence</span>
+                  <span class="detail-value">Pierre Martin (conjoint) &mdash; +33 6 98 76 54 32</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Lien constituant</span>
+                  <span class="detail-value"><a href="../constituents/detail.html">Voir la fiche constituant &#8594;</a></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Compétences -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Comp&#233;tences</h3>
+              </div>
+              <div class="card-body">
+                <div class="skill-tags">
+                  <span class="badge badge-success">Cuisine</span>
+                  <span class="badge badge-success">Animation</span>
+                  <span class="badge badge-info">Premiers secours</span>
+                  <span class="badge badge-neutral">Accueil</span>
+                  <span class="badge badge-neutral">Permis B</span>
+                  <button class="skill-add-btn" type="button" title="Ajouter une comp&#233;tence">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Disponibilités -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Disponibilit&#233;s</h3>
+              </div>
+              <div class="card-body">
+                <div class="availability-grid">
+                  <!-- Header row -->
+                  <div class="availability-header"></div>
+                  <div class="availability-header">Lun</div>
+                  <div class="availability-header">Mar</div>
+                  <div class="availability-header">Mer</div>
+                  <div class="availability-header">Jeu</div>
+                  <div class="availability-header">Ven</div>
+                  <div class="availability-header">Sam</div>
+                  <div class="availability-header">Dim</div>
+
+                  <!-- Matin row -->
+                  <div class="availability-label">Matin</div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell availability-cell--available"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell availability-cell--available"></div>
+                  <div class="availability-cell"></div>
+
+                  <!-- Après-midi row -->
+                  <div class="availability-label">Apr&#232;s-midi</div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell availability-cell--available"></div>
+                  <div class="availability-cell availability-cell--available"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell availability-cell--available"></div>
+                  <div class="availability-cell"></div>
+
+                  <!-- Soir row -->
+                  <div class="availability-label">Soir</div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell availability-cell--available"></div>
+                  <div class="availability-cell"></div>
+                  <div class="availability-cell"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Missions récentes -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Missions r&#233;centes</h3>
+              </div>
+              <div class="card-body">
+                <div class="mission-row">
+                  <span class="mission-name">Collecte alimentaire</span>
+                  <span class="mission-date">22/02/2026</span>
+                  <span class="mission-hours">4h</span>
+                  <span class="badge badge-success">Compl&#233;t&#233;e</span>
+                </div>
+                <div class="mission-row">
+                  <span class="mission-name">Cours de fran&#231;ais</span>
+                  <span class="mission-date">15/02/2026</span>
+                  <span class="mission-hours">3h</span>
+                  <span class="badge badge-success">Compl&#233;t&#233;e</span>
+                </div>
+                <div class="mission-row">
+                  <span class="mission-name">Distribution v&#234;tements</span>
+                  <span class="mission-date">08/02/2026</span>
+                  <span class="mission-hours">5h</span>
+                  <span class="badge badge-success">Compl&#233;t&#233;e</span>
+                </div>
+                <div class="mission-row">
+                  <span class="mission-name">Accueil permanence</span>
+                  <span class="mission-date">01/02/2026</span>
+                  <span class="mission-hours">3h</span>
+                  <span class="badge badge-success">Compl&#233;t&#233;e</span>
+                </div>
+              </div>
+              <div class="card-footer">
+                <a href="#" class="btn btn-ghost btn-sm">Voir tout l'historique &#8594;</a>
+              </div>
+            </div>
+
+          </div>
+          <!-- END LEFT COLUMN -->
+
+          <!-- ──────────────────────────────────────────
+               RIGHT COLUMN (1fr)
+               ────────────────────────────────────────── -->
+          <div class="detail-col">
+
+            <!-- Card: Statut DBS / Vérification -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Statut DBS / V&#233;rification</h3>
+              </div>
+              <div class="card-body">
+                <div class="dbs-status">
+                  <div class="dbs-icon">&#9989;</div>
+                  <div class="dbs-valid">Valide</div>
+                  <div class="dbs-details">
+                    <div class="dbs-row">
+                      <span class="dbs-row-label">Date de v&#233;rification</span>
+                      <span class="dbs-row-value">15/09/2024</span>
+                    </div>
+                    <div class="dbs-row">
+                      <span class="dbs-row-label">Date d'expiration</span>
+                      <span class="dbs-row-value">15/09/2027</span>
+                    </div>
+                    <div class="dbs-row">
+                      <span class="dbs-row-label">Num&#233;ro</span>
+                      <span class="dbs-row-value">DBS-2024-0847</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm mt-4" type="button">Renouveler</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Résumé des heures -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">R&#233;sum&#233; des heures</h3>
+              </div>
+              <div class="card-body">
+                <div class="hours-big">142h</div>
+                <div class="hours-label">cette ann&#233;e (2026)</div>
+                <div class="hours-secondary">387h au total depuis 2023</div>
+                <div class="hours-value-line">Valeur mon&#233;taire : &euro;2&nbsp;840</div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 71%;"></div>
+                </div>
+                <div class="hours-progress-label">
+                  <span>Objectif annuel : 200h</span>
+                  <span>71%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Suggestion Card -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <span class="ai-card-icon">&#10024;</span>
+                <span class="ai-card-label">Suggestion IA</span>
+              </div>
+              <p class="ai-card-text">
+                Sophie a les comp&#233;tences Cuisine et Animation &mdash; la mission Atelier Jardinage recherche aussi des profils polyvalents. Sugg&#233;rer l'affectation ?
+              </p>
+              <div class="ai-card-actions">
+                <button class="btn btn-primary btn-sm" type="button">Assigner</button>
+                <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+              </div>
+            </div>
+
+          </div>
+          <!-- END RIGHT COLUMN -->
+
+        </div>
+        <!-- END DETAIL GRID -->
+
+      </main>
+      <!-- end .main-content -->
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>

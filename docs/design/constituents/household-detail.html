@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fontaine-Duval &mdash; M&eacute;nages &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: CON-005 Household detail ── */
+
+    /* Household header */
+    .household-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+
+    .household-header-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-lg);
+      background: var(--color-neutral-100);
+      border: 2px solid var(--color-neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .household-header-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .household-header-name {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+      line-height: var(--leading-tight);
+    }
+
+    .household-header-address {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-1);
+    }
+
+    .household-header-meta {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .household-header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-shrink: 0;
+    }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+
+    .summary-stat-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-1);
+    }
+
+    .summary-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+
+    .summary-stat-value--sm {
+      font-size: var(--text-lg);
+    }
+
+    /* Member card */
+    .member-card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .member-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-card);
+    }
+
+    .member-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-md);
+      font-weight: var(--weight-semi);
+      color: var(--color-white);
+      flex-shrink: 0;
+    }
+
+    .member-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .member-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+      margin-bottom: var(--space-0-5);
+    }
+
+    .member-name a {
+      color: var(--color-sky);
+      text-decoration: none;
+    }
+
+    .member-name a:hover {
+      text-decoration: underline;
+    }
+
+    .member-role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      color: var(--color-primary-dark);
+      background: var(--color-primary-50);
+      padding: 1px 8px;
+      border-radius: var(--radius-pill);
+    }
+
+    .member-detail {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-0-5);
+    }
+
+    .member-stats {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .member-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .member-stat-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .members-grid {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    /* Fiscal receipt summary */
+    .receipt-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-neutral-100);
+      font-size: var(--text-sm);
+    }
+
+    .receipt-row:last-child { border-bottom: none; }
+    .receipt-row:first-child { padding-top: 0; }
+
+    .receipt-year {
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .receipt-amount {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .receipt-status {
+      flex-shrink: 0;
+    }
+
+    .receipt-actions {
+      flex-shrink: 0;
+    }
+
+    /* AI card */
+    .ai-card--wide { max-width: 100%; }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--            Sidebar              -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <div class="sidebar-section">Principal</div>
+
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9633;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+
+        <a href="list.html" class="nav-item active">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+          <span class="nav-item-badge">1 247</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9878;</span>
+          <span class="nav-item-label">Campagnes</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9883;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+
+        <div class="sidebar-section">Communication</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Emails</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9782;</span>
+          <span class="nav-item-label">Segments</span>
+        </a>
+
+        <div class="sidebar-section">Administration</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9432;</span>
+          <span class="nav-item-label">Aide &amp; Support</span>
+        </a>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Administratrice</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--          Main wrapper           -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Association Solidarit&eacute; M&eacute;diterran&eacute;e</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Constituants</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="households-list.html">M&eacute;nages</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Fontaine-Duval</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher un constituant, un don, une campagne&hellip;"
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- ============================================================
+             HOUSEHOLD HEADER
+             ============================================================ -->
+        <div class="household-header">
+          <div class="household-header-icon">&#127968;</div>
+          <div class="household-header-info">
+            <h1 class="household-header-name">M&eacute;nage Fontaine-Duval</h1>
+            <p class="household-header-address">24 Rue de la R&eacute;publique, 13001 Marseille</p>
+            <p class="household-header-meta">Cr&eacute;&eacute; le 15 janvier 2019 &middot; 2 membres</p>
+          </div>
+          <div class="household-header-actions">
+            <button class="btn btn-primary" type="button">G&eacute;n&eacute;rer re&ccedil;u fiscal</button>
+            <button class="btn btn-secondary" type="button">Ajouter un membre</button>
+            <button class="btn btn-secondary" type="button">Modifier</button>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             SUMMARY STATS
+             ============================================================ -->
+        <div class="card mb-6">
+          <div class="card-body">
+            <div class="summary-grid">
+              <div>
+                <div class="summary-stat-label">Total dons 2026</div>
+                <div class="summary-stat-value">&euro;750</div>
+              </div>
+              <div>
+                <div class="summary-stat-label">Total all-time</div>
+                <div class="summary-stat-value">&euro;8&nbsp;750</div>
+              </div>
+              <div>
+                <div class="summary-stat-label">Nombre de dons</div>
+                <div class="summary-stat-value summary-stat-value--sm">16</div>
+              </div>
+              <div>
+                <div class="summary-stat-label">Membres</div>
+                <div class="summary-stat-value summary-stat-value--sm">2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             AI SUGGESTION
+             ============================================================ -->
+        <div class="ai-card ai-card--wide mb-6">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            G&eacute;n&eacute;rer automatiquement le re&ccedil;u fiscal annuel 2025 pour ce m&eacute;nage ? Total d&eacute;ductible : &euro;2&nbsp;400.
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm" type="button">G&eacute;n&eacute;rer le re&ccedil;u</button>
+            <button class="btn btn-ghost btn-sm" type="button">Plus tard</button>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             MEMBERS LIST
+             ============================================================ -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">Membres du m&eacute;nage</h3>
+            <button class="btn btn-ghost btn-sm" type="button">+ Ajouter un membre</button>
+          </div>
+          <div class="card-body">
+            <div class="members-grid">
+
+              <!-- Member 1: Principal -->
+              <div class="member-card">
+                <div class="member-avatar" style="background: var(--color-primary);">MF</div>
+                <div class="member-info">
+                  <div class="member-name">
+                    <a href="detail.html">Marie-Claire Fontaine</a>
+                    <span class="member-role-badge">Contact principal</span>
+                  </div>
+                  <div class="member-detail">mc.fontaine@gmail.com &middot; 06 12 34 56 78</div>
+                </div>
+                <div class="member-stats">
+                  <div class="member-stat-value">&euro;7&nbsp;250</div>
+                  <div class="member-stat-label">Total dons personnels</div>
+                </div>
+              </div>
+
+              <!-- Member 2 -->
+              <div class="member-card">
+                <div class="member-avatar" style="background: var(--color-sky);">PD</div>
+                <div class="member-info">
+                  <div class="member-name">
+                    <a href="#">Philippe Duval</a>
+                  </div>
+                  <div class="member-detail">p.duval@gmail.com &middot; 06 98 76 54 32</div>
+                </div>
+                <div class="member-stats">
+                  <div class="member-stat-value">&euro;1&nbsp;500</div>
+                  <div class="member-stat-label">Total dons personnels</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             CONSOLIDATED FISCAL RECEIPT SUMMARY
+             ============================================================ -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">Re&ccedil;us fiscaux consolid&eacute;s</h3>
+          </div>
+          <div class="card-body">
+
+            <div class="receipt-row">
+              <span class="receipt-year">Exercice 2025</span>
+              <span class="receipt-amount">&euro;2&nbsp;400</span>
+              <span class="receipt-status">
+                <span class="badge badge-success"><span class="badge-icon">&#10003;</span> &Eacute;mis</span>
+              </span>
+              <span class="receipt-actions">
+                <button class="btn btn-ghost btn-sm" type="button">T&eacute;l&eacute;charger PDF</button>
+              </span>
+            </div>
+
+            <div class="receipt-row">
+              <span class="receipt-year">Exercice 2024</span>
+              <span class="receipt-amount">&euro;1&nbsp;800</span>
+              <span class="receipt-status">
+                <span class="badge badge-success"><span class="badge-icon">&#10003;</span> &Eacute;mis</span>
+              </span>
+              <span class="receipt-actions">
+                <button class="btn btn-ghost btn-sm" type="button">T&eacute;l&eacute;charger PDF</button>
+              </span>
+            </div>
+
+            <div class="receipt-row">
+              <span class="receipt-year">Exercice 2023</span>
+              <span class="receipt-amount">&euro;2&nbsp;100</span>
+              <span class="receipt-status">
+                <span class="badge badge-success"><span class="badge-icon">&#10003;</span> &Eacute;mis</span>
+              </span>
+              <span class="receipt-actions">
+                <button class="btn btn-ghost btn-sm" type="button">T&eacute;l&eacute;charger PDF</button>
+              </span>
+            </div>
+
+            <div class="receipt-row">
+              <span class="receipt-year">Exercice 2022</span>
+              <span class="receipt-amount">&euro;1&nbsp;500</span>
+              <span class="receipt-status">
+                <span class="badge badge-success"><span class="badge-icon">&#10003;</span> &Eacute;mis</span>
+              </span>
+              <span class="receipt-actions">
+                <button class="btn btn-ghost btn-sm" type="button">T&eacute;l&eacute;charger PDF</button>
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ============================================================
+             DONATION BREAKDOWN BY YEAR
+             ============================================================ -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">D&eacute;tail des dons par ann&eacute;e</h3>
+          </div>
+          <div class="card-body">
+            <div class="data-table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ann&eacute;e</th>
+                    <th>Nombre de dons</th>
+                    <th class="text-right">Marie-Claire</th>
+                    <th class="text-right">Philippe</th>
+                    <th class="text-right">Total m&eacute;nage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="cell-name">2026</td>
+                    <td>2</td>
+                    <td class="text-right cell-mono">&euro;500</td>
+                    <td class="text-right cell-mono">&euro;250</td>
+                    <td class="text-right cell-mono font-semi">&euro;750</td>
+                  </tr>
+                  <tr>
+                    <td class="cell-name">2025</td>
+                    <td>5</td>
+                    <td class="text-right cell-mono">&euro;1&nbsp;650</td>
+                    <td class="text-right cell-mono">&euro;750</td>
+                    <td class="text-right cell-mono font-semi">&euro;2&nbsp;400</td>
+                  </tr>
+                  <tr>
+                    <td class="cell-name">2024</td>
+                    <td>4</td>
+                    <td class="text-right cell-mono">&euro;1&nbsp;500</td>
+                    <td class="text-right cell-mono">&euro;300</td>
+                    <td class="text-right cell-mono font-semi">&euro;1&nbsp;800</td>
+                  </tr>
+                  <tr>
+                    <td class="cell-name">2023</td>
+                    <td>3</td>
+                    <td class="text-right cell-mono">&euro;1&nbsp;900</td>
+                    <td class="text-right cell-mono">&euro;200</td>
+                    <td class="text-right cell-mono font-semi">&euro;2&nbsp;100</td>
+                  </tr>
+                  <tr>
+                    <td class="cell-name">2022</td>
+                    <td>2</td>
+                    <td class="text-right cell-mono">&euro;1&nbsp;500</td>
+                    <td class="text-right cell-mono">&euro;0</td>
+                    <td class="text-right cell-mono font-semi">&euro;1&nbsp;500</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

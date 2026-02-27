@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; Tableau de bord Impact</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Impact Dashboard-specific layout ── */
+    .impact-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-6);
+    }
+
+    .impact-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    /* ── Gauge bar (mini progress under stat widget value) ── */
+    .gauge-bar {
+      height: 6px;
+      background: var(--color-neutral-200);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin-top: var(--space-2);
+    }
+
+    .gauge-bar-fill {
+      height: 100%;
+      background: var(--color-primary);
+      border-radius: var(--radius-pill);
+      transition: width var(--duration-slow) var(--ease-out);
+    }
+
+    .gauge-bar-fill--amber {
+      background: var(--color-amber);
+    }
+
+    .gauge-bar-target {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-1);
+    }
+
+    /* ── Chart container ── */
+    .chart-container {
+      width: 100%;
+      height: 300px;
+      position: relative;
+    }
+
+    .chart-container svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Chart legend ── */
+    .chart-legend {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      margin-top: var(--space-4);
+    }
+
+    .chart-legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .chart-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    .chart-legend-dot--green {
+      background: var(--color-primary);
+    }
+
+    .chart-legend-dot--sky {
+      background: var(--color-sky);
+    }
+
+    /* ── Filter bar extensions ── */
+    .filter-bar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-4);
+    }
+
+    .filter-bar-row .form-select {
+      width: auto;
+      min-width: 180px;
+      height: 36px;
+      font-size: var(--text-sm);
+    }
+
+    .filter-chips {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    /* ── Progress bar in table ── */
+    .table-progress {
+      width: 100px;
+      display: inline-block;
+    }
+
+    .table-progress .progress {
+      height: 6px;
+    }
+
+    /* ── AI card override for full-width in sidebar column ── */
+    .impact-col .ai-card {
+      max-width: 100%;
+    }
+
+    /* ── Topbar search shortcut badge ── */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+
+    /* ── Sidebar org logo ── */
+    .sidebar-footer-org-logo {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+
+    /* ── Export card ── */
+    .export-card-description {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+      margin-bottom: var(--space-4);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .impact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="../constituents/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9775;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="../donations/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="../grants/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="../programs/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9670;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="../volunteers/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9996;</span>
+          <span class="nav-item-label">B&#233;n&#233;voles</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9678;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9776;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&#232;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-org-logo">ASM</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Association Solidarit&#233; M&#233;diterran&#233;e</div>
+          <div class="sidebar-footer-role">Claire Dubois</div>
+        </div>
+        <div class="sidebar-footer-avatar">CD</div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <span class="topbar-breadcrumb-current">Impact</span>
+        </div>
+
+        <div class="topbar-search">
+          <input
+            type="text"
+            class="topbar-search-input"
+            placeholder="Rechercher..."
+          >
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- ── Main Content ── -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Tableau de bord Impact</h1>
+            <p class="page-subtitle">Suivez vos indicateurs d'impact et mesurez vos r&#233;sultats.</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary">Exporter PDF</button>
+            <button class="btn btn-primary">+ Saisir une mesure</button>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             FILTER BAR
+             ============================================================ -->
+        <div class="filter-bar-row">
+          <select class="form-select">
+            <option>Tous les programmes</option>
+            <option>Aide alimentaire</option>
+            <option>Insertion</option>
+            <option>Formation</option>
+            <option>H&#233;bergement</option>
+          </select>
+          <select class="form-select">
+            <option>T1 2026 (janv&ndash;mars)</option>
+            <option>T4 2025 (oct&ndash;d&#233;c)</option>
+            <option>T3 2025 (jul&ndash;sep)</option>
+            <option>T2 2025 (avr&ndash;jun)</option>
+          </select>
+          <select class="form-select">
+            <option>Tous</option>
+            <option>Fondation de France</option>
+            <option>R&#233;gion Sud</option>
+            <option>Fondation Rothschild</option>
+          </select>
+        </div>
+        <div class="filter-chips mb-4">
+          <span class="filter-chip active">Tous</span>
+          <span class="filter-chip">En progr&#232;s</span>
+          <span class="filter-chip">En retard</span>
+          <span class="filter-chip">Atteints</span>
+        </div>
+
+        <!-- ============================================================
+             STAT WIDGETS (4 columns)
+             ============================================================ -->
+        <div class="grid-4">
+
+          <!-- 1. Repas servis -->
+          <div class="stat-widget">
+            <div class="stat-widget-label">Repas servis</div>
+            <div class="stat-widget-value">12&nbsp;450</div>
+            <div class="stat-widget-trend stat-widget-trend--up">
+              &#9650; +8% vs T4 2025
+            </div>
+            <div class="gauge-bar">
+              <div class="gauge-bar-fill" style="width: 83%;"></div>
+            </div>
+            <div class="gauge-bar-target">12 450 / 15 000</div>
+          </div>
+
+          <!-- 2. Beneficiaires accompagnes -->
+          <div class="stat-widget">
+            <div class="stat-widget-label">B&#233;n&#233;ficiaires accompagn&#233;s</div>
+            <div class="stat-widget-value">342</div>
+            <div class="stat-widget-trend stat-widget-trend--up">
+              &#9650; +12 ce mois
+            </div>
+            <div class="gauge-bar">
+              <div class="gauge-bar-fill" style="width: 86%;"></div>
+            </div>
+            <div class="gauge-bar-target">342 / 400</div>
+          </div>
+
+          <!-- 3. Heures de formation -->
+          <div class="stat-widget">
+            <div class="stat-widget-label">Heures de formation</div>
+            <div class="stat-widget-value">1&nbsp;280</div>
+            <div class="stat-widget-trend stat-widget-trend--up">
+              &#9650; +15% vs N-1
+            </div>
+            <div class="gauge-bar">
+              <div class="gauge-bar-fill" style="width: 64%;"></div>
+            </div>
+            <div class="gauge-bar-target">1 280 / 2 000</div>
+          </div>
+
+          <!-- 4. Taux de reinsertion -->
+          <div class="stat-widget">
+            <div class="stat-widget-label">Taux de r&#233;insertion</div>
+            <div class="stat-widget-value">67%</div>
+            <div class="stat-widget-trend stat-widget-trend--down">
+              &#9660; -3pts vs T4
+            </div>
+            <div class="gauge-bar">
+              <div class="gauge-bar-fill gauge-bar-fill--amber" style="width: 67%;"></div>
+            </div>
+            <div class="gauge-bar-target">67% / 75% cible</div>
+          </div>
+
+        </div>
+
+        <!-- ============================================================
+             TWO-COLUMN IMPACT GRID (2fr + 1fr)
+             ============================================================ -->
+        <div class="impact-grid">
+
+          <!-- ──────────────────────────────────────────
+               LEFT COLUMN (2fr)
+               ────────────────────────────────────────── -->
+          <div class="impact-col">
+
+            <!-- Card: Evolution trimestrielle (line chart) -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">&#201;volution des indicateurs</h3>
+                  <p class="card-subtitle">Tendance sur les 12 derniers mois</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <svg viewBox="0 0 720 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid lines -->
+                    <line x1="60" y1="20" x2="60" y2="250" stroke="#E4E0D9" stroke-width="1"/>
+                    <line x1="60" y1="250" x2="700" y2="250" stroke="#E4E0D9" stroke-width="1"/>
+
+                    <!-- Horizontal grid lines + Y axis labels -->
+                    <line x1="60" y1="20" x2="700" y2="20" stroke="#F2F0EC" stroke-width="1"/>
+                    <text x="50" y="24" text-anchor="end" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">2000</text>
+
+                    <line x1="60" y1="77.5" x2="700" y2="77.5" stroke="#F2F0EC" stroke-width="1"/>
+                    <text x="50" y="81" text-anchor="end" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">1500</text>
+
+                    <line x1="60" y1="135" x2="700" y2="135" stroke="#F2F0EC" stroke-width="1"/>
+                    <text x="50" y="139" text-anchor="end" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">1000</text>
+
+                    <line x1="60" y1="192.5" x2="700" y2="192.5" stroke="#F2F0EC" stroke-width="1"/>
+                    <text x="50" y="196" text-anchor="end" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">500</text>
+
+                    <text x="50" y="254" text-anchor="end" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">0</text>
+
+                    <!-- X axis labels (12 months) -->
+                    <!-- spacing: 60 to 700 = 640px / 11 segments = ~58.2px each -->
+                    <text x="60" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Avr</text>
+                    <text x="118" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Mai</text>
+                    <text x="176" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Jun</text>
+                    <text x="234" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Jul</text>
+                    <text x="292" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Ao&#251;</text>
+                    <text x="350" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Sep</text>
+                    <text x="408" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Oct</text>
+                    <text x="466" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Nov</text>
+                    <text x="524" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">D&#233;c</text>
+                    <text x="582" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Jan</text>
+                    <text x="640" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">F&#233;v</text>
+                    <text x="700" y="270" text-anchor="middle" fill="#8A857E" font-size="10" font-family="Inter, sans-serif">Mar</text>
+
+                    <!-- Line 1: Repas servis (green) -->
+                    <!-- Values: 800,900,950,1000,1050,1100,1200,1150,1300,1350,1400,1500 -->
+                    <!-- Y mapping: y = 250 - (value / 2000) * 230 -->
+                    <!-- 800=158, 900=146.5, 950=140.75, 1000=135, 1050=129.25, 1100=123.5, 1200=112, 1150=117.75, 1300=100.5, 1350=94.75, 1400=89, 1500=77.5 -->
+                    <polyline
+                      fill="none"
+                      stroke="#2E7D5E"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      points="60,158 118,146.5 176,140.75 234,135 292,129.25 350,123.5 408,112 466,117.75 524,100.5 582,94.75 640,89 700,77.5"
+                    />
+                    <!-- Green area fill -->
+                    <polygon
+                      fill="rgba(46,125,94,0.08)"
+                      points="60,158 118,146.5 176,140.75 234,135 292,129.25 350,123.5 408,112 466,117.75 524,100.5 582,94.75 640,89 700,77.5 700,250 60,250"
+                    />
+                    <!-- Dots for Line 1 -->
+                    <circle cx="60" cy="158" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="118" cy="146.5" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="176" cy="140.75" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="234" cy="135" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="292" cy="129.25" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="350" cy="123.5" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="408" cy="112" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="466" cy="117.75" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="524" cy="100.5" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="582" cy="94.75" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="640" cy="89" r="3.5" fill="#2E7D5E"/>
+                    <circle cx="700" cy="77.5" r="3.5" fill="#fff" stroke="#2E7D5E" stroke-width="2.5"/>
+
+                    <!-- Line 2: Beneficiaires (sky blue) -->
+                    <!-- Values: 200,220,240,250,260,270,280,290,300,310,330,342 -->
+                    <!-- Y mapping: 200=227, 220=224.7, 240=222.4, 250=221.25, 260=220.1, 270=218.95, 280=217.8, 290=216.65, 300=215.5, 310=214.35, 330=212.05, 342=210.67 -->
+                    <polyline
+                      fill="none"
+                      stroke="#2E79A6"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      points="60,227 118,224.7 176,222.4 234,221.25 292,220.1 350,218.95 408,217.8 466,216.65 524,215.5 582,214.35 640,212.05 700,210.67"
+                    />
+                    <!-- Sky area fill -->
+                    <polygon
+                      fill="rgba(46,121,166,0.08)"
+                      points="60,227 118,224.7 176,222.4 234,221.25 292,220.1 350,218.95 408,217.8 466,216.65 524,215.5 582,214.35 640,212.05 700,210.67 700,250 60,250"
+                    />
+                    <!-- Dots for Line 2 -->
+                    <circle cx="60" cy="227" r="3.5" fill="#2E79A6"/>
+                    <circle cx="118" cy="224.7" r="3.5" fill="#2E79A6"/>
+                    <circle cx="176" cy="222.4" r="3.5" fill="#2E79A6"/>
+                    <circle cx="234" cy="221.25" r="3.5" fill="#2E79A6"/>
+                    <circle cx="292" cy="220.1" r="3.5" fill="#2E79A6"/>
+                    <circle cx="350" cy="218.95" r="3.5" fill="#2E79A6"/>
+                    <circle cx="408" cy="217.8" r="3.5" fill="#2E79A6"/>
+                    <circle cx="466" cy="216.65" r="3.5" fill="#2E79A6"/>
+                    <circle cx="524" cy="215.5" r="3.5" fill="#2E79A6"/>
+                    <circle cx="582" cy="214.35" r="3.5" fill="#2E79A6"/>
+                    <circle cx="640" cy="212.05" r="3.5" fill="#2E79A6"/>
+                    <circle cx="700" cy="210.67" r="3.5" fill="#fff" stroke="#2E79A6" stroke-width="2.5"/>
+                  </svg>
+                </div>
+                <div class="chart-legend">
+                  <div class="chart-legend-item">
+                    <span class="chart-legend-dot chart-legend-dot--green"></span>
+                    Repas servis
+                  </div>
+                  <div class="chart-legend-item">
+                    <span class="chart-legend-dot chart-legend-dot--sky"></span>
+                    B&#233;n&#233;ficiaires
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Indicateurs par programme (table) -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Indicateurs par programme</h3>
+              </div>
+              <div class="card-body">
+                <div class="data-table-wrapper">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Indicateur</th>
+                        <th>Programme</th>
+                        <th class="text-right">R&#233;alis&#233;</th>
+                        <th class="text-right">Cible</th>
+                        <th>Progression</th>
+                        <th>Statut</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Row 1: Repas servis -->
+                      <tr>
+                        <td class="cell-name">Repas servis</td>
+                        <td>Aide alimentaire</td>
+                        <td class="text-right cell-mono">12 450</td>
+                        <td class="text-right cell-mono">15 000</td>
+                        <td>
+                          <div class="table-progress">
+                            <div class="progress">
+                              <div class="progress-fill" style="width: 83%;"></div>
+                            </div>
+                          </div>
+                          <span class="text-xs" style="margin-left: 6px;">83%</span>
+                        </td>
+                        <td><span class="badge badge-success">En progr&#232;s</span></td>
+                      </tr>
+                      <!-- Row 2: Beneficiaires -->
+                      <tr>
+                        <td class="cell-name">B&#233;n&#233;ficiaires</td>
+                        <td>Insertion</td>
+                        <td class="text-right cell-mono">342</td>
+                        <td class="text-right cell-mono">400</td>
+                        <td>
+                          <div class="table-progress">
+                            <div class="progress">
+                              <div class="progress-fill" style="width: 86%;"></div>
+                            </div>
+                          </div>
+                          <span class="text-xs" style="margin-left: 6px;">86%</span>
+                        </td>
+                        <td><span class="badge badge-success">En progr&#232;s</span></td>
+                      </tr>
+                      <!-- Row 3: Heures formation -->
+                      <tr>
+                        <td class="cell-name">Heures formation</td>
+                        <td>Formation</td>
+                        <td class="text-right cell-mono">1 280</td>
+                        <td class="text-right cell-mono">2 000</td>
+                        <td>
+                          <div class="table-progress">
+                            <div class="progress">
+                              <div class="progress-fill" style="width: 64%;"></div>
+                            </div>
+                          </div>
+                          <span class="text-xs" style="margin-left: 6px;">64%</span>
+                        </td>
+                        <td><span class="badge badge-info">En progr&#232;s</span></td>
+                      </tr>
+                      <!-- Row 4: Reinsertion -->
+                      <tr>
+                        <td class="cell-name">R&#233;insertion</td>
+                        <td>Insertion</td>
+                        <td class="text-right cell-mono">67%</td>
+                        <td class="text-right cell-mono">75%</td>
+                        <td>
+                          <div class="table-progress">
+                            <div class="progress">
+                              <div class="progress-fill progress-fill--amber" style="width: 89%;"></div>
+                            </div>
+                          </div>
+                          <span class="text-xs" style="margin-left: 6px;">89%</span>
+                        </td>
+                        <td><span class="badge badge-warning">En retard</span></td>
+                      </tr>
+                      <!-- Row 5: Logements -->
+                      <tr>
+                        <td class="cell-name">Logements</td>
+                        <td>H&#233;bergement</td>
+                        <td class="text-right cell-mono">48</td>
+                        <td class="text-right cell-mono">60</td>
+                        <td>
+                          <div class="table-progress">
+                            <div class="progress">
+                              <div class="progress-fill" style="width: 80%;"></div>
+                            </div>
+                          </div>
+                          <span class="text-xs" style="margin-left: 6px;">80%</span>
+                        </td>
+                        <td><span class="badge badge-success">En progr&#232;s</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- END LEFT COLUMN -->
+
+          <!-- ──────────────────────────────────────────
+               RIGHT COLUMN (1fr)
+               ────────────────────────────────────────── -->
+          <div class="impact-col">
+
+            <!-- AI Suggestion Card -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <span class="ai-card-icon">&#10024;</span>
+                <span class="ai-card-label">Suggestion IA</span>
+              </div>
+              <p class="ai-card-text">
+                L'indicateur &laquo;&nbsp;Repas servis&nbsp;&raquo; est 15% en-dessous de l'objectif trimestriel. Les donn&#233;es sugg&#232;rent une baisse de fr&#233;quentation le week-end &mdash; analyser les causes ?
+              </p>
+              <div class="ai-card-actions">
+                <button class="btn btn-primary btn-sm">Analyser</button>
+                <button class="btn btn-ghost btn-sm">Ignorer</button>
+              </div>
+            </div>
+
+            <!-- Card: Dernieres saisies -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Derni&#232;res saisies</h3>
+              </div>
+              <div class="card-body">
+                <div class="timeline">
+
+                  <!-- Timeline 1 -->
+                  <div class="timeline-item">
+                    <div class="timeline-icon" style="background: var(--color-primary-50); color: var(--color-primary-dark);">
+                      &#9678;
+                    </div>
+                    <div class="timeline-content">
+                      <div class="timeline-title">Repas servis : 1 500 ajout&#233;</div>
+                      <div class="timeline-meta">par Sophie M. &middot; Il y a 2h</div>
+                    </div>
+                  </div>
+
+                  <!-- Timeline 2 -->
+                  <div class="timeline-item">
+                    <div class="timeline-icon" style="background: var(--color-sky-50); color: var(--color-sky);">
+                      &#9678;
+                    </div>
+                    <div class="timeline-content">
+                      <div class="timeline-title">B&#233;n&#233;ficiaires : +12 ce mois</div>
+                      <div class="timeline-meta">par Claire D. &middot; Hier</div>
+                    </div>
+                  </div>
+
+                  <!-- Timeline 3 -->
+                  <div class="timeline-item">
+                    <div class="timeline-icon" style="background: var(--color-amber-50); color: var(--color-amber);">
+                      &#9678;
+                    </div>
+                    <div class="timeline-content">
+                      <div class="timeline-title">Formation : 120h ajout&#233;es</div>
+                      <div class="timeline-meta">par Karim B. &middot; 25/02</div>
+                    </div>
+                  </div>
+
+                  <!-- Timeline 4 -->
+                  <div class="timeline-item">
+                    <div class="timeline-icon" style="background: var(--color-indigo-50); color: var(--color-indigo);">
+                      &#9678;
+                    </div>
+                    <div class="timeline-content">
+                      <div class="timeline-title">R&#233;insertion : 67% mis &#224; jour</div>
+                      <div class="timeline-meta">par Claire D. &middot; 24/02</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Export rapide -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">G&#233;n&#233;rer un rapport</h3>
+              </div>
+              <div class="card-body">
+                <p class="export-card-description">
+                  Exportez vos donn&#233;es d'impact pour vos bailleurs et rapports annuels.
+                </p>
+                <button class="btn btn-primary w-full">G&#233;n&#233;rer le rapport &#8594;</button>
+              </div>
+            </div>
+
+          </div>
+          <!-- END RIGHT COLUMN -->
+
+        </div>
+        <!-- END IMPACT GRID -->
+
+      </main>
+    </div>
+    <!-- END MAIN WRAPPER -->
+
+  </div>
+  <!-- END APP LAYOUT -->
+</body>
+</html>

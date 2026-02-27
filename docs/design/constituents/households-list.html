@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M&eacute;nages &mdash; Constituants &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: CON-006 Households list ── */
+
+    .page-header-left .page-title {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+    }
+
+    .page-title-thin {
+      font-weight: var(--weight-regular);
+      color: var(--color-text-secondary);
+      font-family: var(--font-heading);
+    }
+
+    /* Household icon avatar */
+    .household-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      flex-shrink: 0;
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-neutral-200);
+    }
+
+    .household-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .household-cell-name {
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .household-cell-address {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    /* Member avatars stacked */
+    .members-stack {
+      display: flex;
+      align-items: center;
+    }
+
+    .members-stack-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: var(--weight-semi);
+      color: var(--color-white);
+      border: 2px solid var(--color-white);
+      margin-left: -6px;
+      position: relative;
+    }
+
+    .members-stack-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .members-stack-count {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-left: var(--space-2);
+    }
+
+    /* Action icon */
+    .action-icon {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      background: var(--color-white);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+      text-decoration: none;
+    }
+
+    .action-icon:hover {
+      background: var(--color-neutral-50);
+      border-color: var(--color-neutral-300);
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    /* Checkbox alignment */
+    .data-table th:first-child,
+    .data-table td:first-child {
+      width: 40px;
+      text-align: center;
+    }
+
+    .data-table input[type="checkbox"] {
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--            Sidebar              -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <div class="sidebar-section">Principal</div>
+
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9633;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+
+        <a href="list.html" class="nav-item active">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+          <span class="nav-item-badge">1 247</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9878;</span>
+          <span class="nav-item-label">Campagnes</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9883;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+
+        <div class="sidebar-section">Communication</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Emails</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9782;</span>
+          <span class="nav-item-label">Segments</span>
+        </a>
+
+        <div class="sidebar-section">Administration</div>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9432;</span>
+          <span class="nav-item-label">Aide &amp; Support</span>
+        </a>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Administratrice</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--          Main wrapper           -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Association Solidarit&eacute; M&eacute;diterran&eacute;e</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Constituants</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">M&eacute;nages</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher un constituant, un don, une campagne&hellip;"
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">
+              Constituants <span class="page-title-thin">&mdash; M&eacute;nages</span>
+            </h1>
+            <p class="page-subtitle">156 m&eacute;nages</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Exporter pour re&ccedil;us</button>
+            <button class="btn btn-primary" type="button">+ Nouveau m&eacute;nage</button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar mb-4">
+          <button class="filter-chip active" type="button">Tous</button>
+          <button class="filter-chip" type="button">2+ membres</button>
+          <button class="filter-chip" type="button">Donateurs 2026</button>
+          <button class="filter-chip" type="button">Re&ccedil;u fiscal en attente</button>
+        </div>
+
+        <!-- Data Table -->
+        <div class="card">
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" aria-label="S&eacute;lectionner tout"></th>
+                  <th>M&eacute;nage</th>
+                  <th>Membres</th>
+                  <th>Contact principal</th>
+                  <th class="text-right">Dons 2026</th>
+                  <th class="text-right">Total all-time</th>
+                  <th>Dernier re&ccedil;u</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <!-- Row 1 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Fontaine-Duval"></td>
+                  <td>
+                    <div class="household-cell">
+                      <div class="household-avatar">&#127968;</div>
+                      <div>
+                        <div class="household-cell-name">Fontaine-Duval</div>
+                        <div class="household-cell-address">24 Rue de la R&eacute;publique, 13001 Marseille</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="members-stack">
+                      <div class="members-stack-avatar" style="background: var(--color-primary);">MF</div>
+                      <div class="members-stack-avatar" style="background: var(--color-sky);">PD</div>
+                    </div>
+                    <span class="members-stack-count">2 membres</span>
+                  </td>
+                  <td>Marie-Claire Fontaine</td>
+                  <td class="text-right cell-mono">&euro;750</td>
+                  <td class="text-right cell-mono">&euro;8&nbsp;750</td>
+                  <td class="cell-secondary">Exercice 2025</td>
+                  <td><a href="household-detail.html" class="action-icon" title="Voir le m&eacute;nage" aria-label="Voir Fontaine-Duval">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Benali"></td>
+                  <td>
+                    <div class="household-cell">
+                      <div class="household-avatar">&#127968;</div>
+                      <div>
+                        <div class="household-cell-name">Benali</div>
+                        <div class="household-cell-address">8 Boulevard du Prado, 13008 Marseille</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="members-stack">
+                      <div class="members-stack-avatar" style="background: var(--color-amber);">AB</div>
+                      <div class="members-stack-avatar" style="background: var(--color-indigo);">SB</div>
+                      <div class="members-stack-avatar" style="background: var(--color-primary);">LB</div>
+                    </div>
+                    <span class="members-stack-count">3 membres</span>
+                  </td>
+                  <td>Ahmed Benali</td>
+                  <td class="text-right cell-mono">&euro;200</td>
+                  <td class="text-right cell-mono">&euro;1&nbsp;450</td>
+                  <td class="cell-secondary">Exercice 2025</td>
+                  <td><a href="#" class="action-icon" title="Voir le m&eacute;nage" aria-label="Voir Benali">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Martin-Petit"></td>
+                  <td>
+                    <div class="household-cell">
+                      <div class="household-avatar">&#127968;</div>
+                      <div>
+                        <div class="household-cell-name">Martin-Petit</div>
+                        <div class="household-cell-address">15 Rue Paradis, 13006 Marseille</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="members-stack">
+                      <div class="members-stack-avatar" style="background: var(--color-sky);">SM</div>
+                      <div class="members-stack-avatar" style="background: var(--color-primary);">LP</div>
+                    </div>
+                    <span class="members-stack-count">2 membres</span>
+                  </td>
+                  <td>Sophie Martin</td>
+                  <td class="text-right cell-mono">&euro;150</td>
+                  <td class="text-right cell-mono">&euro;3&nbsp;200</td>
+                  <td class="cell-secondary">Exercice 2025</td>
+                  <td><a href="#" class="action-icon" title="Voir le m&eacute;nage" aria-label="Voir Martin-Petit">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Rousseau"></td>
+                  <td>
+                    <div class="household-cell">
+                      <div class="household-avatar">&#127968;</div>
+                      <div>
+                        <div class="household-cell-name">Rousseau</div>
+                        <div class="household-cell-address">42 Cours Julien, 13006 Marseille</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="members-stack">
+                      <div class="members-stack-avatar" style="background: var(--color-amber);">JR</div>
+                    </div>
+                    <span class="members-stack-count">1 membre</span>
+                  </td>
+                  <td>Jean-Pierre Rousseau</td>
+                  <td class="text-right cell-mono">&euro;0</td>
+                  <td class="text-right cell-mono">&euro;0</td>
+                  <td class="cell-secondary">&mdash;</td>
+                  <td><a href="#" class="action-icon" title="Voir le m&eacute;nage" aria-label="Voir Rousseau">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 5 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Lef&egrave;vre-Garcia"></td>
+                  <td>
+                    <div class="household-cell">
+                      <div class="household-avatar">&#127968;</div>
+                      <div>
+                        <div class="household-cell-name">Lef&egrave;vre-Garcia</div>
+                        <div class="household-cell-address">7 Avenue du Prado, 13006 Marseille</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="members-stack">
+                      <div class="members-stack-avatar" style="background: var(--color-primary);">PL</div>
+                      <div class="members-stack-avatar" style="background: var(--color-indigo);">IG</div>
+                    </div>
+                    <span class="members-stack-count">2 membres</span>
+                  </td>
+                  <td>Pierre Lef&egrave;vre</td>
+                  <td class="text-right cell-mono">&euro;2&nbsp;000</td>
+                  <td class="text-right cell-mono">&euro;12&nbsp;500</td>
+                  <td class="cell-secondary">Exercice 2025</td>
+                  <td><a href="#" class="action-icon" title="Voir le m&eacute;nage" aria-label="Voir Lef&egrave;vre-Garcia">&#128065;</a></td>
+                </tr>
+
+                <!-- Row 6 -->
+                <tr>
+                  <td><input type="checkbox" aria-label="S&eacute;lectionner Berger"></td>
+                  <td>
+                    <div class="household-cell">
+                      <div class="household-avatar">&#127968;</div>
+                      <div>
+                        <div class="household-cell-name">Berger</div>
+                        <div class="household-cell-address">33 Rue de Rome, 13001 Marseille</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="members-stack">
+                      <div class="members-stack-avatar" style="background: var(--color-sky);">NB</div>
+                      <div class="members-stack-avatar" style="background: var(--color-amber);">TB</div>
+                      <div class="members-stack-avatar" style="background: var(--color-primary);">EB</div>
+                      <div class="members-stack-avatar" style="background: var(--color-indigo);">CB</div>
+                    </div>
+                    <span class="members-stack-count">4 membres</span>
+                  </td>
+                  <td>Nadia Berger</td>
+                  <td class="text-right cell-mono">&euro;300</td>
+                  <td class="text-right cell-mono">&euro;2&nbsp;100</td>
+                  <td class="cell-secondary">Exercice 2024</td>
+                  <td><a href="#" class="action-icon" title="Voir le m&eacute;nage" aria-label="Voir Berger">&#128065;</a></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <span class="pagination-info">Affichage 1&ndash;25 sur 156</span>
+            <div class="pagination-controls">
+              <button class="pagination-btn" disabled aria-label="Page pr&eacute;c&eacute;dente">&lsaquo;</button>
+              <button class="pagination-btn active">1</button>
+              <button class="pagination-btn">2</button>
+              <button class="pagination-btn">3</button>
+              <button class="pagination-btn">4</button>
+              <button class="pagination-btn">5</button>
+              <button class="pagination-btn">6</button>
+              <button class="pagination-btn">7</button>
+              <button class="pagination-btn" aria-label="Page suivante">&rsaquo;</button>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nouvelle campagne &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for campaigns/new (CAMP-003) ── */
+
+    /* Currency input wrapper */
+    .currency-input-wrapper {
+      position: relative;
+    }
+
+    .currency-input-wrapper .form-input {
+      padding-left: var(--space-8);
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semi);
+    }
+
+    .currency-prefix {
+      position: absolute;
+      left: var(--space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-secondary);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semi);
+      pointer-events: none;
+    }
+
+    /* Form footer */
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      padding-top: var(--space-6);
+      margin-top: var(--space-8);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .form-footer-left {
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Dons &amp; Campagnes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Campagnes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Nouvelle campagne</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher..."
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content main-content--form">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Nouvelle campagne</h1>
+            <p class="page-subtitle">Cr&eacute;ez une campagne de collecte de fonds</p>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form action="#" method="post" novalidate>
+
+          <!-- ============================== -->
+          <!--  Section 1: Informations g&eacute;n&eacute;rales -->
+          <!-- ============================== -->
+          <div class="form-section">
+            <h2 class="form-section-title">Informations g&eacute;n&eacute;rales</h2>
+
+            <!-- Nom de la campagne -->
+            <div class="form-group">
+              <label class="form-label form-label-required" for="camp-nom">Nom de la campagne</label>
+              <input
+                class="form-input"
+                type="text"
+                id="camp-nom"
+                placeholder="Ex : Appel aux dons Printemps 2026"
+                required
+              >
+            </div>
+
+            <!-- Type de campagne -->
+            <div class="form-group">
+              <label class="form-label form-label-required" for="camp-type">Type de campagne</label>
+              <select class="form-select" id="camp-type" required>
+                <option value="" disabled selected>S&eacute;lectionnez un type</option>
+                <option value="email">Email</option>
+                <option value="courrier">Courrier postal</option>
+                <option value="evenement">&Eacute;v&eacute;nement</option>
+                <option value="digital">Digital (r&eacute;seaux sociaux)</option>
+                <option value="mixte">Mixte</option>
+              </select>
+            </div>
+
+            <!-- Campagne parente -->
+            <div class="form-group">
+              <label class="form-label" for="camp-parente">Campagne parente</label>
+              <select class="form-select" id="camp-parente">
+                <option value="" selected>Aucune (par d&eacute;faut)</option>
+                <option value="hiver-2026">Appel aux dons Hiver 2026</option>
+                <option value="gala-2026">Gala annuel 2026</option>
+              </select>
+              <p class="form-hint">S&eacute;lectionnez une campagne parente pour cr&eacute;er une sous-campagne</p>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+              <label class="form-label" for="camp-description">Description</label>
+              <textarea
+                class="form-textarea"
+                id="camp-description"
+                rows="4"
+                placeholder="D&eacute;crivez l'objectif et le contexte de cette campagne..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- ============================== -->
+          <!--  Section 2: Objectifs et dates  -->
+          <!-- ============================== -->
+          <div class="form-section">
+            <h2 class="form-section-title">Objectifs et dates</h2>
+
+            <!-- Date de d&eacute;but + Date de fin -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label form-label-required" for="camp-date-debut">Date de d&eacute;but</label>
+                <input class="form-input" type="date" id="camp-date-debut" value="2026-04-01" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label form-label-required" for="camp-date-fin">Date de fin</label>
+                <input class="form-input" type="date" id="camp-date-fin" value="2026-06-30" required>
+              </div>
+            </div>
+
+            <!-- Objectif financier + Fonds cible -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label form-label-required" for="camp-objectif">Objectif financier</label>
+                <div class="currency-input-wrapper">
+                  <span class="currency-prefix">&euro;</span>
+                  <input
+                    class="form-input"
+                    type="number"
+                    id="camp-objectif"
+                    placeholder="50 000"
+                    min="0"
+                    step="1"
+                    required
+                  >
+                </div>
+                <p class="form-hint">Montant en euros que vous souhaitez collecter</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label form-label-required" for="camp-fonds">Fonds cible</label>
+                <select class="form-select" id="camp-fonds" required>
+                  <option value="" disabled selected>S&eacute;lectionnez un fonds</option>
+                  <option value="general">Fonds g&eacute;n&eacute;ral</option>
+                  <option value="alimentaire">Aide alimentaire</option>
+                  <option value="hebergement">H&eacute;bergement urgence</option>
+                  <option value="education">&Eacute;ducation</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================== -->
+          <!--  Section 3: Responsable et suivi -->
+          <!-- ============================== -->
+          <div class="form-section">
+            <h2 class="form-section-title">Responsable et suivi</h2>
+
+            <!-- Responsable -->
+            <div class="form-group">
+              <label class="form-label" for="camp-responsable">Responsable</label>
+              <select class="form-select" id="camp-responsable">
+                <option value="claire" selected>Claire Dubois</option>
+                <option value="marc">Marc Benali</option>
+                <option value="sophie">Sophie Laurent</option>
+              </select>
+            </div>
+
+            <!-- Code source -->
+            <div class="form-group">
+              <label class="form-label" for="camp-code">Code source</label>
+              <input
+                class="form-input"
+                type="text"
+                id="camp-code"
+                placeholder="Ex : PRINT-2026-S1"
+              >
+              <p class="form-hint">Code de suivi pour mesurer la performance de cette campagne</p>
+            </div>
+
+            <!-- Notes internes -->
+            <div class="form-group">
+              <label class="form-label" for="camp-notes">Notes internes</label>
+              <textarea
+                class="form-textarea"
+                id="camp-notes"
+                rows="3"
+                placeholder="Notes internes visibles uniquement par l'&eacute;quipe..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Form Footer -->
+          <div class="form-footer">
+            <div class="form-footer-left">
+              <button class="btn btn-secondary" type="button">Annuler</button>
+            </div>
+            <button class="btn btn-primary" type="submit">Sauvegarder</button>
+          </div>
+
+        </form>
+
+      </main>
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+</body>
+</html>
