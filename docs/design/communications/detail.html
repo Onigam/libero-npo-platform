@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D&eacute;tail envoi &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for communications/detail (COM-003) ── */
+
+    /* Stats row — 6 columns */
+    .stats-row-6 {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: var(--space-4);
+    }
+
+    @media (max-width: 1200px) {
+      .stats-row-6 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .stat-widget-sub {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      font-family: var(--font-mono);
+      margin-top: var(--space-0-5);
+    }
+
+    /* ── Content split layout: table + preview ── */
+    .content-split {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+    }
+
+    @media (max-width: 1024px) {
+      .content-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── SVG Line chart (opens over time) ── */
+    .line-chart-container {
+      position: relative;
+      height: 180px;
+      padding: var(--space-2) 0;
+    }
+
+    .line-chart-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .line-chart-legend {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      display: inline-block;
+      margin-right: var(--space-1);
+    }
+
+    .legend-dot--green { background: var(--color-primary); }
+    .legend-dot--sky { background: var(--color-sky); }
+
+    .line-chart-x-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-1) 0 0;
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    /* ── Email preview panel ── */
+    .email-preview {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .email-preview-header {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-neutral-50);
+    }
+
+    .email-preview-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+    }
+
+    .email-preview-meta {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .email-preview-body {
+      padding: var(--space-4);
+      flex: 1;
+      overflow-y: auto;
+      max-height: 500px;
+    }
+
+    /* Simulated email content */
+    .email-sim {
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+
+    .email-sim-logo {
+      width: 120px;
+      height: 40px;
+      background: var(--color-primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-family: var(--font-heading);
+      font-size: var(--text-md);
+      margin-bottom: var(--space-5);
+    }
+
+    .email-sim h3 {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      color: var(--color-text);
+      margin-bottom: var(--space-3);
+    }
+
+    .email-sim p {
+      margin-bottom: var(--space-3);
+      color: var(--color-text-secondary);
+    }
+
+    .email-sim-cta {
+      display: inline-block;
+      background: var(--color-primary);
+      color: var(--color-white);
+      padding: var(--space-2) var(--space-5);
+      border-radius: 6px;
+      font-weight: var(--weight-medium);
+      font-size: var(--text-sm);
+      text-decoration: none;
+      margin: var(--space-3) 0;
+    }
+
+    .email-sim-footer {
+      margin-top: var(--space-6);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-neutral-200);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+
+    .email-sim-divider {
+      height: 1px;
+      background: var(--color-neutral-200);
+      margin: var(--space-4) 0;
+    }
+
+    /* ── Status badges for recipients ── */
+    .badge-opened {
+      background: var(--color-primary-50);
+      color: var(--color-primary-dark);
+    }
+
+    .badge-clicked {
+      background: var(--color-sky-50);
+      color: #1E5A7E;
+    }
+
+    .badge-unsubscribed {
+      background: var(--color-amber-50);
+      color: #92400E;
+    }
+
+    .badge-bounced {
+      background: var(--color-indigo-50);
+      color: var(--color-indigo);
+    }
+
+    .badge-delivered {
+      background: var(--color-neutral-100);
+      color: var(--color-text-secondary);
+    }
+
+    /* ── Chart card ── */
+    .chart-section {
+      margin-top: var(--space-6);
+    }
+
+    /* ── Page header title row ── */
+    .page-header-title-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="list.html">Communications</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Newsletter Printemps 2026</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher..." aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- ============================================================
+             PAGE HEADER
+             ============================================================ -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-header-title-row">
+              <h1 class="page-title">Newsletter Printemps 2026</h1>
+              <span class="badge badge-success"><span class="badge-icon">&#10003;</span> Envoy&eacute;</span>
+            </div>
+            <p class="page-subtitle">Email &mdash; Envoy&eacute; le 15/03/2026 &agrave; 09:30</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Dupliquer</button>
+            <button class="btn btn-secondary" type="button">Exporter la liste</button>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             STAT WIDGETS — 6 columns
+             ============================================================ -->
+        <div class="stats-row-6">
+          <div class="stat-widget">
+            <div class="stat-widget-label">Envoy&eacute;s</div>
+            <div class="stat-widget-value">1&nbsp;247</div>
+          </div>
+          <div class="stat-widget">
+            <div class="stat-widget-label">D&eacute;livr&eacute;s</div>
+            <div class="stat-widget-value">1&nbsp;231</div>
+            <div class="stat-widget-sub">98,7%</div>
+          </div>
+          <div class="stat-widget">
+            <div class="stat-widget-label">Ouvertures</div>
+            <div class="stat-widget-value">342</div>
+            <div class="stat-widget-sub">27,8%</div>
+          </div>
+          <div class="stat-widget">
+            <div class="stat-widget-label">Clics</div>
+            <div class="stat-widget-value">89</div>
+            <div class="stat-widget-sub">7,2%</div>
+          </div>
+          <div class="stat-widget">
+            <div class="stat-widget-label">D&eacute;sinscriptions</div>
+            <div class="stat-widget-value">4</div>
+            <div class="stat-widget-trend stat-widget-trend--down">0,3%</div>
+          </div>
+          <div class="stat-widget">
+            <div class="stat-widget-label">Bounces</div>
+            <div class="stat-widget-value">16</div>
+            <div class="stat-widget-trend stat-widget-trend--down">1,3%</div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             OPENS OVER TIME CHART
+             ============================================================ -->
+        <div class="card chart-section">
+          <div class="card-header">
+            <h3 class="card-title">Ouvertures dans le temps</h3>
+            <span class="badge badge-neutral">24h apr&egrave;s envoi</span>
+          </div>
+          <div class="card-body">
+            <div class="line-chart-container">
+              <svg class="line-chart-svg" viewBox="0 0 600 160" preserveAspectRatio="none">
+                <!-- Grid lines -->
+                <line x1="0" y1="40" x2="600" y2="40" stroke="#E4E0D9" stroke-width="1" stroke-dasharray="4"/>
+                <line x1="0" y1="80" x2="600" y2="80" stroke="#E4E0D9" stroke-width="1" stroke-dasharray="4"/>
+                <line x1="0" y1="120" x2="600" y2="120" stroke="#E4E0D9" stroke-width="1" stroke-dasharray="4"/>
+                <!-- Opens area -->
+                <path d="M0,150 L25,140 L50,100 L75,45 L100,20 L125,30 L150,50 L175,65 L200,75 L250,90 L300,100 L350,110 L400,118 L450,125 L500,130 L550,135 L600,140 L600,160 L0,160 Z"
+                      fill="#E8F5EE" opacity="0.7"/>
+                <!-- Opens line -->
+                <polyline points="0,150 25,140 50,100 75,45 100,20 125,30 150,50 175,65 200,75 250,90 300,100 350,110 400,118 450,125 500,130 550,135 600,140"
+                          fill="none" stroke="#2E7D5E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Clicks area -->
+                <path d="M0,155 L25,152 L50,140 L75,120 L100,110 L125,115 L150,125 L175,130 L200,133 L250,138 L300,142 L350,145 L400,147 L450,149 L500,150 L550,152 L600,153 L600,160 L0,160 Z"
+                      fill="#E0F2FE" opacity="0.5"/>
+                <!-- Clicks line -->
+                <polyline points="0,155 25,152 50,140 75,120 100,110 125,115 150,125 175,130 200,133 250,138 300,142 350,145 400,147 450,149 500,150 550,152 600,153"
+                          fill="none" stroke="#2E79A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,3"/>
+              </svg>
+            </div>
+            <div class="line-chart-x-labels">
+              <span>09:30</span>
+              <span>12:00</span>
+              <span>15:00</span>
+              <span>18:00</span>
+              <span>21:00</span>
+              <span>00:00</span>
+              <span>03:00</span>
+              <span>06:00</span>
+              <span>09:30</span>
+            </div>
+            <div class="line-chart-legend">
+              <span><span class="legend-dot legend-dot--green"></span> Ouvertures</span>
+              <span><span class="legend-dot legend-dot--sky"></span> Clics</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             CONTENT SPLIT: Recipients table + Email preview
+             ============================================================ -->
+        <div class="content-split">
+
+          <!-- Left: Recipients table -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Destinataires</h3>
+              <span class="text-sm text-muted">1 247 contacts</span>
+            </div>
+            <div class="card-body">
+              <div class="data-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Destinataire</th>
+                      <th>Email</th>
+                      <th>Statut</th>
+                      <th>Ouvert</th>
+                      <th>Cliqu&eacute;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="cell-name">Marie-Claire Fontaine</td>
+                      <td class="cell-secondary">mc.fontaine@email.fr</td>
+                      <td><span class="badge badge-clicked">Cliqu&eacute;</span></td>
+                      <td class="cell-secondary">15/03 09:42</td>
+                      <td class="cell-secondary">15/03 09:48</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">Pierre Lef&egrave;vre</td>
+                      <td class="cell-secondary">p.lefevre@outlook.fr</td>
+                      <td><span class="badge badge-opened">Ouvert</span></td>
+                      <td class="cell-secondary">15/03 10:15</td>
+                      <td class="cell-secondary">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">Sophie Martin</td>
+                      <td class="cell-secondary">s.martin@gmail.com</td>
+                      <td><span class="badge badge-clicked">Cliqu&eacute;</span></td>
+                      <td class="cell-secondary">15/03 09:35</td>
+                      <td class="cell-secondary">15/03 09:41</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">Fran&ccedil;ois Dupont</td>
+                      <td class="cell-secondary">f.dupont@yahoo.fr</td>
+                      <td><span class="badge badge-delivered">D&eacute;livr&eacute;</span></td>
+                      <td class="cell-secondary">&mdash;</td>
+                      <td class="cell-secondary">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">Nadia Berger</td>
+                      <td class="cell-secondary">n.berger@free.fr</td>
+                      <td><span class="badge badge-opened">Ouvert</span></td>
+                      <td class="cell-secondary">15/03 11:22</td>
+                      <td class="cell-secondary">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">Ahmed Benali</td>
+                      <td class="cell-secondary">a.benali@orange.fr</td>
+                      <td><span class="badge badge-unsubscribed">D&eacute;sinscrit</span></td>
+                      <td class="cell-secondary">15/03 10:05</td>
+                      <td class="cell-secondary">15/03 10:12</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">Jean-Marc Rousseau</td>
+                      <td class="cell-secondary">jm.rousseau@laposte.net</td>
+                      <td><span class="badge badge-bounced">Bounce</span></td>
+                      <td class="cell-secondary">&mdash;</td>
+                      <td class="cell-secondary">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">Isabelle Moreau</td>
+                      <td class="cell-secondary">i.moreau@sfr.fr</td>
+                      <td><span class="badge badge-clicked">Cliqu&eacute;</span></td>
+                      <td class="cell-secondary">15/03 09:50</td>
+                      <td class="cell-secondary">15/03 09:55</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">Philippe Lambert</td>
+                      <td class="cell-secondary">p.lambert@proton.me</td>
+                      <td><span class="badge badge-opened">Ouvert</span></td>
+                      <td class="cell-secondary">15/03 14:30</td>
+                      <td class="cell-secondary">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-name">C&eacute;line Girard</td>
+                      <td class="cell-secondary">c.girard@gmail.com</td>
+                      <td><span class="badge badge-delivered">D&eacute;livr&eacute;</span></td>
+                      <td class="cell-secondary">&mdash;</td>
+                      <td class="cell-secondary">&mdash;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pagination -->
+              <div class="pagination">
+                <span class="pagination-info">Affichage 1-10 sur 1 247</span>
+                <div class="pagination-controls">
+                  <button class="pagination-btn" disabled aria-label="Page pr&eacute;c&eacute;dente">&#8249;</button>
+                  <button class="pagination-btn active">1</button>
+                  <button class="pagination-btn">2</button>
+                  <button class="pagination-btn">3</button>
+                  <button class="pagination-btn">&hellip;</button>
+                  <button class="pagination-btn">125</button>
+                  <button class="pagination-btn" aria-label="Page suivante">&#8250;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Email preview -->
+          <div class="email-preview">
+            <div class="email-preview-header">
+              <div class="email-preview-title">Aper&ccedil;u de l'email</div>
+              <div class="email-preview-meta">Objet : Nos projets de printemps</div>
+            </div>
+            <div class="email-preview-body">
+              <div class="email-sim">
+                <div class="email-sim-logo">Libero</div>
+                <h3>Nos projets de printemps 2026</h3>
+                <p>Ch&egrave;re donatrice, cher donateur,</p>
+                <p>
+                  Le printemps est l&agrave; et nos &eacute;quipes sont mobilis&eacute;es sur le terrain.
+                  Gr&acirc;ce &agrave; votre soutien, nous avons pu lancer 3 nouveaux programmes
+                  d'aide alimentaire en M&eacute;diterran&eacute;e.
+                </p>
+                <div class="email-sim-divider"></div>
+                <p><strong>En chiffres :</strong></p>
+                <p>
+                  &#8226; 1 200 familles aid&eacute;es<br>
+                  &#8226; 8 tonnes de denr&eacute;es distribu&eacute;es<br>
+                  &#8226; 15 b&eacute;n&eacute;voles mobilis&eacute;s
+                </p>
+                <a href="#" class="email-sim-cta">D&eacute;couvrir nos actions</a>
+                <div class="email-sim-footer">
+                  Association Solidarit&eacute; M&eacute;diterran&eacute;e<br>
+                  12 rue des Oliviers, 13001 Marseille<br>
+                  <a href="#" style="color: var(--color-sky);">Se d&eacute;sinscrire</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>

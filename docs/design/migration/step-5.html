@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Migration : Terminee</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    .migration-layout {
+      min-height: 100vh;
+      background: var(--color-bg);
+      padding: var(--space-8) var(--space-6);
+    }
+    .migration-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 860px;
+      margin: 0 auto var(--space-6);
+    }
+    .migration-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .migration-step-counter {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text-secondary);
+    }
+    .migration-container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* Success hero */
+    .success-hero {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+    .success-checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-6);
+    }
+    .success-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      margin-bottom: var(--space-2);
+    }
+    .success-subtitle {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    /* Summary stats */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    .summary-stat {
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: var(--space-5);
+      text-align: center;
+    }
+    .summary-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+    }
+    .summary-stat-label {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+    .summary-stat--muted .summary-stat-value {
+      color: var(--color-text-secondary);
+    }
+    .summary-stat--warning .summary-stat-value {
+      color: var(--color-amber);
+    }
+    .summary-stat--error .summary-stat-value {
+      color: var(--color-indigo);
+    }
+    .summary-stat-note {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--space-1);
+    }
+
+    /* Checklist */
+    .post-checklist {
+      margin-bottom: var(--space-8);
+    }
+    .post-checklist-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-4);
+    }
+    .post-checklist-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-3);
+    }
+    .post-checklist-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .post-checklist-check {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+    .post-checklist-label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+    }
+    .post-checklist-action {
+      font-size: var(--text-sm);
+      color: var(--color-primary);
+      font-weight: var(--weight-medium);
+      white-space: nowrap;
+    }
+    .post-checklist-action:hover {
+      text-decoration: underline;
+    }
+
+    /* Final actions */
+    .final-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .download-link {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .download-link:hover { color: var(--color-text); text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="migration-layout">
+    <div class="migration-container">
+
+      <!-- Top bar -->
+      <div class="migration-topbar">
+        <div class="migration-logo">
+          <div class="auth-logo-mark">L</div>
+          <span class="auth-logo-text">Libero</span>
+        </div>
+        <span class="migration-step-counter">5 / 5</span>
+      </div>
+
+      <!-- Wizard Progress: Step 5 of 5 (all completed) -->
+      <div class="wizard-progress">
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Source</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Mapping</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Validation</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step completed">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Import</span>
+        </div>
+        <div class="wizard-step-connector completed"></div>
+        <div class="wizard-step active">
+          <div class="wizard-step-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="wizard-step-label">Termine</span>
+        </div>
+      </div>
+
+      <!-- Success hero -->
+      <div class="success-hero">
+        <div class="success-checkmark">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h1 class="success-title">Migration terminee avec succes !</h1>
+        <p class="success-subtitle">Vos donnees ont ete transferees depuis Salesforce NPSP vers Libero.</p>
+      </div>
+
+      <!-- Summary stats -->
+      <div class="summary-grid">
+        <div class="summary-stat">
+          <div class="summary-stat-value">1 189</div>
+          <div class="summary-stat-label">constituants importes</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-value">3 847</div>
+          <div class="summary-stat-label">dons importes</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-value">15</div>
+          <div class="summary-stat-label">campagnes importees</div>
+        </div>
+        <div class="summary-stat summary-stat--muted">
+          <div class="summary-stat-value">45</div>
+          <div class="summary-stat-label">doublons ignores</div>
+        </div>
+        <div class="summary-stat summary-stat--error">
+          <div class="summary-stat-value">11</div>
+          <div class="summary-stat-label">erreurs</div>
+          <div class="summary-stat-note">rapport disponible</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-value">58</div>
+          <div class="summary-stat-label">organisations importees</div>
+        </div>
+      </div>
+
+      <!-- Post-migration checklist -->
+      <div class="post-checklist">
+        <h3 class="post-checklist-title">Etapes recommandees</h3>
+
+        <div class="post-checklist-item">
+          <div class="post-checklist-left">
+            <div class="post-checklist-check"></div>
+            <span class="post-checklist-label">Verifier les doublons potentiels</span>
+          </div>
+          <a href="#" class="post-checklist-action">Lancer la fusion guidee &rarr;</a>
+        </div>
+
+        <div class="post-checklist-item">
+          <div class="post-checklist-left">
+            <div class="post-checklist-check"></div>
+            <span class="post-checklist-label">Configurer les consentements RGPD</span>
+          </div>
+          <a href="#" class="post-checklist-action">Aller aux parametres RGPD &rarr;</a>
+        </div>
+
+        <div class="post-checklist-item">
+          <div class="post-checklist-left">
+            <div class="post-checklist-check"></div>
+            <span class="post-checklist-label">Tester un recu fiscal</span>
+          </div>
+          <a href="#" class="post-checklist-action">Voir les dons &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Final actions -->
+      <div class="final-actions">
+        <a href="../dashboard.html" class="btn btn-primary btn-lg" style="min-width: 280px;">
+          Acceder au tableau de bord
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#" class="download-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Telecharger le rapport complet
+        </a>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
