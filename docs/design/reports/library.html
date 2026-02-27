@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; Biblioth&#232;que de rapports</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Reports Library Page Styles ── */
+
+    /* Report card */
+    .report-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      transition: box-shadow var(--duration-normal) var(--ease-out);
+    }
+
+    .report-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .report-card-header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .report-card-title {
+      font-size: var(--text-md);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      line-height: var(--leading-tight);
+    }
+
+    .report-card-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+
+    .report-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-neutral-100);
+      margin-top: auto;
+    }
+
+    .report-card-footer-date {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .report-card-footer-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    /* Report cards grid */
+    .report-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+
+    @media (max-width: 1200px) {
+      .report-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .report-cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* AI insight card (compact variant attached to report card) */
+    .report-card-ai {
+      background: var(--color-neutral-100);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      border-left: 3px solid var(--color-primary);
+      padding: var(--space-3) var(--space-4);
+      margin: calc(-1 * var(--space-5));
+      margin-top: 0;
+      border-top: 1px solid var(--color-neutral-200);
+    }
+
+    .report-card-ai .ai-card-header {
+      margin-bottom: var(--space-1);
+    }
+
+    .report-card-ai .ai-card-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-primary-dark);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+
+    .report-card-ai .ai-card-icon {
+      font-size: var(--text-sm);
+    }
+
+    .report-card-ai .ai-card-text {
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      line-height: var(--leading-normal);
+      margin-bottom: 0;
+    }
+
+    /* Card with AI has overflow hidden for the rounded bottom */
+    .report-card--has-ai {
+      padding-bottom: 0;
+      overflow: hidden;
+    }
+
+    .report-card--has-ai .report-card-ai {
+      margin: 0 calc(-1 * var(--space-5));
+      margin-top: var(--space-3);
+      border-radius: 0;
+    }
+
+    /* Topbar search shortcut */
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    .topbar-search {
+      position: relative;
+    }
+
+    /* Sidebar org logo */
+    .sidebar-footer-org-logo {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="../constituents/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9775;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="../donations/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="../grants/kanban.html" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="../programs/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9670;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="../volunteers/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9996;</span>
+          <span class="nav-item-label">B&#233;n&#233;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9678;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="../communications/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="library.html" class="nav-item active">
+          <span class="nav-item-icon">&#9776;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="../admin/organization.html" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&#232;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-org-logo">ASM</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Association Solidarit&#233; M&#233;diterran&#233;e</div>
+          <div class="sidebar-footer-role">Plan Professionnel</div>
+        </div>
+        <div class="sidebar-footer-avatar">CD</div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <span class="topbar-breadcrumb-current">Rapports</span>
+        </div>
+
+        <div class="topbar-search">
+          <input
+            type="text"
+            class="topbar-search-input"
+            placeholder="Rechercher..."
+          >
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- ── Main Content ── -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Biblioth&#232;que de rapports</h1>
+            <p class="page-subtitle">Rapports standard et personnalis&#233;s pour analyser votre activit&#233;.</p>
+          </div>
+          <div class="page-header-actions">
+            <a href="builder.html" class="btn btn-primary">+ Nouveau rapport</a>
+          </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="tabs">
+          <button class="tab active">Tous</button>
+          <button class="tab">Dons</button>
+          <button class="tab">Constituants</button>
+          <button class="tab">Campagnes</button>
+          <button class="tab">Subventions</button>
+          <button class="tab">Personnalis&#233;s</button>
+        </div>
+
+        <!-- ============================================================
+             REPORT CARDS GRID
+             ============================================================ -->
+        <div class="report-cards-grid">
+
+          <!-- ── Card 1: LYBUNT (with AI insight) ── -->
+          <div class="report-card report-card--has-ai">
+            <div class="report-card-header">
+              <div>
+                <span class="badge badge-success">Dons</span>
+              </div>
+              <div class="report-card-title">LYBUNT</div>
+            </div>
+            <p class="report-card-desc">
+              Donateurs de l&rsquo;ann&#233;e derni&#232;re mais pas cette ann&#233;e (Last Year But Unfortunately Not This).
+            </p>
+            <div class="report-card-footer">
+              <span class="report-card-footer-date">Derni&#232;re ex&#233;cution : 20 f&#233;v. 2026</span>
+              <div class="report-card-footer-actions">
+                <button class="btn btn-primary btn-sm">Ex&#233;cuter</button>
+                <button class="btn btn-ghost btn-sm btn-icon">&hellip;</button>
+              </div>
+            </div>
+            <!-- AI Insight -->
+            <div class="report-card-ai">
+              <div class="ai-card-header">
+                <span class="ai-card-icon">&#10024;</span>
+                <span class="ai-card-label">Suggestion IA</span>
+              </div>
+              <p class="ai-card-text">
+                47 donateurs LYBUNT identifi&#233;s. 12 ont un potentiel de r&#233;activation &#233;lev&#233;.
+              </p>
+            </div>
+          </div>
+
+          <!-- ── Card 2: SYBUNT ── -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <div>
+                <span class="badge badge-success">Dons</span>
+              </div>
+              <div class="report-card-title">SYBUNT</div>
+            </div>
+            <p class="report-card-desc">
+              Donateurs d&rsquo;il y a deux ans ou plus sans don r&#233;cent (Some Year But Unfortunately Not This).
+            </p>
+            <div class="report-card-footer">
+              <span class="report-card-footer-date">Derni&#232;re ex&#233;cution : 18 f&#233;v. 2026</span>
+              <div class="report-card-footer-actions">
+                <button class="btn btn-primary btn-sm">Ex&#233;cuter</button>
+                <button class="btn btn-ghost btn-sm btn-icon">&hellip;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Card 3: Taux de retention ── -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <div>
+                <span class="badge badge-info">Constituants</span>
+              </div>
+              <div class="report-card-title">Taux de r&#233;tention</div>
+            </div>
+            <p class="report-card-desc">
+              Analyse de la fid&#233;lit&#233; des donateurs : taux de r&#233;tention annuel et tendances sur 5 ans.
+            </p>
+            <div class="report-card-footer">
+              <span class="report-card-footer-date">Derni&#232;re ex&#233;cution : 15 f&#233;v. 2026</span>
+              <div class="report-card-footer-actions">
+                <button class="btn btn-primary btn-sm">Ex&#233;cuter</button>
+                <button class="btn btn-ghost btn-sm btn-icon">&hellip;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Card 4: Performance des campagnes ── -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <div>
+                <span class="badge badge-warning">Campagnes</span>
+              </div>
+              <div class="report-card-title">Performance des campagnes</div>
+            </div>
+            <p class="report-card-desc">
+              Comparaison des campagnes : montants collect&#233;s, nombre de donateurs, co&#251;t par euro.
+            </p>
+            <div class="report-card-footer">
+              <span class="report-card-footer-date">Derni&#232;re ex&#233;cution : 22 f&#233;v. 2026</span>
+              <div class="report-card-footer-actions">
+                <button class="btn btn-primary btn-sm">Ex&#233;cuter</button>
+                <button class="btn btn-ghost btn-sm btn-icon">&hellip;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Card 5: Suivi des subventions ── -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <div>
+                <span class="badge badge-error">Subventions</span>
+              </div>
+              <div class="report-card-title">Suivi des subventions</div>
+            </div>
+            <p class="report-card-desc">
+              &#201;tat d&rsquo;avancement des subventions actives : &#233;ch&#233;ances, rapports dus, montants restants.
+            </p>
+            <div class="report-card-footer">
+              <span class="report-card-footer-date">Derni&#232;re ex&#233;cution : 25 f&#233;v. 2026</span>
+              <div class="report-card-footer-actions">
+                <button class="btn btn-primary btn-sm">Ex&#233;cuter</button>
+                <button class="btn btn-ghost btn-sm btn-icon">&hellip;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Card 6: Rapport personnalise : Dons mensuels ── -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <div>
+                <span class="badge badge-neutral">Personnalis&#233;</span>
+              </div>
+              <div class="report-card-title">Rapport personnalis&#233; : Dons mensuels</div>
+            </div>
+            <p class="report-card-desc">
+              Ventilation mensuelle des dons par canal et par campagne.
+            </p>
+            <div class="report-card-footer">
+              <span class="report-card-footer-date">Derni&#232;re ex&#233;cution : 26 f&#233;v. 2026</span>
+              <div class="report-card-footer-actions">
+                <button class="btn btn-primary btn-sm">Ex&#233;cuter</button>
+                <button class="btn btn-ghost btn-sm btn-icon">&hellip;</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- END REPORT CARDS GRID -->
+
+      </main>
+    </div>
+    <!-- END MAIN WRAPPER -->
+
+  </div>
+  <!-- END APP LAYOUT -->
+</body>
+</html>

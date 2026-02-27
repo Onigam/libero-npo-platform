@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; Int&eacute;grations</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for admin/integrations (ADM-004) ── */
+
+    .integration-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+
+    @media (max-width: 1024px) {
+      .integration-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .integration-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .integration-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .integration-card-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .integration-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+      color: var(--color-white);
+      flex-shrink: 0;
+    }
+
+    .integration-logo--indigo {
+      background: var(--color-indigo);
+    }
+
+    .integration-logo--amber {
+      background: var(--color-amber);
+    }
+
+    .integration-logo--sky {
+      background: var(--color-sky);
+    }
+
+    .integration-logo--green {
+      background: var(--color-primary);
+    }
+
+    .integration-card-name {
+      font-size: var(--text-md);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .integration-meta {
+      flex: 1;
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+
+    .integration-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-neutral-100);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">ASM</div>
+          <div class="sidebar-footer-role">Association Solidarit&eacute; M&eacute;diterran&eacute;e &mdash; Plan Professionnel</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Param&egrave;tres</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Int&eacute;grations</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher...  &#8984;K" aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil">CD</div>
+        </div>
+      </header>
+
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Int&eacute;grations</h1>
+            <p class="page-subtitle">Connectez vos outils pr&eacute;f&eacute;r&eacute;s pour automatiser vos flux de travail.</p>
+          </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="tabs">
+          <button class="tab active" type="button">Toutes</button>
+          <button class="tab" type="button">Paiement</button>
+          <button class="tab" type="button">Comptabilit&eacute;</button>
+          <button class="tab" type="button">Communication</button>
+          <button class="tab" type="button">Productivit&eacute;</button>
+        </div>
+
+        <!-- Integration Cards Grid -->
+        <div class="integration-grid">
+
+          <!-- 1. Stripe -->
+          <div class="card integration-card">
+            <div class="integration-card-header">
+              <div class="integration-logo integration-logo--indigo">S</div>
+              <div>
+                <div class="integration-card-name">Stripe</div>
+                <span class="badge badge-info">Paiement</span>
+              </div>
+            </div>
+            <p class="integration-meta">Acceptez les dons par carte bancaire et g&eacute;rez les pr&eacute;l&egrave;vements r&eacute;currents.</p>
+            <div class="integration-footer">
+              <span class="badge badge-success">&#10003; Connect&eacute;</span>
+              <button class="btn btn-secondary btn-sm" type="button">Configurer</button>
+            </div>
+          </div>
+
+          <!-- 2. Mollie -->
+          <div class="card integration-card">
+            <div class="integration-card-header">
+              <div class="integration-logo integration-logo--amber">M</div>
+              <div>
+                <div class="integration-card-name">Mollie</div>
+                <span class="badge badge-info">Paiement</span>
+              </div>
+            </div>
+            <p class="integration-meta">Solution de paiement europ&eacute;enne : iDEAL, Bancontact, SEPA.</p>
+            <div class="integration-footer">
+              <span class="badge badge-neutral">Non connect&eacute;</span>
+              <button class="btn btn-primary btn-sm" type="button">Connecter</button>
+            </div>
+          </div>
+
+          <!-- 3. Xero -->
+          <div class="card integration-card">
+            <div class="integration-card-header">
+              <div class="integration-logo integration-logo--sky">X</div>
+              <div>
+                <div class="integration-card-name">Xero</div>
+                <span class="badge badge-warning">Comptabilit&eacute;</span>
+              </div>
+            </div>
+            <p class="integration-meta">Synchronisez vos dons et d&eacute;penses avec votre comptabilit&eacute; Xero.</p>
+            <div class="integration-footer">
+              <span class="badge badge-success">&#10003; Connect&eacute;</span>
+              <button class="btn btn-secondary btn-sm" type="button">Configurer</button>
+            </div>
+          </div>
+
+          <!-- 4. QuickBooks -->
+          <div class="card integration-card">
+            <div class="integration-card-header">
+              <div class="integration-logo integration-logo--green">Q</div>
+              <div>
+                <div class="integration-card-name">QuickBooks</div>
+                <span class="badge badge-warning">Comptabilit&eacute;</span>
+              </div>
+            </div>
+            <p class="integration-meta">Export automatique des &eacute;critures comptables vers QuickBooks.</p>
+            <div class="integration-footer">
+              <span class="badge badge-neutral">Non connect&eacute;</span>
+              <button class="btn btn-primary btn-sm" type="button">Connecter</button>
+            </div>
+          </div>
+
+          <!-- 5. Mailchimp -->
+          <div class="card integration-card">
+            <div class="integration-card-header">
+              <div class="integration-logo integration-logo--amber">MC</div>
+              <div>
+                <div class="integration-card-name">Mailchimp</div>
+                <span class="badge badge-error">Communication</span>
+              </div>
+            </div>
+            <p class="integration-meta">Synchronisez vos constituants et segmentez vos campagnes email.</p>
+            <div class="integration-footer">
+              <span class="badge badge-success">&#10003; Connect&eacute;</span>
+              <button class="btn btn-secondary btn-sm" type="button">Configurer</button>
+            </div>
+          </div>
+
+          <!-- 6. Twilio -->
+          <div class="card integration-card">
+            <div class="integration-card-header">
+              <div class="integration-logo integration-logo--indigo">T</div>
+              <div>
+                <div class="integration-card-name">Twilio</div>
+                <span class="badge badge-error">Communication</span>
+              </div>
+            </div>
+            <p class="integration-meta">Envoyez des SMS de remerciement et des rappels automatiques.</p>
+            <div class="integration-footer">
+              <span class="badge badge-neutral">Non connect&eacute;</span>
+              <button class="btn btn-primary btn-sm" type="button">Connecter</button>
+            </div>
+          </div>
+
+          <!-- 7. Google Workspace -->
+          <div class="card integration-card">
+            <div class="integration-card-header">
+              <div class="integration-logo integration-logo--sky">G</div>
+              <div>
+                <div class="integration-card-name">Google Workspace</div>
+                <span class="badge badge-neutral">Productivit&eacute;</span>
+              </div>
+            </div>
+            <p class="integration-meta">Connectez votre calendrier, contacts et Google Drive.</p>
+            <div class="integration-footer">
+              <span class="badge badge-neutral">Non connect&eacute;</span>
+              <button class="btn btn-primary btn-sm" type="button">Connecter</button>
+            </div>
+          </div>
+
+          <!-- 8. Microsoft 365 -->
+          <div class="card integration-card">
+            <div class="integration-card-header">
+              <div class="integration-logo integration-logo--indigo">M</div>
+              <div>
+                <div class="integration-card-name">Microsoft 365</div>
+                <span class="badge badge-neutral">Productivit&eacute;</span>
+              </div>
+            </div>
+            <p class="integration-meta">Int&eacute;grez Outlook, OneDrive et Teams avec Libero.</p>
+            <div class="integration-footer">
+              <span class="badge badge-neutral">Non connect&eacute;</span>
+              <button class="btn btn-primary btn-sm" type="button">Connecter</button>
+            </div>
+          </div>
+
+        </div><!-- /integration-grid -->
+
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>

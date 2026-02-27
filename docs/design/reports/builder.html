@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; G&#233;n&#233;rateur de rapports</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Report Builder: override main-content to fill height ── */
+    .main-content--builder {
+      max-width: 100%;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Builder Toolbar ── */
+    .builder-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface);
+      flex-shrink: 0;
+      gap: var(--space-4);
+    }
+
+    .builder-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      min-width: 0;
+      flex: 1;
+    }
+
+    .builder-toolbar-left h2 {
+      font-size: var(--text-xl);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .builder-toolbar-name {
+      height: 36px;
+      padding: 0 var(--space-3);
+      background: var(--color-neutral-50);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      min-width: 200px;
+      max-width: 320px;
+      transition: border-color var(--duration-normal) var(--ease-out),
+                  box-shadow var(--duration-normal) var(--ease-out);
+    }
+
+    .builder-toolbar-name::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .builder-toolbar-name:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+      background: var(--color-white);
+    }
+
+    .builder-toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-shrink: 0;
+    }
+
+    /* ── 3-Panel Builder Layout ── */
+    .builder-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr 360px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Left Panel: Field Picker ── */
+    .field-picker {
+      background: var(--color-neutral-100);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .field-picker-search {
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    .field-picker-search-input {
+      width: 100%;
+      height: 32px;
+      padding: 0 var(--space-3);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      transition: border-color var(--duration-normal) var(--ease-out),
+                  box-shadow var(--duration-normal) var(--ease-out);
+    }
+
+    .field-picker-search-input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .field-picker-search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    .field-picker-tree {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-2) 0;
+    }
+
+    /* Object group header (expandable) */
+    .field-group-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      cursor: pointer;
+      user-select: none;
+      transition: background var(--duration-normal) var(--ease-out);
+    }
+
+    .field-group-header:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .field-group-toggle {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      width: 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .field-group-items {
+      padding-left: var(--space-2);
+    }
+
+    /* Individual field item */
+    .field-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1-5) var(--space-3) var(--space-1-5) var(--space-8);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: background var(--duration-normal) var(--ease-out),
+                  color var(--duration-normal) var(--ease-out);
+      user-select: none;
+    }
+
+    .field-item:hover {
+      background: rgba(0, 0, 0, 0.04);
+      color: var(--color-text);
+    }
+
+    .field-item-handle {
+      color: var(--color-neutral-400);
+      font-size: 10px;
+      letter-spacing: 1px;
+      cursor: grab;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .field-item-label {
+      flex: 1;
+    }
+
+    /* ── Center Panel: Canvas ── */
+    .builder-canvas {
+      background: var(--color-surface);
+      overflow-y: auto;
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .canvas-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .canvas-section-header {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+
+    /* Selected column chips */
+    .selected-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .selected-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      height: 30px;
+      padding: 0 var(--space-3);
+      background: var(--color-primary-50);
+      border: 1px solid var(--color-primary-100);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      color: var(--color-primary-dark);
+      cursor: default;
+    }
+
+    .selected-chip-remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: var(--radius-full);
+      background: transparent;
+      border: none;
+      color: var(--color-primary-dark);
+      font-size: 11px;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      transition: background var(--duration-fast) var(--ease-out);
+    }
+
+    .selected-chip-remove:hover {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    /* Canvas divider */
+    .canvas-divider {
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    /* Filter rows */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .filter-row select {
+      height: 32px;
+      padding: 0 var(--space-3);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      cursor: pointer;
+      appearance: auto;
+      min-width: 0;
+    }
+
+    .filter-row select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    .filter-row-delete {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      transition: background var(--duration-fast) var(--ease-out),
+                  color var(--duration-fast) var(--ease-out);
+    }
+
+    .filter-row-delete:hover {
+      background: var(--color-neutral-100);
+      color: var(--color-text);
+    }
+
+    .canvas-add-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      color: var(--color-primary);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: var(--font-body);
+      transition: color var(--duration-normal) var(--ease-out);
+    }
+
+    .canvas-add-link:hover {
+      color: var(--color-primary-dark);
+      text-decoration: underline;
+    }
+
+    /* Sort rows (same structure as filter rows) */
+    .sort-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .sort-row select {
+      height: 32px;
+      padding: 0 var(--space-3);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      cursor: pointer;
+      appearance: auto;
+      min-width: 0;
+    }
+
+    .sort-row select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    /* ── Right Panel: Live Preview ── */
+    .preview-panel {
+      background: var(--color-neutral-50);
+      border-left: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .preview-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    .preview-panel-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .preview-panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4);
+    }
+
+    /* Compact preview table */
+    .preview-table-wrapper {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-white);
+    }
+
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-xs);
+    }
+
+    .preview-table th {
+      background: var(--color-neutral-200);
+      padding: var(--space-2) var(--space-3);
+      text-align: left;
+      font-weight: var(--weight-semi);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+      white-space: nowrap;
+    }
+
+    .preview-table td {
+      padding: var(--space-2) var(--space-3);
+      height: var(--table-row-compact);
+      vertical-align: middle;
+      border-bottom: 1px solid var(--color-neutral-100);
+      white-space: nowrap;
+      color: var(--color-text);
+    }
+
+    .preview-table tbody tr:nth-child(even) {
+      background: var(--color-neutral-50);
+    }
+
+    .preview-table tbody tr:nth-child(odd) {
+      background: var(--color-white);
+    }
+
+    .preview-table td.text-right {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-medium);
+    }
+
+    .preview-panel-footer {
+      padding: var(--space-3) var(--space-4);
+      border-top: 1px solid var(--color-border);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    /* ── Topbar overrides ── */
+    .topbar-search {
+      position: relative;
+    }
+
+    .search-shortcut {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      background: var(--color-neutral-100);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+    }
+
+    /* ── Sidebar org logo ── */
+    .sidebar-footer-org-logo {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar">
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="../constituents/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9775;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="../donations/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="../grants/kanban.html" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="../programs/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9670;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="../volunteers/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9996;</span>
+          <span class="nav-item-label">B&#233;n&#233;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9678;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="../communications/list.html" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9776;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="../admin/organization.html" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&#232;tres</span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-org-logo">ASM</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Association Solidarit&#233; M&#233;diterran&#233;e</div>
+          <div class="sidebar-footer-role">Plan Professionnel</div>
+        </div>
+        <div class="sidebar-footer-avatar">CD</div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN WRAPPER
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <div class="topbar-breadcrumb">
+          <a href="#">Rapports</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Nouveau rapport</span>
+        </div>
+
+        <div class="topbar-search">
+          <input
+            type="text"
+            class="topbar-search-input"
+            placeholder="Rechercher..."
+          >
+          <span class="search-shortcut">&#8984;K</span>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" title="Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- ── Main Content (no padding, full height) ── -->
+      <main class="main-content main-content--builder">
+
+        <!-- ── Builder Toolbar ── -->
+        <div class="builder-toolbar">
+          <div class="builder-toolbar-left">
+            <h2>G&#233;n&#233;rateur de rapports</h2>
+            <input
+              type="text"
+              class="builder-toolbar-name"
+              value="Rapport sans titre"
+              aria-label="Nom du rapport"
+            >
+          </div>
+          <div class="builder-toolbar-actions">
+            <button class="btn btn-secondary">Annuler</button>
+            <button class="btn btn-secondary">Enregistrer</button>
+            <button class="btn btn-primary">Ex&#233;cuter</button>
+          </div>
+        </div>
+
+        <!-- ── 3-Panel Builder Layout ── -->
+        <div class="builder-layout">
+
+          <!-- ──────────────────────────────────────────
+               LEFT PANEL: Field Picker
+               ────────────────────────────────────────── -->
+          <div class="field-picker">
+
+            <!-- Search -->
+            <div class="field-picker-search">
+              <input
+                type="text"
+                class="field-picker-search-input"
+                placeholder="Rechercher un champ..."
+              >
+            </div>
+
+            <!-- Object tree -->
+            <div class="field-picker-tree">
+
+              <!-- Constituants (expanded) -->
+              <div class="field-group">
+                <div class="field-group-header">
+                  <span class="field-group-toggle">&#9660;</span>
+                  Constituants
+                </div>
+                <div class="field-group-items">
+                  <div class="field-item">
+                    <span class="field-item-handle">&#8942;&#8942;</span>
+                    <span class="field-item-label">Nom complet</span>
+                  </div>
+                  <div class="field-item">
+                    <span class="field-item-handle">&#8942;&#8942;</span>
+                    <span class="field-item-label">Pr&#233;nom</span>
+                  </div>
+                  <div class="field-item">
+                    <span class="field-item-handle">&#8942;&#8942;</span>
+                    <span class="field-item-label">Nom</span>
+                  </div>
+                  <div class="field-item">
+                    <span class="field-item-handle">&#8942;&#8942;</span>
+                    <span class="field-item-label">Email</span>
+                  </div>
+                  <div class="field-item">
+                    <span class="field-item-handle">&#8942;&#8942;</span>
+                    <span class="field-item-label">T&#233;l&#233;phone</span>
+                  </div>
+                  <div class="field-item">
+                    <span class="field-item-handle">&#8942;&#8942;</span>
+                    <span class="field-item-label">Ville</span>
+                  </div>
+                  <div class="field-item">
+                    <span class="field-item-handle">&#8942;&#8942;</span>
+                    <span class="field-item-label">Pays</span>
+                  </div>
+                  <div class="field-item">
+                    <span class="field-item-handle">&#8942;&#8942;</span>
+                    <span class="field-item-label">Date de cr&#233;ation</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dons (collapsed) -->
+              <div class="field-group">
+                <div class="field-group-header">
+                  <span class="field-group-toggle">&#9654;</span>
+                  Dons
+                </div>
+              </div>
+
+              <!-- Campagnes (collapsed) -->
+              <div class="field-group">
+                <div class="field-group-header">
+                  <span class="field-group-toggle">&#9654;</span>
+                  Campagnes
+                </div>
+              </div>
+
+              <!-- Subventions (collapsed) -->
+              <div class="field-group">
+                <div class="field-group-header">
+                  <span class="field-group-toggle">&#9654;</span>
+                  Subventions
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ──────────────────────────────────────────
+               CENTER PANEL: Canvas
+               ────────────────────────────────────────── -->
+          <div class="builder-canvas">
+
+            <!-- Section: Selected Columns -->
+            <div class="canvas-section">
+              <div class="canvas-section-header">Colonnes s&#233;lectionn&#233;es</div>
+              <div class="selected-chips">
+                <span class="selected-chip">
+                  Pr&#233;nom
+                  <button class="selected-chip-remove" aria-label="Retirer Pr&#233;nom">&times;</button>
+                </span>
+                <span class="selected-chip">
+                  Nom
+                  <button class="selected-chip-remove" aria-label="Retirer Nom">&times;</button>
+                </span>
+                <span class="selected-chip">
+                  Email
+                  <button class="selected-chip-remove" aria-label="Retirer Email">&times;</button>
+                </span>
+                <span class="selected-chip">
+                  Ville
+                  <button class="selected-chip-remove" aria-label="Retirer Ville">&times;</button>
+                </span>
+                <span class="selected-chip">
+                  Total des dons
+                  <button class="selected-chip-remove" aria-label="Retirer Total des dons">&times;</button>
+                </span>
+              </div>
+            </div>
+
+            <div class="canvas-divider"></div>
+
+            <!-- Section: Filters -->
+            <div class="canvas-section">
+              <div class="canvas-section-header">Filtres</div>
+
+              <!-- Filter Row 1 -->
+              <div class="filter-row">
+                <select aria-label="Champ de filtre">
+                  <option selected>Pays</option>
+                </select>
+                <select aria-label="Op&#233;rateur">
+                  <option selected>est</option>
+                </select>
+                <select aria-label="Valeur">
+                  <option selected>France</option>
+                </select>
+                <button class="filter-row-delete" aria-label="Supprimer le filtre">&times;</button>
+              </div>
+
+              <!-- Filter Row 2 -->
+              <div class="filter-row">
+                <select aria-label="Champ de filtre">
+                  <option selected>Total des dons</option>
+                </select>
+                <select aria-label="Op&#233;rateur">
+                  <option selected>sup&#233;rieur &#224;</option>
+                </select>
+                <select aria-label="Valeur">
+                  <option selected>100 &euro;</option>
+                </select>
+                <button class="filter-row-delete" aria-label="Supprimer le filtre">&times;</button>
+              </div>
+
+              <button class="canvas-add-link">+ Ajouter un filtre</button>
+            </div>
+
+            <div class="canvas-divider"></div>
+
+            <!-- Section: Sort -->
+            <div class="canvas-section">
+              <div class="canvas-section-header">Tri</div>
+
+              <div class="sort-row">
+                <select aria-label="Champ de tri">
+                  <option selected>Total des dons</option>
+                </select>
+                <select aria-label="Ordre de tri">
+                  <option selected>D&#233;croissant</option>
+                </select>
+                <button class="filter-row-delete" aria-label="Supprimer le tri">&times;</button>
+              </div>
+
+              <button class="canvas-add-link">+ Ajouter un tri</button>
+            </div>
+
+          </div>
+
+          <!-- ──────────────────────────────────────────
+               RIGHT PANEL: Live Preview
+               ────────────────────────────────────────── -->
+          <div class="preview-panel">
+
+            <!-- Header -->
+            <div class="preview-panel-header">
+              <span class="preview-panel-title">Aper&#231;u</span>
+              <button class="btn btn-ghost btn-sm">Actualiser</button>
+            </div>
+
+            <!-- Preview table body -->
+            <div class="preview-panel-body">
+              <div class="preview-table-wrapper">
+                <table class="preview-table">
+                  <thead>
+                    <tr>
+                      <th>Pr&#233;nom</th>
+                      <th>Nom</th>
+                      <th>Email</th>
+                      <th>Ville</th>
+                      <th class="text-right">Total dons</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Marie</td>
+                      <td>Fontaine</td>
+                      <td>marie@...</td>
+                      <td>Marseille</td>
+                      <td class="text-right">2&nbsp;450&nbsp;&euro;</td>
+                    </tr>
+                    <tr>
+                      <td>Ahmed</td>
+                      <td>Benali</td>
+                      <td>ahmed@...</td>
+                      <td>Lyon</td>
+                      <td class="text-right">1&nbsp;800&nbsp;&euro;</td>
+                    </tr>
+                    <tr>
+                      <td>Lucie</td>
+                      <td>Martin</td>
+                      <td>lucie@...</td>
+                      <td>Paris</td>
+                      <td class="text-right">1&nbsp;200&nbsp;&euro;</td>
+                    </tr>
+                    <tr>
+                      <td>Paul</td>
+                      <td>Girard</td>
+                      <td>paul@...</td>
+                      <td>Nice</td>
+                      <td class="text-right">950&nbsp;&euro;</td>
+                    </tr>
+                    <tr>
+                      <td>Sophie</td>
+                      <td>Petit</td>
+                      <td>sophie@...</td>
+                      <td>Toulouse</td>
+                      <td class="text-right">720&nbsp;&euro;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="preview-panel-footer">
+              Affichage 5 sur 47 r&#233;sultats
+            </div>
+
+          </div>
+
+        </div>
+        <!-- END BUILDER LAYOUT -->
+
+      </main>
+    </div>
+    <!-- END MAIN WRAPPER -->
+
+  </div>
+  <!-- END APP LAYOUT -->
+</body>
+</html>

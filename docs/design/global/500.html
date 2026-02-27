@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; Erreur serveur</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── GLO-003: 500 Server Error ── */
+
+    /* ── Full-viewport centered layout (no sidebar) ── */
+    .error-layout {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-bg);
+      padding: var(--space-6);
+    }
+
+    /* ── Centered content column ── */
+    .error-content {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Logo ── */
+    .error-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-10);
+    }
+
+    .error-logo-mark {
+      width: 48px;
+      height: 48px;
+      background: var(--color-primary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+    }
+
+    .error-logo-text {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      color: var(--color-text);
+    }
+
+    /* ── CSS Art Illustration: Gear + Wrench ── */
+    .error-illustration {
+      position: relative;
+      width: 180px;
+      height: 150px;
+      margin-bottom: var(--space-8);
+    }
+
+    /* Large gear (back) */
+    .gear-large {
+      position: absolute;
+      top: 10px;
+      left: 24px;
+      width: 90px;
+      height: 90px;
+      border: 8px solid var(--color-neutral-200);
+      border-radius: var(--radius-full);
+      animation: spin-slow 12s linear infinite;
+    }
+
+    .gear-large::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px;
+      height: 22px;
+      background: var(--color-neutral-200);
+      border-radius: var(--radius-full);
+    }
+
+    /* Gear teeth for large gear */
+    .gear-large::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 98px;
+      height: 98px;
+      transform: translate(-50%, -50%);
+      background:
+        linear-gradient(0deg,   transparent 40%, var(--color-neutral-200) 40%, var(--color-neutral-200) 60%, transparent 60%),
+        linear-gradient(90deg,  transparent 40%, var(--color-neutral-200) 40%, var(--color-neutral-200) 60%, transparent 60%),
+        linear-gradient(45deg,  transparent 40%, var(--color-neutral-200) 40%, var(--color-neutral-200) 60%, transparent 60%),
+        linear-gradient(-45deg, transparent 40%, var(--color-neutral-200) 40%, var(--color-neutral-200) 60%, transparent 60%);
+      border-radius: var(--radius-full);
+      z-index: -1;
+    }
+
+    /* Small gear (front) */
+    .gear-small {
+      position: absolute;
+      top: 60px;
+      right: 24px;
+      width: 60px;
+      height: 60px;
+      border: 6px solid var(--color-neutral-300);
+      border-radius: var(--radius-full);
+      animation: spin-reverse 8s linear infinite;
+    }
+
+    .gear-small::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px;
+      height: 16px;
+      background: var(--color-neutral-300);
+      border-radius: var(--radius-full);
+    }
+
+    .gear-small::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 68px;
+      height: 68px;
+      transform: translate(-50%, -50%);
+      background:
+        linear-gradient(0deg,   transparent 38%, var(--color-neutral-300) 38%, var(--color-neutral-300) 62%, transparent 62%),
+        linear-gradient(90deg,  transparent 38%, var(--color-neutral-300) 38%, var(--color-neutral-300) 62%, transparent 62%),
+        linear-gradient(60deg,  transparent 38%, var(--color-neutral-300) 38%, var(--color-neutral-300) 62%, transparent 62%),
+        linear-gradient(-60deg, transparent 38%, var(--color-neutral-300) 38%, var(--color-neutral-300) 62%, transparent 62%);
+      border-radius: var(--radius-full);
+      z-index: -1;
+    }
+
+    /* Wrench shape */
+    .wrench {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-30deg);
+      width: 8px;
+      height: 80px;
+      background: var(--color-primary);
+      border-radius: 4px;
+      opacity: 0.85;
+    }
+
+    .wrench::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 18px;
+      border: 5px solid var(--color-primary);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      background: transparent;
+    }
+
+    .wrench::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 8px;
+      background: var(--color-primary);
+      border-radius: 0 0 4px 4px;
+    }
+
+    /* Subtle accent dot */
+    .accent-dot {
+      position: absolute;
+      top: 0;
+      right: 40px;
+      width: 12px;
+      height: 12px;
+      background: var(--color-primary-100);
+      border-radius: var(--radius-full);
+    }
+
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    @keyframes spin-reverse {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(-360deg); }
+    }
+
+    /* ── Heading ── */
+    .error-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-regular);
+      color: var(--color-neutral-900);
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-3);
+    }
+
+    /* ── Body message ── */
+    .error-message {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+      max-width: 420px;
+      margin-bottom: var(--space-5);
+    }
+
+    /* ── Error ID badge ── */
+    .error-id {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      background: var(--color-neutral-100);
+      padding: var(--space-1) var(--space-4);
+      border-radius: var(--radius-pill);
+      margin-bottom: var(--space-8);
+      letter-spacing: var(--tracking-wide);
+    }
+
+    /* ── Action buttons ── */
+    .error-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+
+    /* ── Footer text ── */
+    .error-footer {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .error-footer a {
+      color: var(--color-primary);
+      font-weight: var(--weight-medium);
+    }
+
+    .error-footer a:hover {
+      color: var(--color-primary-dark);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="error-layout">
+
+    <div class="error-content">
+
+      <!-- Logo -->
+      <div class="error-logo">
+        <div class="error-logo-mark">L</div>
+        <span class="error-logo-text">Libero</span>
+      </div>
+
+      <!-- CSS Art: Gears + Wrench ("we're working on it") -->
+      <div class="error-illustration" role="img" aria-label="Illustration d&rsquo;engrenages et cl&eacute; &agrave; molette indiquant une maintenance en cours">
+        <div class="accent-dot"></div>
+        <div class="gear-large"></div>
+        <div class="gear-small"></div>
+        <div class="wrench"></div>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="error-title">Une erreur inattendue</h1>
+
+      <!-- Message -->
+      <p class="error-message">
+        Quelque chose s&rsquo;est mal pass&eacute; de notre c&ocirc;t&eacute;.
+        Notre &eacute;quipe a &eacute;t&eacute; notifi&eacute;e et travaille &agrave; r&eacute;soudre le probl&egrave;me.
+      </p>
+
+      <!-- Error ID -->
+      <span class="error-id">Identifiant de l&rsquo;erreur&nbsp;: ERR-20260227-A3F8</span>
+
+      <!-- Actions -->
+      <div class="error-actions">
+        <button class="btn btn-primary" type="button">R&eacute;essayer</button>
+        <a href="#" class="btn btn-secondary">Contacter le support</a>
+      </div>
+
+      <!-- Footer link -->
+      <p class="error-footer">
+        Vous pouvez aussi revenir au <a href="../dashboard.html">tableau de bord</a>.
+      </p>
+
+    </div>
+    <!-- end .error-content -->
+
+  </div>
+  <!-- end .error-layout -->
+
+</body>
+</html>

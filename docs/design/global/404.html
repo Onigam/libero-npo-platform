@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; Page introuvable</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: GLO-002 404 Not Found ── */
+
+    .error-layout {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-bg);
+      padding: var(--space-6);
+    }
+
+    .error-content {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    /* ── Logo ── */
+    .error-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-10);
+    }
+
+    .error-logo-mark {
+      width: 48px;
+      height: 48px;
+      background: var(--color-primary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+    }
+
+    .error-logo-text {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      color: var(--color-text);
+    }
+
+    /* ── Illustration: compass with lost path ── */
+    .error-illustration {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto var(--space-8);
+    }
+
+    /* Outer compass ring */
+    .compass-ring {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 150px;
+      height: 150px;
+      border: 3px solid var(--color-neutral-200);
+      border-radius: var(--radius-full);
+      background: var(--color-white);
+      box-shadow: var(--shadow-card);
+    }
+
+    /* Inner compass ring */
+    .compass-inner {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 110px;
+      height: 110px;
+      border: 2px dashed var(--color-neutral-200);
+      border-radius: var(--radius-full);
+    }
+
+    /* Cardinal markers */
+    .compass-mark {
+      position: absolute;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-neutral-400);
+    }
+
+    .compass-mark--n {
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--color-primary);
+      font-weight: var(--weight-bold);
+    }
+
+    .compass-mark--s {
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .compass-mark--e {
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .compass-mark--w {
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Compass needle */
+    .compass-needle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 4px;
+      height: 52px;
+      transform: translate(-50%, -50%) rotate(35deg);
+      transform-origin: center center;
+    }
+
+    .compass-needle::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 24px solid var(--color-primary);
+    }
+
+    .compass-needle::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 22px solid var(--color-neutral-300);
+    }
+
+    /* Center pivot dot */
+    .compass-pivot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background: var(--color-amber);
+      border-radius: var(--radius-full);
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      box-shadow: 0 0 0 3px var(--color-white);
+    }
+
+    /* Dotted wandering path */
+    .compass-path {
+      position: absolute;
+      bottom: -8px;
+      right: -20px;
+      width: 60px;
+      height: 40px;
+      border: 2px dashed var(--color-primary-light);
+      border-radius: 0 0 30px 0;
+      border-top: none;
+      border-left: none;
+      opacity: 0.7;
+    }
+
+    .compass-path::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+      width: 10px;
+      height: 10px;
+      background: var(--color-primary);
+      border-radius: var(--radius-full);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    /* Small question mark */
+    .compass-question {
+      position: absolute;
+      top: -10px;
+      right: -14px;
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      color: var(--color-amber);
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    /* ── Typography ── */
+    .error-code {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-primary);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      margin-bottom: var(--space-3);
+    }
+
+    .error-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-regular);
+      color: var(--color-text);
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-4);
+    }
+
+    .error-message {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+      max-width: 380px;
+      margin: 0 auto var(--space-8);
+    }
+
+    /* ── Actions ── */
+    .error-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .error-search {
+      max-width: 320px;
+      margin: 0 auto var(--space-8);
+    }
+
+    .error-search .form-input {
+      text-align: center;
+    }
+
+    .error-search .form-input::placeholder {
+      text-align: center;
+    }
+
+    /* ── Divider ── */
+    .error-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+    }
+
+    .error-divider::before,
+    .error-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-neutral-200);
+    }
+
+    /* ── Footer ── */
+    .error-footer {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .error-footer a {
+      color: var(--color-primary);
+      font-weight: var(--weight-medium);
+    }
+
+    .error-footer a:hover {
+      color: var(--color-primary-dark);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="error-layout">
+
+    <div class="error-content">
+
+      <!-- ============================== -->
+      <!--            Logo                -->
+      <!-- ============================== -->
+      <div class="error-logo">
+        <div class="error-logo-mark">L</div>
+        <span class="error-logo-text">Libero</span>
+      </div>
+
+      <!-- ============================== -->
+      <!--     CSS Art: Compass           -->
+      <!-- ============================== -->
+      <div class="error-illustration">
+        <div class="compass-ring">
+          <span class="compass-mark compass-mark--n">N</span>
+          <span class="compass-mark compass-mark--s">S</span>
+          <span class="compass-mark compass-mark--e">E</span>
+          <span class="compass-mark compass-mark--w">O</span>
+        </div>
+        <div class="compass-inner"></div>
+        <div class="compass-needle"></div>
+        <div class="compass-pivot"></div>
+        <div class="compass-path"></div>
+        <span class="compass-question">?</span>
+      </div>
+
+      <!-- ============================== -->
+      <!--        Heading & text          -->
+      <!-- ============================== -->
+      <div class="error-code">Erreur 404</div>
+      <h1 class="error-title">Page introuvable</h1>
+      <p class="error-message">
+        La page que vous recherchez n&rsquo;existe pas ou a &eacute;t&eacute; d&eacute;plac&eacute;e.
+        Pas d&rsquo;inqui&eacute;tude, nous allons vous remettre sur le bon chemin.
+      </p>
+
+      <!-- ============================== -->
+      <!--           Actions              -->
+      <!-- ============================== -->
+      <div class="error-actions">
+        <a href="../dashboard.html" class="btn btn-primary btn-lg">
+          Retour au tableau de bord
+        </a>
+      </div>
+
+      <div class="error-divider">ou</div>
+
+      <div class="error-search">
+        <input
+          class="form-input"
+          type="search"
+          placeholder="Rechercher dans Libero&hellip;"
+          aria-label="Rechercher dans Libero"
+        >
+      </div>
+
+      <!-- ============================== -->
+      <!--           Footer               -->
+      <!-- ============================== -->
+      <footer class="error-footer">
+        Si le probl&egrave;me persiste, contactez notre
+        <a href="mailto:support@libero.org">support</a>.
+      </footer>
+
+    </div>
+    <!-- end .error-content -->
+
+  </div>
+  <!-- end .error-layout -->
+
+</body>
+</html>

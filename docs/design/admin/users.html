@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; Gestion des utilisateurs</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific styles for admin/users (ADM-002) ── */
+
+    /* User cell: avatar + name/email stacked */
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .user-cell-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      flex-shrink: 0;
+    }
+
+    .user-cell-avatar--green  { background: var(--color-primary); }
+    .user-cell-avatar--sky    { background: var(--color-sky); }
+    .user-cell-avatar--amber  { background: var(--color-amber); }
+    .user-cell-avatar--indigo { background: var(--color-indigo); }
+
+    .user-cell-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .user-cell-name {
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-cell-email {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Status dot inside badges */
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+      margin-right: var(--space-1);
+    }
+
+    .status-dot--active {
+      background: var(--color-primary);
+    }
+
+    .status-dot--invited {
+      background: var(--color-amber);
+    }
+
+    .status-dot--disabled {
+      background: var(--color-indigo);
+    }
+
+    /* Action menu button (3-dot) */
+    .action-menu-btn {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-md);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .action-menu-btn:hover {
+      background: var(--color-neutral-100);
+      color: var(--color-text);
+    }
+
+    /* Table search input */
+    .table-search {
+      width: 260px;
+      height: 32px;
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 0 var(--space-3) 0 var(--space-8);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      transition: border-color var(--duration-normal) var(--ease-out);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A8A29E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 10px center;
+    }
+
+    .table-search::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .table-search:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    /* User count label */
+    .user-count {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    /* ── Modal overlay ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: var(--z-modal);
+      padding: var(--space-6);
+    }
+
+    .modal-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-modal);
+      width: 100%;
+      max-width: 480px;
+      padding: var(--space-8);
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      color: var(--color-text);
+      margin-bottom: var(--space-6);
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--color-neutral-100);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">ASM &mdash; Association Solidarit&eacute; M&eacute;diterran&eacute;e</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- ── Topbar ── -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Param&egrave;tres</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Utilisateurs</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input
+            class="topbar-search-input"
+            type="search"
+            placeholder="Rechercher&hellip;  &#8984;K"
+            aria-label="Recherche globale"
+          >
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+            &#128276;
+            <span class="notification-dot"></span>
+          </button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+      <!-- end .topbar -->
+
+      <!-- ── Main Content ── -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Gestion des utilisateurs</h1>
+            <p class="page-subtitle">Invitez des membres, g&eacute;rez les r&ocirc;les et les acc&egrave;s.</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" type="button">+ Inviter un utilisateur</button>
+          </div>
+        </div>
+
+        <!-- Table Controls -->
+        <div class="table-controls">
+          <div class="table-controls-left">
+            <input
+              class="table-search"
+              type="search"
+              placeholder="Rechercher un utilisateur&hellip;"
+              aria-label="Rechercher un utilisateur"
+            >
+            <div class="filter-bar">
+              <button class="filter-chip active" type="button">Tous</button>
+              <button class="filter-chip" type="button">Actifs</button>
+              <button class="filter-chip" type="button">Invit&eacute;s</button>
+              <button class="filter-chip" type="button">D&eacute;sactiv&eacute;s</button>
+            </div>
+          </div>
+          <div class="table-controls-right">
+            <span class="user-count">8 utilisateurs</span>
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Utilisateur</th>
+                <th>Email</th>
+                <th>R&ocirc;le</th>
+                <th>Statut</th>
+                <th>Derni&egrave;re connexion</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- Row 1 — Claire Dubois -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell-avatar user-cell-avatar--green">CD</div>
+                    <div class="user-cell-info">
+                      <span class="user-cell-name">Claire Dubois</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-secondary">claire@solidarite-med.org</td>
+                <td><span class="badge badge-info">Admin</span></td>
+                <td><span class="badge badge-success"><span class="status-dot status-dot--active"></span>Actif</span></td>
+                <td class="cell-secondary">27 f&eacute;v. 2026</td>
+                <td class="text-center">
+                  <button class="action-menu-btn" type="button" aria-label="Actions pour Claire Dubois">&#8943;</button>
+                </td>
+              </tr>
+
+              <!-- Row 2 — Marc Laurent -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell-avatar user-cell-avatar--sky">ML</div>
+                    <div class="user-cell-info">
+                      <span class="user-cell-name">Marc Laurent</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-secondary">marc@solidarite-med.org</td>
+                <td><span class="badge badge-neutral">Collecteur</span></td>
+                <td><span class="badge badge-success"><span class="status-dot status-dot--active"></span>Actif</span></td>
+                <td class="cell-secondary">26 f&eacute;v. 2026</td>
+                <td class="text-center">
+                  <button class="action-menu-btn" type="button" aria-label="Actions pour Marc Laurent">&#8943;</button>
+                </td>
+              </tr>
+
+              <!-- Row 3 — Sophie Bertrand -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell-avatar user-cell-avatar--amber">SB</div>
+                    <div class="user-cell-info">
+                      <span class="user-cell-name">Sophie Bertrand</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-secondary">sophie@solidarite-med.org</td>
+                <td><span class="badge badge-neutral">Gestionnaire</span></td>
+                <td><span class="badge badge-success"><span class="status-dot status-dot--active"></span>Actif</span></td>
+                <td class="cell-secondary">25 f&eacute;v. 2026</td>
+                <td class="text-center">
+                  <button class="action-menu-btn" type="button" aria-label="Actions pour Sophie Bertrand">&#8943;</button>
+                </td>
+              </tr>
+
+              <!-- Row 4 — Pierre Dupont -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell-avatar user-cell-avatar--indigo">PD</div>
+                    <div class="user-cell-info">
+                      <span class="user-cell-name">Pierre Dupont</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-secondary">pierre@solidarite-med.org</td>
+                <td><span class="badge badge-neutral">Collecteur</span></td>
+                <td><span class="badge badge-success"><span class="status-dot status-dot--active"></span>Actif</span></td>
+                <td class="cell-secondary">24 f&eacute;v. 2026</td>
+                <td class="text-center">
+                  <button class="action-menu-btn" type="button" aria-label="Actions pour Pierre Dupont">&#8943;</button>
+                </td>
+              </tr>
+
+              <!-- Row 5 — Amina Benali (Invited) -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell-avatar user-cell-avatar--green">AB</div>
+                    <div class="user-cell-info">
+                      <span class="user-cell-name">Amina Benali</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-secondary">amina@solidarite-med.org</td>
+                <td><span class="badge badge-neutral">B&eacute;n&eacute;vole</span></td>
+                <td><span class="badge badge-warning"><span class="status-dot status-dot--invited"></span>Invit&eacute;</span></td>
+                <td class="cell-secondary">&mdash;</td>
+                <td class="text-center">
+                  <button class="action-menu-btn" type="button" aria-label="Actions pour Amina Benali">&#8943;</button>
+                </td>
+              </tr>
+
+              <!-- Row 6 — Jacques Renault (Disabled) -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell-avatar user-cell-avatar--sky">JR</div>
+                    <div class="user-cell-info">
+                      <span class="user-cell-name">Jacques Renault</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-secondary">jacques@solidarite-med.org</td>
+                <td><span class="badge badge-neutral">Lecteur</span></td>
+                <td><span class="badge badge-error"><span class="status-dot status-dot--disabled"></span>D&eacute;sactiv&eacute;</span></td>
+                <td class="cell-secondary">10 jan. 2026</td>
+                <td class="text-center">
+                  <button class="action-menu-btn" type="button" aria-label="Actions pour Jacques Renault">&#8943;</button>
+                </td>
+              </tr>
+
+              <!-- Row 7 — Lina Moreau -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell-avatar user-cell-avatar--amber">LM</div>
+                    <div class="user-cell-info">
+                      <span class="user-cell-name">Lina Moreau</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-secondary">lina@solidarite-med.org</td>
+                <td><span class="badge badge-neutral">Gestionnaire</span></td>
+                <td><span class="badge badge-success"><span class="status-dot status-dot--active"></span>Actif</span></td>
+                <td class="cell-secondary">23 f&eacute;v. 2026</td>
+                <td class="text-center">
+                  <button class="action-menu-btn" type="button" aria-label="Actions pour Lina Moreau">&#8943;</button>
+                </td>
+              </tr>
+
+              <!-- Row 8 — Thomas Garcia -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell-avatar user-cell-avatar--indigo">TG</div>
+                    <div class="user-cell-info">
+                      <span class="user-cell-name">Thomas Garcia</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-secondary">thomas@solidarite-med.org</td>
+                <td><span class="badge badge-neutral">Lecteur</span></td>
+                <td><span class="badge badge-success"><span class="status-dot status-dot--active"></span>Actif</span></td>
+                <td class="cell-secondary">22 f&eacute;v. 2026</td>
+                <td class="text-center">
+                  <button class="action-menu-btn" type="button" aria-label="Actions pour Thomas Garcia">&#8943;</button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <!-- end .data-table-wrapper -->
+
+      </main>
+      <!-- end .main-content -->
+
+    </div>
+    <!-- end .main-wrapper -->
+
+  </div>
+  <!-- end .app-layout -->
+
+  <!-- ============================== -->
+  <!--        Invite Modal             -->
+  <!-- ============================== -->
+  <div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-invite">
+
+    <div class="modal-card">
+      <h2 class="modal-title" id="modal-title-invite">Inviter un utilisateur</h2>
+
+      <form>
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label form-label-required" for="invite-email">Email</label>
+          <input
+            class="form-input"
+            type="email"
+            id="invite-email"
+            placeholder="nom@exemple.org"
+            required
+          >
+        </div>
+
+        <!-- Role -->
+        <div class="form-group">
+          <label class="form-label" for="invite-role">R&ocirc;le</label>
+          <select class="form-select" id="invite-role">
+            <option value="collecteur">Collecteur</option>
+            <option value="gestionnaire">Gestionnaire</option>
+            <option value="benevole">B&eacute;n&eacute;vole</option>
+            <option value="lecteur">Lecteur</option>
+          </select>
+        </div>
+
+        <!-- Custom message -->
+        <div class="form-group">
+          <label class="form-label" for="invite-message">Message personnalis&eacute;</label>
+          <textarea
+            class="form-textarea"
+            id="invite-message"
+            rows="3"
+            placeholder="Ajoutez un message d'accueil (optionnel)&hellip;"
+          ></textarea>
+          <p class="form-hint">Ce message sera inclus dans l'email d'invitation.</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="modal-actions">
+          <button class="btn btn-secondary" type="button">Annuler</button>
+          <button class="btn btn-primary" type="submit">Envoyer l'invitation</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+  <!-- end .modal-overlay -->
+
+</body>
+</html>
