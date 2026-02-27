@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes de cas &mdash; Amira Al-Rashid &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: PROG-005 Case notes ── */
+
+    /* Note card */
+    .note-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .note-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: var(--space-5);
+      position: relative;
+    }
+
+    .note-card--locked {
+      background: var(--color-neutral-50);
+    }
+
+    .note-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+
+    .note-author {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .note-author-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .note-author-role {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .note-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .note-timestamp {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+    }
+
+    .note-lock {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .note-lock-icon {
+      font-size: var(--text-sm);
+    }
+
+    .note-body {
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+
+    .note-body p {
+      margin-bottom: var(--space-2);
+    }
+
+    .note-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .note-body strong {
+      font-weight: var(--weight-semi);
+    }
+
+    .note-body ul {
+      margin: var(--space-1) 0 var(--space-2) var(--space-5);
+      list-style: disc;
+    }
+
+    .note-body li {
+      margin-bottom: var(--space-1);
+    }
+
+    .note-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-neutral-100);
+    }
+
+    .note-tags {
+      display: flex;
+      gap: var(--space-1);
+    }
+
+    .note-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 var(--space-2);
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .note-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    /* Print button */
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    /* Rich text input area */
+    .note-input-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: var(--space-5);
+    }
+
+    .note-input-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+
+    .note-input-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      color: var(--color-text);
+    }
+
+    /* Rich text toolbar */
+    .richtext-toolbar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      border: 1px solid var(--color-border);
+      border-bottom: none;
+    }
+
+    .richtext-toolbar-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      transition: all var(--duration-normal) var(--ease-out);
+      font-family: var(--font-body);
+    }
+
+    .richtext-toolbar-btn:hover {
+      background: var(--color-neutral-200);
+      color: var(--color-text);
+    }
+
+    .richtext-toolbar-btn.active {
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+    }
+
+    .richtext-toolbar-sep {
+      width: 1px;
+      height: 20px;
+      background: var(--color-neutral-200);
+      margin: 0 var(--space-1);
+    }
+
+    .richtext-area {
+      width: 100%;
+      min-height: 160px;
+      padding: var(--space-4);
+      border: 1px solid var(--color-border);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+      resize: vertical;
+      background: var(--color-white);
+    }
+
+    .richtext-area:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    .richtext-area::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .note-input-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-3);
+    }
+
+    .note-input-hint {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="list.html" class="nav-item active">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+          <span class="nav-item-badge">6</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Coordinatrice Programmes</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">ASM</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Programmes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="detail.html">Accompagnement R&eacute;fugi&eacute;s</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="beneficiary-detail.html">Amira Al-Rashid</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Notes de cas</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher&hellip;" aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">&#128276;<span class="notification-dot"></span></button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">Notes de cas</h1>
+            <p class="page-subtitle">Amira Al-Rashid &mdash; Accompagnement R&eacute;fugi&eacute;s &mdash; 12 notes</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary print-btn" type="button">&#128424; Imprimer</button>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--       Chronological Notes       -->
+        <!-- ============================== -->
+        <div class="note-list">
+
+          <!-- Note 1 — Recent, editable -->
+          <div class="note-card">
+            <div class="note-header">
+              <div class="note-author">
+                <span class="avatar avatar-sm avatar-green">FH</span>
+                <div>
+                  <div class="note-author-name">Fatima Hadji</div>
+                  <div class="note-author-role">Charg&eacute;e de cas</div>
+                </div>
+              </div>
+              <div class="note-meta">
+                <span class="note-timestamp">25/02/2026 &mdash; 14:32</span>
+              </div>
+            </div>
+            <div class="note-body">
+              <p><strong>Accompagnement pr&eacute;fecture &mdash; Renouvellement APS</strong></p>
+              <p>Accompagn&eacute; Amira &agrave; la pr&eacute;fecture ce matin pour le renouvellement de son attestation de demande d'asile. Le dossier complet a &eacute;t&eacute; d&eacute;pos&eacute; sans difficult&eacute;.</p>
+              <ul>
+                <li>Nouvelle APS attendue sous 3 semaines</li>
+                <li>R&eacute;c&eacute;piss&eacute; de d&eacute;p&ocirc;t obtenu &mdash; scann&eacute; et ajout&eacute; aux documents</li>
+                <li>Prochain RDV OFPRA le 15/03 &mdash; &agrave; pr&eacute;parer</li>
+              </ul>
+              <p>Amira semble plus confiante concernant sa proc&eacute;dure. Elle a commenc&eacute; &agrave; s'exprimer davantage en fran&ccedil;ais lors de nos &eacute;changes.</p>
+            </div>
+            <div class="note-footer">
+              <div class="note-tags">
+                <span class="note-tag">Pr&eacute;fecture</span>
+                <span class="note-tag">APS</span>
+                <span class="note-tag">Administratif</span>
+              </div>
+              <div class="note-actions">
+                <button class="btn btn-sm btn-ghost" type="button">Modifier</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Note 2 — Locked -->
+          <div class="note-card note-card--locked">
+            <div class="note-header">
+              <div class="note-author">
+                <span class="avatar avatar-sm avatar-green">FH</span>
+                <div>
+                  <div class="note-author-name">Fatima Hadji</div>
+                  <div class="note-author-role">Charg&eacute;e de cas</div>
+                </div>
+              </div>
+              <div class="note-meta">
+                <span class="note-lock"><span class="note-lock-icon">&#128274;</span> Verrouill&eacute;e</span>
+                <span class="note-timestamp">18/02/2026 &mdash; 16:05</span>
+              </div>
+            </div>
+            <div class="note-body">
+              <p><strong>Orientation logement &mdash; Dossier DALO</strong></p>
+              <p>S&eacute;ance de travail sur le dossier DALO. Toutes les pi&egrave;ces justificatives ont &eacute;t&eacute; rassembl&eacute;es :</p>
+              <ul>
+                <li>Justificatif d'identit&eacute; (APS en cours de validit&eacute;)</li>
+                <li>Justificatifs de ressources (ADA)</li>
+                <li>Attestation d'h&eacute;bergement d'urgence actuel</li>
+                <li>Lettre de motivation r&eacute;dig&eacute;e avec Amira</li>
+              </ul>
+              <p>Dossier envoy&eacute; par recommand&eacute; &agrave; la commission de m&eacute;diation. D&eacute;lai de r&eacute;ponse estim&eacute; : 6 mois.</p>
+            </div>
+            <div class="note-footer">
+              <div class="note-tags">
+                <span class="note-tag">Logement</span>
+                <span class="note-tag">DALO</span>
+              </div>
+              <div class="note-actions">
+                <span class="text-xs text-muted">Modifiable jusqu'au 19/02 16:05</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Note 3 — Locked -->
+          <div class="note-card note-card--locked">
+            <div class="note-header">
+              <div class="note-author">
+                <span class="avatar avatar-sm avatar-indigo">NR</span>
+                <div>
+                  <div class="note-author-name">Nour Rahmani</div>
+                  <div class="note-author-role">Formatrice FLE</div>
+                </div>
+              </div>
+              <div class="note-meta">
+                <span class="note-lock"><span class="note-lock-icon">&#128274;</span> Verrouill&eacute;e</span>
+                <span class="note-timestamp">12/02/2026 &mdash; 17:20</span>
+              </div>
+            </div>
+            <div class="note-body">
+              <p><strong>Cours FLE &mdash; Progression A2</strong></p>
+              <p>Amira a termin&eacute; la session 12 sur 20 du cursus FLE niveau A2. Tr&egrave;s bonne participation orale. Les points &agrave; am&eacute;liorer restent l'&eacute;crit, notamment la conjugaison des verbes irr&eacute;guliers.</p>
+              <p>Passage au niveau B1 pr&eacute;vu d&eacute;but mars si les prochaines sessions confirment la progression. Je recommande de planifier le TCF pour valider ses acquis avant la fin du trimestre.</p>
+            </div>
+            <div class="note-footer">
+              <div class="note-tags">
+                <span class="note-tag">FLE</span>
+                <span class="note-tag">Formation</span>
+                <span class="note-tag">Progression</span>
+              </div>
+              <div class="note-actions"></div>
+            </div>
+          </div>
+
+          <!-- Note 4 — Locked -->
+          <div class="note-card note-card--locked">
+            <div class="note-header">
+              <div class="note-author">
+                <span class="avatar avatar-sm avatar-green">FH</span>
+                <div>
+                  <div class="note-author-name">Fatima Hadji</div>
+                  <div class="note-author-role">Charg&eacute;e de cas</div>
+                </div>
+              </div>
+              <div class="note-meta">
+                <span class="note-lock"><span class="note-lock-icon">&#128274;</span> Verrouill&eacute;e</span>
+                <span class="note-timestamp">28/01/2026 &mdash; 11:45</span>
+              </div>
+            </div>
+            <div class="note-body">
+              <p><strong>Bilan de sant&eacute; &mdash; Centre de sant&eacute;</strong></p>
+              <p>Accompagn&eacute; Amira au centre de sant&eacute; pour le bilan initial. M&eacute;decin g&eacute;n&eacute;raliste rassurante. R&eacute;f&eacute;rencement vers un suivi psychologique recommand&eacute; par le m&eacute;decin &mdash; orientation vers le centre Paoli-Calmettes effectu&eacute;e.</p>
+              <p>Amira a accept&eacute; le principe d'un suivi psy. Premier RDV programm&eacute; le 10/02.</p>
+            </div>
+            <div class="note-footer">
+              <div class="note-tags">
+                <span class="note-tag">Sant&eacute;</span>
+                <span class="note-tag">R&eacute;f&eacute;rencement</span>
+              </div>
+              <div class="note-actions"></div>
+            </div>
+          </div>
+
+          <!-- Note 5 — Locked -->
+          <div class="note-card note-card--locked">
+            <div class="note-header">
+              <div class="note-author">
+                <span class="avatar avatar-sm avatar-sky">JD</span>
+                <div>
+                  <div class="note-author-name">Jean Duval</div>
+                  <div class="note-author-role">Conseiller juridique</div>
+                </div>
+              </div>
+              <div class="note-meta">
+                <span class="note-lock"><span class="note-lock-icon">&#128274;</span> Verrouill&eacute;e</span>
+                <span class="note-timestamp">15/01/2026 &mdash; 15:10</span>
+              </div>
+            </div>
+            <div class="note-body">
+              <p><strong>Pr&eacute;paration entretien OFPRA</strong></p>
+              <p>S&eacute;ance de pr&eacute;paration avec Me Khadija Amrani (avocate). R&eacute;vision compl&egrave;te du r&eacute;cit de vie. Points cl&eacute;s travaill&eacute;s :</p>
+              <ul>
+                <li>Chronologie pr&eacute;cise des &eacute;v&eacute;nements</li>
+                <li>Description des persecutions subies</li>
+                <li>Simulation d'entretien (2 tours)</li>
+              </ul>
+              <p>Amira est bien pr&eacute;par&eacute;e. Son r&eacute;cit est coh&eacute;rent et d&eacute;taill&eacute;. La convocation OFPRA est attendue pour mars.</p>
+            </div>
+            <div class="note-footer">
+              <div class="note-tags">
+                <span class="note-tag">Juridique</span>
+                <span class="note-tag">OFPRA</span>
+                <span class="note-tag">Asile</span>
+              </div>
+              <div class="note-actions"></div>
+            </div>
+          </div>
+
+        </div>
+        <!-- end .note-list -->
+
+        <!-- ============================== -->
+        <!--      Rich Text Input            -->
+        <!-- ============================== -->
+        <div class="note-input-card">
+          <div class="note-input-header">
+            <h3 class="note-input-title">Nouvelle note de cas</h3>
+          </div>
+
+          <!-- Rich text toolbar -->
+          <div class="richtext-toolbar">
+            <button class="richtext-toolbar-btn" type="button" title="Gras" aria-label="Gras"><strong>B</strong></button>
+            <button class="richtext-toolbar-btn" type="button" title="Italique" aria-label="Italique"><em>I</em></button>
+            <button class="richtext-toolbar-btn" type="button" title="Soulign&eacute;" aria-label="Soulign&eacute;"><u>U</u></button>
+            <div class="richtext-toolbar-sep"></div>
+            <button class="richtext-toolbar-btn" type="button" title="Liste &agrave; puces" aria-label="Liste &agrave; puces">&#8226;</button>
+            <button class="richtext-toolbar-btn" type="button" title="Liste num&eacute;rot&eacute;e" aria-label="Liste num&eacute;rot&eacute;e">1.</button>
+            <div class="richtext-toolbar-sep"></div>
+            <button class="richtext-toolbar-btn" type="button" title="Titre" aria-label="Titre">H</button>
+            <button class="richtext-toolbar-btn" type="button" title="Lien" aria-label="Lien">&#128279;</button>
+          </div>
+
+          <!-- Text area -->
+          <textarea
+            class="richtext-area"
+            placeholder="Saisissez votre note de cas ici&hellip; Vous pouvez utiliser la barre d'outils pour mettre en forme le texte."
+            aria-label="Contenu de la note de cas"
+            rows="8"
+          ></textarea>
+
+          <div class="note-input-footer">
+            <span class="note-input-hint">&#128274; Les notes sont verrouill&eacute;es automatiquement 24h apr&egrave;s leur cr&eacute;ation.</span>
+            <div class="flex gap-3">
+              <button class="btn btn-ghost" type="button">Annuler</button>
+              <button class="btn btn-primary" type="button">Enregistrer la note</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>

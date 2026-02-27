@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B&eacute;n&eacute;ficiaires inscrits &mdash; Accompagnement R&eacute;fugi&eacute;s &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: PROG-003 Enrolled beneficiaries ── */
+
+    .filter-bar-section {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .filter-bar-section .form-select {
+      width: auto;
+      min-width: 140px;
+      height: 32px;
+      font-size: var(--text-xs);
+      padding: 0 var(--space-6) 0 var(--space-3);
+      border-radius: var(--radius-pill);
+      background-color: var(--color-white);
+    }
+
+    .filter-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      white-space: nowrap;
+    }
+
+    /* Bulk actions bar */
+    .bulk-actions-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-primary-50);
+      border: 1px solid var(--color-primary-100);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+      font-size: var(--text-sm);
+    }
+
+    .bulk-actions-bar-count {
+      font-weight: var(--weight-semi);
+      color: var(--color-primary-dark);
+    }
+
+    .bulk-actions-bar-sep {
+      width: 1px;
+      height: 20px;
+      background: var(--color-primary-100);
+    }
+
+    /* Checkbox styling in table */
+    .data-table input[type="checkbox"] {
+      accent-color: var(--color-primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .data-table th:first-child,
+    .data-table td:first-child {
+      width: 40px;
+      text-align: center;
+    }
+
+    /* Action button */
+    .action-view {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .action-view:hover {
+      background: var(--color-neutral-100);
+      color: var(--color-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="list.html" class="nav-item active">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+          <span class="nav-item-badge">6</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Coordinatrice Programmes</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Association Solidarit&eacute; M&eacute;diterran&eacute;e</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Programmes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="detail.html">Accompagnement R&eacute;fugi&eacute;s</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">B&eacute;n&eacute;ficiaires</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher un b&eacute;n&eacute;ficiaire&hellip;" aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">&#128276;<span class="notification-dot"></span></button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">B&eacute;n&eacute;ficiaires inscrits</h1>
+            <p class="page-subtitle">Accompagnement R&eacute;fugi&eacute;s &mdash; 54 b&eacute;n&eacute;ficiaires actifs, 8 en attente</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" type="button">Exporter</button>
+            <button class="btn btn-primary" type="button">+ Inscrire un b&eacute;n&eacute;ficiaire</button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar-section">
+          <span class="filter-label">Filtres :</span>
+          <select class="form-select" aria-label="Statut">
+            <option selected>Tous les statuts</option>
+            <option>Actif</option>
+            <option>En attente</option>
+            <option>Termin&eacute;</option>
+            <option>Sorti</option>
+          </select>
+          <select class="form-select" aria-label="Charg&eacute; de cas">
+            <option selected>Tous les charg&eacute;s de cas</option>
+            <option>Fatima Hadji</option>
+            <option>Samira Benali</option>
+            <option>Nour Rahmani</option>
+            <option>Jean Duval</option>
+          </select>
+          <select class="form-select" aria-label="P&eacute;riode d'inscription">
+            <option selected>Toutes les p&eacute;riodes</option>
+            <option>Ce mois</option>
+            <option>Ce trimestre</option>
+            <option>Cette ann&eacute;e</option>
+          </select>
+        </div>
+
+        <!-- Bulk Actions Bar (shown when rows selected) -->
+        <div class="bulk-actions-bar">
+          <span class="bulk-actions-bar-count">3 s&eacute;lectionn&eacute;(e)s</span>
+          <div class="bulk-actions-bar-sep"></div>
+          <button class="btn btn-sm btn-secondary" type="button">Assigner un charg&eacute; de cas</button>
+          <button class="btn btn-sm btn-secondary" type="button">Changer le statut</button>
+          <button class="btn btn-sm btn-ghost" type="button">Exporter la s&eacute;lection</button>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" aria-label="S&eacute;lectionner tout"></th>
+                <th>Nom</th>
+                <th>Date d'inscription</th>
+                <th>Statut</th>
+                <th>Charg&eacute;(e) de cas</th>
+                <th>Derni&egrave;re note</th>
+                <th>Services</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1 — selected -->
+              <tr style="background: var(--color-primary-50);">
+                <td><input type="checkbox" checked aria-label="S&eacute;lectionner Amira Al-Rashid"></td>
+                <td class="cell-name"><a href="beneficiary-detail.html" style="color: var(--color-sky);">Amira Al-Rashid</a></td>
+                <td class="cell-secondary">12/09/2025</td>
+                <td><span class="badge badge-success">Actif &#10003;</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-green">FH</span>
+                    <span class="text-sm">Fatima Hadji</span>
+                  </div>
+                </td>
+                <td class="cell-secondary">25/02/2026</td>
+                <td class="cell-mono">7</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 2 — selected -->
+              <tr style="background: var(--color-primary-50);">
+                <td><input type="checkbox" checked aria-label="S&eacute;lectionner Youssef Karam"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Youssef Karam</a></td>
+                <td class="cell-secondary">03/11/2025</td>
+                <td><span class="badge badge-success">Actif &#10003;</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-amber">SB</span>
+                    <span class="text-sm">Samira Benali</span>
+                  </div>
+                </td>
+                <td class="cell-secondary">24/02/2026</td>
+                <td class="cell-mono">5</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 3 — selected -->
+              <tr style="background: var(--color-primary-50);">
+                <td><input type="checkbox" checked aria-label="S&eacute;lectionner Marie Nguema"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Marie Nguema</a></td>
+                <td class="cell-secondary">20/01/2026</td>
+                <td><span class="badge badge-success">Actif &#10003;</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-green">FH</span>
+                    <span class="text-sm">Fatima Hadji</span>
+                  </div>
+                </td>
+                <td class="cell-secondary">22/02/2026</td>
+                <td class="cell-mono">3</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr>
+                <td><input type="checkbox" aria-label="S&eacute;lectionner Khaled Mansour"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Khaled Mansour</a></td>
+                <td class="cell-secondary">15/07/2025</td>
+                <td><span class="badge badge-success">Actif &#10003;</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-amber">SB</span>
+                    <span class="text-sm">Samira Benali</span>
+                  </div>
+                </td>
+                <td class="cell-secondary">20/02/2026</td>
+                <td class="cell-mono">9</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 5 -->
+              <tr>
+                <td><input type="checkbox" aria-label="S&eacute;lectionner Fatoumata Diarra"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Fatoumata Diarra</a></td>
+                <td class="cell-secondary">02/12/2025</td>
+                <td><span class="badge badge-success">Actif &#10003;</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-indigo">NR</span>
+                    <span class="text-sm">Nour Rahmani</span>
+                  </div>
+                </td>
+                <td class="cell-secondary">18/02/2026</td>
+                <td class="cell-mono">4</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 6 -->
+              <tr>
+                <td><input type="checkbox" aria-label="S&eacute;lectionner Omar Sadiq"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Omar Sadiq</a></td>
+                <td class="cell-secondary">10/01/2026</td>
+                <td><span class="badge badge-success">Actif &#10003;</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-green">FH</span>
+                    <span class="text-sm">Fatima Hadji</span>
+                  </div>
+                </td>
+                <td class="cell-secondary">15/02/2026</td>
+                <td class="cell-mono">2</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 7 — Pending -->
+              <tr>
+                <td><input type="checkbox" aria-label="S&eacute;lectionner Hassan Diallo"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Hassan Diallo</a></td>
+                <td class="cell-secondary">08/02/2026</td>
+                <td><span class="badge badge-warning">En attente &#9888;</span></td>
+                <td class="cell-secondary">&mdash;</td>
+                <td class="cell-secondary">&mdash;</td>
+                <td class="cell-mono">0</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 8 — Pending -->
+              <tr>
+                <td><input type="checkbox" aria-label="S&eacute;lectionner Aisha Mohamed"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Aisha Mohamed</a></td>
+                <td class="cell-secondary">12/02/2026</td>
+                <td><span class="badge badge-warning">En attente &#9888;</span></td>
+                <td class="cell-secondary">&mdash;</td>
+                <td class="cell-secondary">&mdash;</td>
+                <td class="cell-mono">0</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 9 — Completed -->
+              <tr>
+                <td><input type="checkbox" aria-label="S&eacute;lectionner Layla Mahmoud"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Layla Mahmoud</a></td>
+                <td class="cell-secondary">14/06/2025</td>
+                <td><span class="badge badge-neutral">Termin&eacute;</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-amber">SB</span>
+                    <span class="text-sm">Samira Benali</span>
+                  </div>
+                </td>
+                <td class="cell-secondary">10/01/2026</td>
+                <td class="cell-mono">12</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+              <!-- Row 10 — Exited -->
+              <tr>
+                <td><input type="checkbox" aria-label="S&eacute;lectionner Ibrahim Toure"></td>
+                <td class="cell-name"><a href="#" style="color: var(--color-sky);">Ibrahim Toure</a></td>
+                <td class="cell-secondary">20/03/2025</td>
+                <td><span class="badge badge-error">Sorti &#10005;</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="avatar avatar-sm avatar-indigo">NR</span>
+                    <span class="text-sm">Nour Rahmani</span>
+                  </div>
+                </td>
+                <td class="cell-secondary">05/12/2025</td>
+                <td class="cell-mono">6</td>
+                <td class="text-center">
+                  <button class="action-view" type="button" aria-label="Voir le d&eacute;tail" title="Voir le d&eacute;tail">&#128065;</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <span class="pagination-info">Affichage 1&ndash;10 sur 62</span>
+          <div class="pagination-controls">
+            <button class="pagination-btn" disabled aria-label="Page pr&eacute;c&eacute;dente">&#8249;</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">...</button>
+            <button class="pagination-btn">7</button>
+            <button class="pagination-btn" aria-label="Page suivante">&#8250;</button>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+</body>
+</html>

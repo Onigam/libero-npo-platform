@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accompagnement R&eacute;fugi&eacute;s &mdash; Programme &mdash; Libero NPO Platform</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Page-specific: PROG-002 Program detail ── */
+
+    .program-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+
+    .program-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-lg);
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-2xl);
+      flex-shrink: 0;
+    }
+
+    .program-info { flex: 1; min-width: 0; }
+
+    .program-name {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+      line-height: var(--leading-tight);
+    }
+
+    .program-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-2);
+    }
+
+    .program-meta-sep { color: var(--color-neutral-300); }
+
+    .program-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-shrink: 0;
+    }
+
+    /* Capacity hero bar */
+    .capacity-hero {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: var(--space-5);
+      margin-bottom: var(--space-6);
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+    }
+
+    .capacity-hero-bar {
+      flex: 1;
+    }
+
+    .capacity-hero-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: var(--space-2);
+    }
+
+    .capacity-hero-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .capacity-hero-numbers {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .capacity-hero-track {
+      height: 12px;
+      background: var(--color-neutral-200);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .capacity-hero-fill {
+      height: 100%;
+      background: var(--color-primary);
+      border-radius: var(--radius-pill);
+      transition: width var(--duration-slow) var(--ease-out);
+    }
+
+    .capacity-hero-stats {
+      display: flex;
+      gap: var(--space-6);
+      flex-shrink: 0;
+    }
+
+    .capacity-stat-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-0-5);
+    }
+
+    .capacity-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+
+    /* Detail rows */
+    .detail-row {
+      display: flex;
+      align-items: baseline;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--color-neutral-100);
+      font-size: var(--text-sm);
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+
+    .detail-label {
+      width: 160px;
+      flex-shrink: 0;
+      color: var(--color-text-secondary);
+      font-weight: var(--weight-medium);
+    }
+
+    .detail-value {
+      flex: 1;
+      color: var(--color-text);
+    }
+
+    /* Mini table inside tabs */
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+
+    .mini-table th {
+      text-align: left;
+      font-weight: var(--weight-semi);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-text-secondary);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .mini-table td {
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-neutral-100);
+      vertical-align: middle;
+    }
+
+    .mini-table td.cell-mono {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+    }
+
+    /* Indicator cards for impact */
+    .indicator-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+
+    .indicator-card {
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+    }
+
+    .indicator-card-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-1);
+    }
+
+    .indicator-card-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+    }
+
+    .indicator-card-target {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    /* AI card wider */
+    .ai-card--wide { max-width: 100%; }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ============================== -->
+    <!--           Sidebar               -->
+    <!-- ============================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">L</div>
+        <span class="sidebar-brand-text">Libero</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9634;</span>
+          <span class="nav-item-label">Tableau de bord</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9823;</span>
+          <span class="nav-item-label">Constituants</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9829;</span>
+          <span class="nav-item-label">Dons &amp; Campagnes</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9733;</span>
+          <span class="nav-item-label">Subventions</span>
+        </a>
+        <a href="list.html" class="nav-item active">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Programmes</span>
+          <span class="nav-item-badge">6</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9975;</span>
+          <span class="nav-item-label">B&eacute;n&eacute;voles</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9673;</span>
+          <span class="nav-item-label">Impact</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9993;</span>
+          <span class="nav-item-label">Communications</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9783;</span>
+          <span class="nav-item-label">Rapports</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-item-icon">&#9881;</span>
+          <span class="nav-item-label">Param&egrave;tres</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">CD</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">Claire Dubois</div>
+          <div class="sidebar-footer-role">Coordinatrice Programmes</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================== -->
+    <!--         Main Wrapper            -->
+    <!-- ============================== -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <nav class="topbar-breadcrumb" aria-label="Fil d'Ariane">
+          <a href="#">Association Solidarit&eacute; M&eacute;diterran&eacute;e</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <a href="list.html">Programmes</a>
+          <span class="topbar-breadcrumb-sep">&#8250;</span>
+          <span class="topbar-breadcrumb-current">Accompagnement R&eacute;fugi&eacute;s</span>
+        </nav>
+
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="search" placeholder="Rechercher&hellip;" aria-label="Recherche globale">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" type="button" aria-label="Notifications">&#128276;<span class="notification-dot"></span></button>
+          <div class="topbar-avatar" aria-label="Profil Claire Dubois">CD</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- ============================== -->
+        <!--        Program Header           -->
+        <!-- ============================== -->
+        <div class="program-header">
+          <div class="program-icon">&#9829;</div>
+          <div class="program-info">
+            <h1 class="program-name">Accompagnement R&eacute;fugi&eacute;s</h1>
+            <div class="program-meta">
+              <span class="badge badge-success">Actif &#10003;</span>
+              <span class="program-meta-sep">&middot;</span>
+              <span>Accompagnement global</span>
+              <span class="program-meta-sep">&middot;</span>
+              <span>Cr&eacute;&eacute; le 15/01/2023</span>
+            </div>
+            <p style="font-size: var(--text-sm); color: var(--color-text-secondary);">
+              Programme d'accompagnement int&eacute;gral des personnes r&eacute;fugi&eacute;es et demandeuses d'asile &mdash; acc&egrave;s aux droits, logement, sant&eacute;, insertion professionnelle.
+            </p>
+          </div>
+          <div class="program-actions">
+            <button class="btn btn-primary" type="button">+ Inscrire un b&eacute;n&eacute;ficiaire</button>
+            <button class="btn btn-secondary" type="button">Modifier</button>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--        Capacity Progress        -->
+        <!-- ============================== -->
+        <div class="capacity-hero">
+          <div class="capacity-hero-bar">
+            <div class="capacity-hero-label">
+              <span class="capacity-hero-title">Capacit&eacute; du programme</span>
+              <span class="capacity-hero-numbers">54 / 60 places</span>
+            </div>
+            <div class="capacity-hero-track">
+              <div class="capacity-hero-fill" style="width: 90%"></div>
+            </div>
+          </div>
+          <div class="capacity-hero-stats">
+            <div>
+              <div class="capacity-stat-label">Inscrits actifs</div>
+              <div class="capacity-stat-value">54</div>
+            </div>
+            <div>
+              <div class="capacity-stat-label">En attente</div>
+              <div class="capacity-stat-value">8</div>
+            </div>
+            <div>
+              <div class="capacity-stat-label">Sortis ce mois</div>
+              <div class="capacity-stat-value">3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--              Tabs               -->
+        <!-- ============================== -->
+        <div class="tabs">
+          <button class="tab active" type="button">B&eacute;n&eacute;ficiaires</button>
+          <button class="tab" type="button">Indicateurs d'impact</button>
+          <button class="tab" type="button">Financements</button>
+          <button class="tab" type="button">Documents</button>
+        </div>
+
+        <!-- ============================== -->
+        <!--    Tab: B&eacute;n&eacute;ficiaires (active)   -->
+        <!-- ============================== -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">B&eacute;n&eacute;ficiaires inscrits</h3>
+            <a href="beneficiaries.html" class="btn btn-ghost btn-sm">Voir tout &#8594;</a>
+          </div>
+          <div class="card-body">
+            <table class="mini-table">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Date d'inscription</th>
+                  <th>Statut</th>
+                  <th>Charg&eacute;(e) de cas</th>
+                  <th>Services</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-name"><a href="beneficiary-detail.html" style="color: var(--color-sky);">Amira Al-Rashid</a></td>
+                  <td class="cell-mono">12/09/2025</td>
+                  <td><span class="badge badge-success">Actif &#10003;</span></td>
+                  <td>Fatima Hadji</td>
+                  <td class="cell-mono">7</td>
+                </tr>
+                <tr>
+                  <td class="cell-name"><a href="#" style="color: var(--color-sky);">Youssef Karam</a></td>
+                  <td class="cell-mono">03/11/2025</td>
+                  <td><span class="badge badge-success">Actif &#10003;</span></td>
+                  <td>Samira Benali</td>
+                  <td class="cell-mono">5</td>
+                </tr>
+                <tr>
+                  <td class="cell-name"><a href="#" style="color: var(--color-sky);">Marie Nguema</a></td>
+                  <td class="cell-mono">20/01/2026</td>
+                  <td><span class="badge badge-success">Actif &#10003;</span></td>
+                  <td>Fatima Hadji</td>
+                  <td class="cell-mono">3</td>
+                </tr>
+                <tr>
+                  <td class="cell-name"><a href="#" style="color: var(--color-sky);">Hassan Diallo</a></td>
+                  <td class="cell-mono">08/02/2026</td>
+                  <td><span class="badge badge-warning">En attente &#9888;</span></td>
+                  <td>&mdash;</td>
+                  <td class="cell-mono">0</td>
+                </tr>
+                <tr>
+                  <td class="cell-name"><a href="#" style="color: var(--color-sky);">Layla Mahmoud</a></td>
+                  <td class="cell-mono">14/06/2025</td>
+                  <td><span class="badge badge-neutral">Termin&eacute;</span></td>
+                  <td>Samira Benali</td>
+                  <td class="cell-mono">12</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--    Indicateurs d'impact         -->
+        <!-- ============================== -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">Indicateurs d'impact</h3>
+          </div>
+          <div class="card-body">
+            <div class="indicator-grid">
+              <div class="indicator-card">
+                <div class="indicator-card-label">Taux d'acc&egrave;s au logement</div>
+                <div class="indicator-card-value">68%</div>
+                <div class="indicator-card-target">Objectif : 75% &mdash; <span style="color: var(--color-amber);">&#9888; En dessous</span></div>
+              </div>
+              <div class="indicator-card">
+                <div class="indicator-card-label">Taux d'insertion professionnelle</div>
+                <div class="indicator-card-value">42%</div>
+                <div class="indicator-card-target">Objectif : 40% &mdash; <span style="color: var(--color-primary);">&#10003; Atteint</span></div>
+              </div>
+              <div class="indicator-card">
+                <div class="indicator-card-label">D&eacute;lai moyen d'acc&egrave;s aux droits</div>
+                <div class="indicator-card-value">4,2 mois</div>
+                <div class="indicator-card-target">Objectif : &lt;6 mois &mdash; <span style="color: var(--color-primary);">&#10003; Atteint</span></div>
+              </div>
+              <div class="indicator-card">
+                <div class="indicator-card-label">Sorties positives</div>
+                <div class="indicator-card-value">31</div>
+                <div class="indicator-card-target">Sur 45 sorties totales (69%)</div>
+              </div>
+              <div class="indicator-card">
+                <div class="indicator-card-label">Notes de cas ce mois</div>
+                <div class="indicator-card-value">87</div>
+                <div class="indicator-card-target">Moyenne 1,6 / b&eacute;n&eacute;ficiaire</div>
+              </div>
+              <div class="indicator-card">
+                <div class="indicator-card-label">Satisfaction b&eacute;n&eacute;ficiaires</div>
+                <div class="indicator-card-value">4,3/5</div>
+                <div class="indicator-card-target">Enqu&ecirc;te T4 2025 (n=38)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--        AI Suggestion Card       -->
+        <!-- ============================== -->
+        <div class="ai-card ai-card--wide mb-6">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">&#10024;</span>
+            <span class="ai-card-label">Suggestion IA</span>
+          </div>
+          <p class="ai-card-text">
+            Le taux d'acc&egrave;s au logement (68%) est en dessous de l'objectif de 75%. D'apr&egrave;s les donn&eacute;es, 8 b&eacute;n&eacute;ficiaires actifs ont un dossier DALO en attente depuis plus de 3 mois &mdash; envoyer un rappel group&eacute; &agrave; la pr&eacute;fecture ?
+          </p>
+          <div class="ai-card-actions">
+            <button class="btn btn-primary btn-sm" type="button">Pr&eacute;parer le courrier</button>
+            <button class="btn btn-ghost btn-sm" type="button">Ignorer</button>
+          </div>
+        </div>
+
+        <!-- ============================== -->
+        <!--         Financements            -->
+        <!-- ============================== -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Financements</h3>
+          </div>
+          <div class="card-body">
+            <table class="mini-table">
+              <thead>
+                <tr>
+                  <th>Bailleur</th>
+                  <th>Convention</th>
+                  <th>Montant allou&eacute;</th>
+                  <th>Consomm&eacute;</th>
+                  <th>P&eacute;riode</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-name">UNHCR</td>
+                  <td class="cell-mono">CONV-2025-042</td>
+                  <td class="cell-mono">&euro;75 000</td>
+                  <td class="cell-mono">&euro;58 200 (78%)</td>
+                  <td>01/2025 &ndash; 12/2025</td>
+                  <td><span class="badge badge-success">En cours &#10003;</span></td>
+                </tr>
+                <tr>
+                  <td class="cell-name">Conseil r&eacute;gional PACA</td>
+                  <td class="cell-mono">SUB-CR-2025-118</td>
+                  <td class="cell-mono">&euro;30 000</td>
+                  <td class="cell-mono">&euro;22 400 (75%)</td>
+                  <td>07/2025 &ndash; 06/2026</td>
+                  <td><span class="badge badge-success">En cours &#10003;</span></td>
+                </tr>
+                <tr>
+                  <td class="cell-name">Fondation de France</td>
+                  <td class="cell-mono">FDF-2024-R03</td>
+                  <td class="cell-mono">&euro;15 000</td>
+                  <td class="cell-mono">&euro;15 000 (100%)</td>
+                  <td>01/2024 &ndash; 12/2024</td>
+                  <td><span class="badge badge-neutral">Cl&ocirc;tur&eacute;</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>
