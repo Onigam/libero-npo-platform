@@ -850,5 +850,17 @@ Sur demande, n'importe quel administrateur peut consulter :
 
 ---
 
+---
+
+## 10. Évolution future — Mode Conversationnel (Vision 2026-2028)
+
+Les trois modes décrits ci-dessus s'appliquent à l'interface GUI classique (sidebar, modules, formulaires). Une évolution prospective explore un **paradigme conversationnel et agentique** complémentaire : un agent IA en langage naturel capable d'orchestrer des actions multi-étapes directement dans une interface de chat.
+
+Ce mode conversationnel hérite des mêmes garde-fous (pas d'action irréversible sans confirmation, données bénéficiaires sur modèle local EU, audit complet) et coexiste avec le GUI classique dans une architecture **dual-mode**.
+
+Voir : [docs/vision/conversational-mode.md](./vision/conversational-mode.md) pour l'architecture détaillée et les 11 mockups de référence.
+
+---
+
 *Document maintenu par l'équipe produit Libero. Revu à chaque évolution majeure du moteur IA.*
 *Contributeurs : Product Architect, Design Architect, Platform Architect, DPO.*

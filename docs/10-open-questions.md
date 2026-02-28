@@ -57,6 +57,8 @@
 
 **Decision needed**: Confirm scope for v1 vs v1.1 before implementation starts.
 
+**Mise à jour 2026-02** : cette vision est désormais explorée plus en profondeur dans le **mode conversationnel** — 11 mockups HTML explorant un agent IA en langage naturel avec orchestration d'actions, résultats inline, et vue hybride. Voir [docs/vision/conversational-mode.md](./vision/conversational-mode.md) et les mockups dans `docs/design/conversational-mode/`.
+
 ---
 
 ### 9. AI mode defaults by organization size

@@ -312,4 +312,16 @@ This is a v2 feature but the architecture must not foreclose it.
 
 ---
 
+---
+
+## 9. Vision future — Mode Conversationnel
+
+Au-delà du KITT principle (suggestions IA inline dans le GUI classique), Libero explore un paradigme **conversationnel et agentique** : un agent IA en langage naturel qui peut orchestrer des actions, afficher des résultats inline (graphiques, tableaux, formulaires), et réduire la friction de navigation entre modules.
+
+Ce mode conversationnel utilise les mêmes composants UI (DataTable, StatWidget, etc.) invoqués dynamiquement dans un flux de chat, en complément du GUI structuré existant.
+
+Voir : [docs/vision/conversational-mode.md](./vision/conversational-mode.md) pour la vision complète, et `docs/design/conversational-mode/` pour les 11 mockups exploratoires.
+
+---
+
 *This document is owned by the Design Architect agent and reviewed collaboratively with Platform Architect and Domain Analyst.*

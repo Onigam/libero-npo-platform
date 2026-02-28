@@ -24,6 +24,7 @@
 14. [Migration](#module-migration)
 15. [Admin](#module-admin)
 16. [Rapports](#module-rapports)
+17. [Mode Conversationnel (Vision 2026-2028)](#module-conversationnel)
 
 ---
 
@@ -1501,6 +1502,29 @@ flowchart TD
 
 ---
 
+## Module Conversationnel (Vision 2026-2028) {#module-conversationnel}
+
+> Exploration prospective : évolution vers un paradigme agentique et conversationnel.
+> Ces écrans ne sont pas des spécifications de développement immédiat mais une vision à 2-3 ans.
+> Mockups HTML : `docs/design/conversational-mode/`
+> Voir aussi : [docs/vision/conversational-mode.md](./vision/conversational-mode.md)
+
+| ID | Nom de l'écran | Description |
+|---|---|---|
+| CONV-001 | Hub conversationnel | Point d'entrée : chat IA, panneau contexte, suggestions, actions inline |
+| CONV-002 | Résultats inline | Graphiques SVG, tableaux, formulaires pré-remplis dans la conversation |
+| CONV-003 | Orchestration d'actions | Création multi-étapes (subvention + tranches + bailleur) via timeline |
+| CONV-004 | Confirmation avant action | Validation utilisateur avant opérations sensibles (envoi email masse) |
+| CONV-005 | Journal d'activité | Historique et audit de toutes les actions de l'agent IA |
+| CONV-006 | Vue hybride | Split 40/60 : conversation + données structurées synchronisées |
+| CONV-007 | Palette de commandes | Spotlight/Linear-style : commandes rapides + suggestions IA contextuelles |
+| CONV-008 | Permissions agent | Contrôle granulaire : autonome / avec confirmation / manuel uniquement |
+| CONV-009 | Onboarding agent | Configuration conversationnelle — l'agent apprend l'organisation |
+| CONV-010 | Mobile conversation | Interface mobile-first, bottom nav, quick replies |
+| CONV-011 | Dashboard IA | Tableau de bord classique enrichi par un copilote IA flottant |
+
+---
+
 ## Annexe A — Écrans globaux / transversaux
 
 ### GLO-001 — Commande globale (Command Palette)
@@ -1656,6 +1680,17 @@ flowchart TD
 | GLO-002 | Global | Page 404 | `/*` | MUST |
 | GLO-003 | Global | Erreur 500 | fallback | MUST |
 | GLO-004 | Global | Centre de notifications | panneau latéral | MUST |
+| CONV-001 | Conversationnel | Hub conversationnel | vision | VISION |
+| CONV-002 | Conversationnel | Résultats inline | vision | VISION |
+| CONV-003 | Conversationnel | Orchestration d'actions | vision | VISION |
+| CONV-004 | Conversationnel | Confirmation avant action | vision | VISION |
+| CONV-005 | Conversationnel | Journal d'activité | vision | VISION |
+| CONV-006 | Conversationnel | Vue hybride | vision | VISION |
+| CONV-007 | Conversationnel | Palette de commandes | vision | VISION |
+| CONV-008 | Conversationnel | Permissions agent | vision | VISION |
+| CONV-009 | Conversationnel | Onboarding agent | vision | VISION |
+| CONV-010 | Conversationnel | Mobile conversation | vision | VISION |
+| CONV-011 | Conversationnel | Dashboard IA | vision | VISION |
 
 ---
 

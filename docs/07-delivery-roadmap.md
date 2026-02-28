@@ -39,3 +39,13 @@
 - Phase 4: harden governance, telemetry, and model fallback strategy
 
 Deliverable each phase: validated UX findings + go/no-go for AI feature rollout.
+
+## Future: Mode Conversationnel (2026-2028)
+
+Vision prospective : évolution vers un paradigme dual-mode (GUI + Agent conversationnel).
+
+- Phase 5a (2026 H2): Palette de commandes augmentée + Dashboard enrichi par copilote IA
+- Phase 5b (2027): Hub conversationnel complet, résultats inline, orchestration d'actions, vue hybride
+- Phase 5c (2027-2028): Permissions agent, onboarding conversationnel, interface mobile-first, insights proactifs
+
+Voir [docs/vision/conversational-mode.md](./vision/conversational-mode.md) pour l'architecture détaillée et les mockups de référence.

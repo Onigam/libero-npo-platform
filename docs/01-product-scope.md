@@ -32,6 +32,14 @@ European nonprofits running on Salesforce NPSP face a compounding set of problem
 
 ## 2. Vision statement
 
+> **"Every nonprofit should have enterprise-grade constituent and program management, without needing a Salesforce admin — and without navigating 16 modules for a simple question."**
+
+Libero est conçu comme un **dual-mode platform** :
+- **GUI IA-augmenté** : interface structurée classique (modules, formulaires, tableaux) enrichie par trois niveaux de collaboration IA (Manuel, Assisté, Autopilote — cf. [docs/13-ai-modes.md](./13-ai-modes.md)).
+- **Mode conversationnel** (vision 2026-2028) : agent IA en langage naturel, capable d'orchestrer des actions multi-étapes, d'afficher des résultats inline, et de réduire 80 % des interactions quotidiennes à une conversation — cf. [docs/vision/conversational-mode.md](./vision/conversational-mode.md).
+
+Les deux paradigmes coexistent et partagent le même back-end, les mêmes garde-fous RGPD, et le même système de permissions.
+
 ## 3. AI-native UX principle (cross-feature)
 
 Libero should use AI agents **inside each core workflow** to reduce clicks, reduce admin burden, and improve data quality — without hiding critical decisions.
