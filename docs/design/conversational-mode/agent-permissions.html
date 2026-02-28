@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; Permissions agent &middot; CONV-008</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── CONV-008: Agent Permissions ── */
+
+    .settings-section {
+      margin-bottom: var(--space-8);
+    }
+
+    .settings-section-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    .settings-section-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .settings-section-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      color: var(--color-text);
+    }
+
+    /* ── Autonomy Slider ── */
+    .autonomy-slider {
+      display: flex;
+      align-items: stretch;
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    .autonomy-level {
+      flex: 1;
+      padding: var(--space-5) var(--space-4);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--duration-normal) var(--ease-out);
+      border-right: 1px solid var(--color-border);
+      background: var(--color-surface);
+    }
+
+    .autonomy-level:last-child {
+      border-right: none;
+    }
+
+    .autonomy-level:hover {
+      background: var(--color-neutral-50);
+    }
+
+    .autonomy-level.selected {
+      background: var(--color-primary-50);
+      border-color: var(--color-primary);
+      position: relative;
+    }
+
+    .autonomy-level.selected::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--color-primary);
+    }
+
+    .autonomy-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-3);
+    }
+
+    .autonomy-level:nth-child(1) .autonomy-icon {
+      background: var(--color-sky-50);
+      color: var(--color-sky);
+    }
+
+    .autonomy-level:nth-child(2) .autonomy-icon {
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+    }
+
+    .autonomy-level:nth-child(3) .autonomy-icon {
+      background: var(--color-amber-50);
+      color: var(--color-amber);
+    }
+
+    .autonomy-label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+    }
+
+    .autonomy-level.selected .autonomy-label {
+      color: var(--color-primary-dark);
+    }
+
+    .autonomy-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+
+    .autonomy-detail {
+      margin-top: var(--space-4);
+      padding: var(--space-4);
+      background: var(--color-primary-50);
+      border: 1px solid var(--color-primary-100);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      color: var(--color-primary-dark);
+      line-height: var(--leading-relaxed);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+
+    .autonomy-detail-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── Permissions Table ── */
+    .perm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+
+    .perm-table thead {
+      position: sticky;
+      top: 0;
+    }
+
+    .perm-table th {
+      background: var(--color-neutral-200);
+      padding: var(--space-3) var(--space-4);
+      text-align: center;
+      font-weight: var(--weight-semi);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .perm-table th:first-child {
+      text-align: left;
+      width: 40%;
+    }
+
+    .perm-table td {
+      padding: var(--space-3) var(--space-4);
+      vertical-align: middle;
+      border-bottom: 1px solid var(--color-neutral-100);
+      text-align: center;
+    }
+
+    .perm-table td:first-child {
+      text-align: left;
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .perm-table tbody tr:nth-child(even) {
+      background: var(--color-neutral-50);
+    }
+
+    .perm-table tbody tr:nth-child(odd) {
+      background: var(--color-white);
+    }
+
+    .perm-table tbody tr:hover {
+      background: var(--color-primary-50);
+    }
+
+    /* Radio dot indicator */
+    .radio-dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--color-border);
+      cursor: pointer;
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .radio-dot.selected {
+      border-color: var(--color-primary);
+    }
+
+    .radio-dot.selected::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+    }
+
+    /* ── Memory Section ── */
+    .memory-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .memory-card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .memory-card:hover {
+      border-color: var(--color-neutral-300);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .memory-card-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary-light);
+      flex-shrink: 0;
+    }
+
+    .memory-card-text {
+      flex: 1;
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      line-height: var(--leading-normal);
+    }
+
+    .memory-card-forget {
+      flex-shrink: 0;
+    }
+
+    /* ── Integration Cards ── */
+    .integration-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+
+    .integration-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--space-3);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .integration-card:hover {
+      border-color: var(--color-neutral-300);
+      box-shadow: var(--shadow-card);
+    }
+
+    .integration-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .integration-icon--green {
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+    }
+
+    .integration-icon--amber {
+      background: var(--color-amber-50);
+      color: var(--color-amber);
+    }
+
+    .integration-icon--sky {
+      background: var(--color-sky-50);
+      color: var(--color-sky);
+    }
+
+    .integration-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .integration-access {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1-5);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .integration-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    .integration-status-dot--green {
+      background: var(--color-primary-light);
+    }
+
+    .integration-status-dot--amber {
+      background: var(--color-amber);
+    }
+
+    .integration-status-dot--sky {
+      background: var(--color-sky);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .autonomy-slider {
+        flex-direction: column;
+      }
+
+      .autonomy-level {
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .autonomy-level:last-child {
+        border-bottom: none;
+      }
+
+      .autonomy-level.selected::after {
+        bottom: auto;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        right: auto;
+      }
+
+      .integration-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .perm-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .perm-table {
+        min-width: 520px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-logo">L</div>
+      <span class="sidebar-brand-text">Libero</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="../index.html" class="nav-item" style="margin-bottom:4px;opacity:0.7;font-size:12px;">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="nav-item-label">Retour a Libero</span>
+      </a>
+      <div class="sidebar-section">Mode Conversationnel</div>
+      <a href="conversation-hub.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="nav-item-label">Hub conversationnel</span></a>
+      <a href="inline-results.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span><span class="nav-item-label">Resultats inline</span></a>
+      <a href="action-orchestration.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span class="nav-item-label">Orchestration</span></a>
+      <a href="action-confirmation.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><span class="nav-item-label">Confirmations</span></a>
+      <a href="agent-activity.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="nav-item-label">Journal d'activite</span></a>
+      <a href="hybrid-view.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg></span><span class="nav-item-label">Vue hybride</span></a>
+      <a href="smart-command.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="nav-item-label">Palette de commandes</span></a>
+      <a href="agent-permissions.html" class="nav-item active"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><span class="nav-item-label">Permissions agent</span></a>
+      <a href="onboarding-agent.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><span class="nav-item-label">Onboarding</span></a>
+      <a href="mobile-conversation.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span><span class="nav-item-label">Mobile</span></a>
+      <a href="dashboard-ai.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class="nav-item-label">Dashboard IA</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">ML</div>
+      <div class="sidebar-footer-info">
+        <div class="sidebar-footer-name">Marie Laurent</div>
+        <div class="sidebar-footer-role">Directrice</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Wrapper -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="../index.html">Libero</a>
+        <span class="topbar-breadcrumb-sep">&rsaquo;</span>
+        <a href="./index.html">Mode Conversationnel</a>
+        <span class="topbar-breadcrumb-sep">&rsaquo;</span>
+        <span class="topbar-breadcrumb-current">Permissions agent</span>
+      </div>
+      <div class="topbar-search">
+        <input type="text" class="topbar-search-input" placeholder="Rechercher... (&#8984;K)">
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notification-dot"></span></button>
+        <div class="topbar-avatar">ML</div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <a href="./index.html" style="font-size:13px;color:var(--color-text-secondary);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Retour au mode conversationnel
+          </a>
+          <h1 class="page-title">Permissions agent <span style="display:inline-block;vertical-align:middle;background:#5B4FD4;color:#fff;font-size:11px;font-family:var(--font-body);font-weight:600;padding:3px 10px;border-radius:99px;margin-left:8px;">Vision 2026-2028</span></h1>
+          <p class="page-subtitle">Controle granulaire de ce que l'agent peut faire seul vs avec validation</p>
+        </div>
+      </div>
+
+      <!-- Section 1: Niveau d'autonomie -->
+      <div class="settings-section">
+        <div class="settings-section-header">
+          <div class="settings-section-icon" style="background:var(--color-primary-50);color:var(--color-primary);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <h2 class="settings-section-title">Niveau d'autonomie</h2>
+        </div>
+
+        <div class="autonomy-slider">
+          <!-- Assiste -->
+          <div class="autonomy-level">
+            <div class="autonomy-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="autonomy-label">Assiste</div>
+            <div class="autonomy-desc">L'agent suggere, vous validez chaque action</div>
+          </div>
+
+          <!-- Equilibre (selected) -->
+          <div class="autonomy-level selected">
+            <div class="autonomy-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="autonomy-label">Equilibre</div>
+            <div class="autonomy-desc">Actions courantes automatiques, sensibles avec validation</div>
+          </div>
+
+          <!-- Autonome -->
+          <div class="autonomy-level">
+            <div class="autonomy-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <div class="autonomy-label">Autonome</div>
+            <div class="autonomy-desc">L'agent agit seul, vous etes notifie apres</div>
+          </div>
+        </div>
+
+        <div class="autonomy-detail">
+          <span class="autonomy-detail-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </span>
+          <span><strong>Equilibre</strong> &mdash; L'agent execute les actions courantes et demande confirmation pour les operations sensibles (envoi emails, suppression, export).</span>
+        </div>
+      </div>
+
+      <!-- Section 2: Permissions par action -->
+      <div class="settings-section">
+        <div class="settings-section-header">
+          <div class="settings-section-icon" style="background:var(--color-indigo-50);color:var(--color-indigo);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h2 class="settings-section-title">Permissions par action</h2>
+        </div>
+
+        <div class="data-table-wrapper perm-table-wrapper">
+          <table class="perm-table">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Autonome</th>
+                <th>Avec confirmation</th>
+                <th>Manuel uniquement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Creer des contacts</td>
+                <td><span class="radio-dot selected"><span></span></span></td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot"></span></td>
+              </tr>
+              <tr>
+                <td>Envoyer des emails (&lt; 50)</td>
+                <td><span class="radio-dot selected"><span></span></span></td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot"></span></td>
+              </tr>
+              <tr>
+                <td>Envoyer des emails (&gt; 50)</td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot selected"><span></span></span></td>
+                <td><span class="radio-dot"></span></td>
+              </tr>
+              <tr>
+                <td>Generer des recus fiscaux</td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot selected"><span></span></span></td>
+                <td><span class="radio-dot"></span></td>
+              </tr>
+              <tr>
+                <td>Supprimer des donnees</td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot selected"><span></span></span></td>
+              </tr>
+              <tr>
+                <td>Exporter des donnees</td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot selected"><span></span></span></td>
+                <td><span class="radio-dot"></span></td>
+              </tr>
+              <tr>
+                <td>Creer une subvention</td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot selected"><span></span></span></td>
+                <td><span class="radio-dot"></span></td>
+              </tr>
+              <tr>
+                <td>Modifier les parametres</td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot"></span></td>
+                <td><span class="radio-dot selected"><span></span></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 3: Memoire de l'agent -->
+      <div class="settings-section">
+        <div class="settings-section-header">
+          <div class="settings-section-icon" style="background:var(--color-amber-50);color:var(--color-amber);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h2 class="settings-section-title">Memoire de l'agent</h2>
+        </div>
+
+        <div class="memory-list">
+          <div class="memory-card">
+            <div class="memory-card-dot"></div>
+            <div class="memory-card-text">Mission : protection de l'environnement et sensibilisation jeunesse</div>
+            <button class="btn btn-sm btn-ghost memory-card-forget">Oublier</button>
+          </div>
+          <div class="memory-card">
+            <div class="memory-card-dot"></div>
+            <div class="memory-card-text">2 847 donateurs actifs, dont 340 grands donateurs (&gt; 1 000 CHF/an)</div>
+            <button class="btn btn-sm btn-ghost memory-card-forget">Oublier</button>
+          </div>
+          <div class="memory-card">
+            <div class="memory-card-dot"></div>
+            <div class="memory-card-text">3 campagnes en cours : Reactivation LYBUNT, Fin d'annee 2025, Gala annuel</div>
+            <button class="btn btn-sm btn-ghost memory-card-forget">Oublier</button>
+          </div>
+          <div class="memory-card">
+            <div class="memory-card-dot"></div>
+            <div class="memory-card-text">Devise : CHF &middot; Langue : francais &middot; Fuseau : Europe/Zurich</div>
+            <button class="btn btn-sm btn-ghost memory-card-forget">Oublier</button>
+          </div>
+          <div class="memory-card">
+            <div class="memory-card-dot"></div>
+            <div class="memory-card-text">Recu fiscal : modele suisse avec QR-code</div>
+            <button class="btn btn-sm btn-ghost memory-card-forget">Oublier</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Integrations activees -->
+      <div class="settings-section">
+        <div class="settings-section-header">
+          <div class="settings-section-icon" style="background:var(--color-sky-50);color:var(--color-sky);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h2 class="settings-section-title">Integrations activees</h2>
+        </div>
+
+        <div class="integration-grid">
+          <!-- Donateurs -->
+          <div class="integration-card">
+            <div class="integration-icon integration-icon--green">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="integration-name">Donateurs</div>
+            <div class="integration-access">
+              <span class="integration-status-dot integration-status-dot--green"></span>
+              Acces complet
+            </div>
+          </div>
+
+          <!-- Subventions -->
+          <div class="integration-card">
+            <div class="integration-icon integration-icon--green">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="integration-name">Subventions</div>
+            <div class="integration-access">
+              <span class="integration-status-dot integration-status-dot--green"></span>
+              Acces complet
+            </div>
+          </div>
+
+          <!-- Communications -->
+          <div class="integration-card">
+            <div class="integration-icon integration-icon--amber">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="integration-name">Communications</div>
+            <div class="integration-access">
+              <span class="integration-status-dot integration-status-dot--amber"></span>
+              Lecture + envoi
+            </div>
+          </div>
+
+          <!-- Finance -->
+          <div class="integration-card">
+            <div class="integration-icon integration-icon--sky">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="integration-name">Finance</div>
+            <div class="integration-access">
+              <span class="integration-status-dot integration-status-dot--sky"></span>
+              Lecture seule
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</div>
+<script src="../shared/mobile.js"></script>
+</body>
+</html>

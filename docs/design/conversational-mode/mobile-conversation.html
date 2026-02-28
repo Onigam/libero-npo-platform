@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero &mdash; Mobile conversation &middot; CONV-010</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── CONV-010: Mobile Conversation Mockup ── */
+
+    .mockup-container {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-8);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: var(--space-6);
+    }
+
+    /* ── Phone Frame ── */
+    .phone-frame {
+      width: 390px;
+      max-width: 100%;
+      min-height: 780px;
+      background: var(--color-white);
+      border: 2px solid var(--color-neutral-300);
+      border-radius: 36px;
+      box-shadow: var(--shadow-elevated), 0 0 0 8px var(--color-neutral-100);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    /* Notch / status bar */
+    .phone-statusbar {
+      height: 44px;
+      background: var(--color-white);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 4px;
+      position: relative;
+    }
+
+    .phone-notch {
+      width: 120px;
+      height: 28px;
+      background: var(--color-neutral-900);
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .phone-statusbar-left,
+    .phone-statusbar-right {
+      position: absolute;
+      bottom: 6px;
+      font-size: 11px;
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+    }
+
+    .phone-statusbar-left {
+      left: 24px;
+    }
+
+    .phone-statusbar-right {
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Phone Header ── */
+    .phone-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-white);
+    }
+
+    .phone-header-logo {
+      width: 32px;
+      height: 32px;
+      background: var(--color-primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: 14px;
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+
+    .phone-header-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-md);
+      color: var(--color-text);
+      flex: 1;
+    }
+
+    .phone-header-action {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-secondary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+    }
+
+    /* ── Chat Area ── */
+    .phone-chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      background: var(--color-bg);
+    }
+
+    .phone-msg {
+      display: flex;
+      gap: var(--space-2);
+      max-width: 92%;
+    }
+
+    .phone-msg--user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .phone-msg--agent {
+      align-self: flex-start;
+    }
+
+    .phone-msg-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: var(--weight-semi);
+      flex-shrink: 0;
+    }
+
+    .phone-msg-avatar--user {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .phone-msg-avatar--agent {
+      background: var(--color-indigo);
+      color: var(--color-white);
+    }
+
+    .phone-msg-bubble {
+      border-radius: 16px;
+      padding: var(--space-3) var(--space-4);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .phone-msg--user .phone-msg-bubble {
+      background: var(--color-primary);
+      color: var(--color-white);
+      border-bottom-right-radius: 4px;
+    }
+
+    .phone-msg--agent .phone-msg-bubble {
+      background: var(--color-white);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-bottom-left-radius: 4px;
+    }
+
+    .phone-msg-time {
+      font-size: 10px;
+      color: var(--color-text-muted);
+      margin-top: 3px;
+      padding: 0 4px;
+    }
+
+    .phone-msg--user .phone-msg-time {
+      text-align: right;
+    }
+
+    /* Inline data card in agent message */
+    .phone-inline-card {
+      margin-top: var(--space-2);
+      background: var(--color-neutral-50);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .phone-inline-card-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--color-primary-50);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      flex-shrink: 0;
+    }
+
+    .phone-inline-card-label {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      line-height: 1.3;
+    }
+
+    .phone-inline-card-value {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+
+    /* Mini list in agent message */
+    .phone-msg-list {
+      margin-top: var(--space-2);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .phone-msg-list-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-neutral-50);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      color: var(--color-text);
+    }
+
+    .phone-msg-list-item-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    .phone-msg-list-item-icon--amber {
+      background: var(--color-amber);
+    }
+
+    .phone-msg-list-item-icon--sky {
+      background: var(--color-sky);
+    }
+
+    .phone-msg-list-item-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: var(--weight-semi);
+      padding: 1px 6px;
+      border-radius: var(--radius-sm);
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .phone-msg-list-item-badge--amber {
+      background: var(--color-amber-50);
+      color: #92400E;
+    }
+
+    .phone-msg-list-item-badge--sky {
+      background: var(--color-sky-50);
+      color: #1E5A7E;
+    }
+
+    /* ── Quick Reply Chips ── */
+    .phone-quick-replies {
+      display: flex;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4) 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background: var(--color-white);
+      border-top: 1px solid var(--color-neutral-100);
+    }
+
+    .phone-quick-chip {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-primary-50);
+      border: 1px solid var(--color-primary-100);
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: var(--weight-medium);
+      color: var(--color-primary-dark);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all var(--duration-normal) var(--ease-out);
+      min-height: 34px;
+    }
+
+    .phone-quick-chip:hover {
+      background: var(--color-primary-100);
+      border-color: var(--color-primary);
+    }
+
+    /* ── Input Bar ── */
+    .phone-input-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-white);
+    }
+
+    .phone-input-field {
+      flex: 1;
+      height: 44px;
+      padding: 0 var(--space-4);
+      background: var(--color-neutral-50);
+      border: 1px solid var(--color-border);
+      border-radius: 22px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--color-text);
+    }
+
+    .phone-input-field::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .phone-input-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .phone-input-btn--mic {
+      background: var(--color-neutral-100);
+      color: var(--color-text-secondary);
+    }
+
+    .phone-input-btn--mic:hover {
+      background: var(--color-neutral-200);
+      color: var(--color-text);
+    }
+
+    .phone-input-btn--send {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .phone-input-btn--send:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* ── Bottom Navigation ── */
+    .phone-bottom-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      height: 56px;
+      border-top: 1px solid var(--color-border);
+      background: var(--color-white);
+      padding-bottom: 4px;
+    }
+
+    .phone-nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 10px;
+      font-weight: var(--weight-medium);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      padding: var(--space-1) var(--space-3);
+      position: relative;
+      min-width: 56px;
+    }
+
+    .phone-nav-tab--active {
+      color: var(--color-primary);
+    }
+
+    .phone-nav-tab-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .phone-nav-badge {
+      position: absolute;
+      top: -3px;
+      right: -8px;
+      min-width: 16px;
+      height: 16px;
+      background: #DC2626;
+      color: var(--color-white);
+      font-size: 9px;
+      font-weight: var(--weight-bold);
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    /* Home indicator */
+    .phone-home-indicator {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-white);
+    }
+
+    .phone-home-indicator-bar {
+      width: 120px;
+      height: 4px;
+      background: var(--color-neutral-300);
+      border-radius: var(--radius-pill);
+    }
+
+    /* ── Side Notes ── */
+    .mockup-notes {
+      max-width: 320px;
+      flex-shrink: 1;
+    }
+
+    .mockup-note {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-left: 3px solid var(--color-indigo);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+
+    .mockup-note-title {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--color-indigo);
+      margin-bottom: var(--space-2);
+    }
+
+    .mockup-note-text {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+
+    .mockup-note-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-2) 0 0;
+    }
+
+    .mockup-note-list li {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      padding: var(--space-1) 0;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      line-height: 1.4;
+    }
+
+    .mockup-note-list li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    /* ── Pattern Annotation ── */
+    .pattern-annotation {
+      margin-top: var(--space-8);
+      background: var(--color-indigo-50);
+      border: 1px solid #C4B5FD;
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-5);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+
+    .pattern-annotation-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--color-indigo);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      flex-shrink: 0;
+    }
+
+    .pattern-annotation-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--color-indigo);
+      margin-bottom: var(--space-1);
+    }
+
+    .pattern-annotation-text {
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      line-height: var(--leading-normal);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .mockup-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .phone-frame {
+        width: 340px;
+        min-height: 680px;
+      }
+
+      .mockup-notes {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-logo">L</div>
+      <span class="sidebar-brand-text">Libero</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="../index.html" class="nav-item" style="margin-bottom:4px;opacity:0.7;font-size:12px;">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="nav-item-label">Retour a Libero</span>
+      </a>
+      <div class="sidebar-section">Mode Conversationnel</div>
+      <a href="conversation-hub.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="nav-item-label">Hub conversationnel</span></a>
+      <a href="inline-results.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span><span class="nav-item-label">Resultats inline</span></a>
+      <a href="action-orchestration.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span class="nav-item-label">Orchestration</span></a>
+      <a href="action-confirmation.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><span class="nav-item-label">Confirmations</span></a>
+      <a href="agent-activity.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="nav-item-label">Journal d'activite</span></a>
+      <a href="hybrid-view.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg></span><span class="nav-item-label">Vue hybride</span></a>
+      <a href="smart-command.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="nav-item-label">Palette de commandes</span></a>
+      <a href="agent-permissions.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><span class="nav-item-label">Permissions agent</span></a>
+      <a href="onboarding-agent.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><span class="nav-item-label">Onboarding</span></a>
+      <a href="mobile-conversation.html" class="nav-item active"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span><span class="nav-item-label">Mobile</span></a>
+      <a href="dashboard-ai.html" class="nav-item"><span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class="nav-item-label">Dashboard IA</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">ML</div>
+      <div class="sidebar-footer-info">
+        <div class="sidebar-footer-name">Marie Laurent</div>
+        <div class="sidebar-footer-role">Directrice</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Wrapper -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="../index.html">Libero</a><span class="topbar-breadcrumb-sep">&rsaquo;</span>
+        <a href="./index.html">Mode Conversationnel</a><span class="topbar-breadcrumb-sep">&rsaquo;</span>
+        <span class="topbar-breadcrumb-current">Mobile conversation</span>
+      </div>
+      <div class="topbar-search"><input type="text" class="topbar-search-input" placeholder="Rechercher... (&#8984;K)"></div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notification-dot"></span></button>
+        <div class="topbar-avatar">ML</div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <a href="./index.html" style="font-size:13px;color:var(--color-text-secondary);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Retour au mode conversationnel
+          </a>
+          <h1 class="page-title">Mobile conversation <span style="display:inline-block;vertical-align:middle;background:#5B4FD4;color:#fff;font-size:11px;font-family:var(--font-body);font-weight:600;padding:3px 10px;border-radius:99px;margin-left:8px;">Vision 2026-2028</span></h1>
+          <p class="page-subtitle">Interface mobile-first, tactile et conversationnelle</p>
+        </div>
+      </div>
+
+      <!-- Mockup Container -->
+      <div class="mockup-container">
+
+        <!-- Phone Frame -->
+        <div class="phone-frame">
+
+          <!-- Status Bar -->
+          <div class="phone-statusbar">
+            <div class="phone-notch"></div>
+            <span class="phone-statusbar-left">9:41</span>
+            <span class="phone-statusbar-right">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg>
+            </span>
+          </div>
+
+          <!-- Phone Header -->
+          <div class="phone-header">
+            <div class="phone-header-logo">L</div>
+            <span class="phone-header-title">Libero</span>
+            <button class="phone-header-action" aria-label="Parametres">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+          </div>
+
+          <!-- Chat Area -->
+          <div class="phone-chat">
+
+            <!-- User Message 1 -->
+            <div class="phone-msg phone-msg--user">
+              <div class="phone-msg-avatar phone-msg-avatar--user">ML</div>
+              <div>
+                <div class="phone-msg-bubble">Stats dons ce mois ?</div>
+                <div class="phone-msg-time">14:22</div>
+              </div>
+            </div>
+
+            <!-- Agent Message 1 -->
+            <div class="phone-msg phone-msg--agent">
+              <div class="phone-msg-avatar phone-msg-avatar--agent">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div>
+                <div class="phone-msg-bubble">
+                  Ce mois : <strong>42 350 CHF</strong> recus (+8% vs mois dernier). 3 nouveaux donateurs.
+                  <!-- Inline Data Card -->
+                  <div class="phone-inline-card">
+                    <div class="phone-inline-card-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <div>
+                      <div class="phone-inline-card-label">Dons fevrier 2026 &middot; 156 transactions</div>
+                      <div class="phone-inline-card-value">42 350 CHF</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="phone-msg-time">14:22 &middot; Agent</div>
+              </div>
+            </div>
+
+            <!-- User Message 2 -->
+            <div class="phone-msg phone-msg--user">
+              <div class="phone-msg-avatar phone-msg-avatar--user">ML</div>
+              <div>
+                <div class="phone-msg-bubble">Prochaines echeances ?</div>
+                <div class="phone-msg-time">14:24</div>
+              </div>
+            </div>
+
+            <!-- Agent Message 2 -->
+            <div class="phone-msg phone-msg--agent">
+              <div class="phone-msg-avatar phone-msg-avatar--agent">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div>
+                <div class="phone-msg-bubble">
+                  2 echeances cette semaine :
+                  <div class="phone-msg-list">
+                    <div class="phone-msg-list-item">
+                      <span class="phone-msg-list-item-icon phone-msg-list-item-icon--amber"></span>
+                      <span>Rapport Fondation Botnar</span>
+                      <span class="phone-msg-list-item-badge phone-msg-list-item-badge--amber">J-5</span>
+                    </div>
+                    <div class="phone-msg-list-item">
+                      <span class="phone-msg-list-item-icon phone-msg-list-item-icon--sky"></span>
+                      <span>Relance campagne fin d'annee</span>
+                      <span class="phone-msg-list-item-badge phone-msg-list-item-badge--sky">J-2</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="phone-msg-time">14:24 &middot; Agent</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Reply Chips -->
+          <div class="phone-quick-replies">
+            <span class="phone-quick-chip">Rapport semaine</span>
+            <span class="phone-quick-chip">Prochaines taches</span>
+            <span class="phone-quick-chip">Stats dons</span>
+          </div>
+
+          <!-- Input Bar -->
+          <div class="phone-input-bar">
+            <input type="text" class="phone-input-field" placeholder="Ecrire un message...">
+            <button class="phone-input-btn phone-input-btn--mic" aria-label="Dictee vocale">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <button class="phone-input-btn phone-input-btn--send" aria-label="Envoyer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+
+          <!-- Bottom Navigation -->
+          <div class="phone-bottom-nav">
+            <div class="phone-nav-tab phone-nav-tab--active">
+              <div class="phone-nav-tab-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <span>Chat</span>
+            </div>
+            <div class="phone-nav-tab">
+              <div class="phone-nav-tab-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <span>Donnees</span>
+            </div>
+            <div class="phone-nav-tab">
+              <div class="phone-nav-tab-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span class="phone-nav-badge">3</span>
+              </div>
+              <span>Alertes</span>
+            </div>
+            <div class="phone-nav-tab">
+              <div class="phone-nav-tab-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </div>
+              <span>Reglages</span>
+            </div>
+          </div>
+
+          <!-- Home Indicator -->
+          <div class="phone-home-indicator">
+            <div class="phone-home-indicator-bar"></div>
+          </div>
+
+        </div>
+
+        <!-- Side Notes -->
+        <div class="mockup-notes">
+
+          <div class="mockup-note">
+            <div class="mockup-note-title">Principes tactiles</div>
+            <div class="mockup-note-text">Design optimise touch : boutons > 44px, espacement genereux, navigation par onglets</div>
+            <ul class="mockup-note-list">
+              <li>Zones tactiles minimum 44x44px (recommandation Apple HIG)</li>
+              <li>Espacement vertical de 16px entre les messages</li>
+              <li>Chips de reponse rapide accessibles au pouce</li>
+              <li>Navigation par onglets en bas de l'ecran</li>
+            </ul>
+          </div>
+
+          <div class="mockup-note">
+            <div class="mockup-note-title">Conversation first</div>
+            <div class="mockup-note-text">Sur mobile, la conversation devient le mode d'interaction principal. L'utilisateur pose des questions naturelles et obtient des donnees contextuelles.</div>
+            <ul class="mockup-note-list">
+              <li>Input vocal natif pour dictee rapide</li>
+              <li>Cartes de donnees compactes inline</li>
+              <li>Raccourcis thematiques en chips horizontaux</li>
+              <li>Notifications via onglet Alertes (badge rouge)</li>
+            </ul>
+          </div>
+
+          <div class="mockup-note">
+            <div class="mockup-note-title">Navigation simplifiee</div>
+            <div class="mockup-note-text">4 onglets couvrent l'essentiel : conversation, donnees structurees, alertes et parametres. Pas de sidebar ni de menus complexes.</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Pattern Annotation -->
+      <div class="pattern-annotation">
+        <div class="pattern-annotation-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+          <div class="pattern-annotation-label">Pattern UX</div>
+          <div class="pattern-annotation-text">Mobile-first -- la conversation est le mode d'interaction principal. L'interface tactile privilegied les echanges naturels en langage libre, les reponses rapides et les donnees condensees adaptees a un ecran reduit.</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</div>
+<script src="../shared/mobile.js"></script>
+</body>
+</html>

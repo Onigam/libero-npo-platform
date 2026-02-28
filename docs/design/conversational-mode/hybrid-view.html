@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libero — Vue hybride · CONV-006</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    /* ── Override main-content for full-height split ── */
+    .main-content {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      height: calc(100vh - var(--topbar-height));
+    }
+
+    /* ── Page header inside split ── */
+    .hybrid-header {
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    /* ── Split layout ── */
+    .hybrid-split {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Left panel — conversation (40%) ── */
+    .panel-conversation {
+      width: 40%;
+      min-width: 320px;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-neutral-50);
+      border-right: 1px solid var(--color-border);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface);
+      flex-shrink: 0;
+    }
+
+    .panel-header-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semi);
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .panel-header-title svg {
+      color: var(--color-primary);
+    }
+
+    /* ── Chat messages ── */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .chat-message {
+      display: flex;
+      gap: var(--space-3);
+      align-items: flex-start;
+    }
+
+    .chat-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      flex-shrink: 0;
+      color: var(--color-white);
+    }
+
+    .chat-avatar--agent {
+      background: var(--color-primary);
+    }
+
+    .chat-avatar--user {
+      background: var(--color-indigo);
+    }
+
+    .chat-bubble {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chat-sender {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-1);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .chat-sender-time {
+      font-weight: var(--weight-regular);
+      color: var(--color-text-muted);
+    }
+
+    .chat-body {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+
+    .chat-body--user {
+      background: var(--color-primary-50);
+      border-color: var(--color-primary-100);
+    }
+
+    .chat-body p {
+      margin-bottom: var(--space-2);
+    }
+
+    .chat-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .chat-body strong {
+      font-weight: var(--weight-semi);
+    }
+
+    .chat-inline-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      color: var(--color-primary);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      cursor: pointer;
+      margin-top: var(--space-2);
+    }
+
+    .chat-inline-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Chat input ── */
+    .chat-input-area {
+      padding: var(--space-3) var(--space-4);
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      flex-shrink: 0;
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--color-neutral-50);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-2) var(--space-3);
+      transition: border-color var(--duration-normal) var(--ease-out);
+    }
+
+    .chat-input-wrapper:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-50);
+    }
+
+    .chat-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      background: transparent;
+      padding: var(--space-1) 0;
+    }
+
+    .chat-input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .chat-send-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-md);
+      background: var(--color-primary);
+      color: var(--color-white);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background var(--duration-normal) var(--ease-out);
+    }
+
+    .chat-send-btn:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* ── Divider handle ── */
+    .split-divider {
+      width: 1px;
+      background: var(--color-border);
+      cursor: col-resize;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .split-divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -3px;
+      width: 7px;
+      height: 48px;
+      transform: translateY(-50%);
+      background: var(--color-neutral-200);
+      border-radius: var(--radius-pill);
+    }
+
+    .split-divider:hover::after {
+      background: var(--color-primary-light);
+    }
+
+    /* ── Right panel — data (60%) ── */
+    .panel-data {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--color-surface);
+    }
+
+    .panel-data-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+      gap: var(--space-3);
+    }
+
+    .panel-data-breadcrumb {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    .panel-data-breadcrumb svg {
+      color: var(--color-primary);
+      flex-shrink: 0;
+    }
+
+    .panel-data-breadcrumb-sep {
+      color: var(--color-neutral-300);
+    }
+
+    /* ── Filter chips ── */
+    .panel-filters {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      border-bottom: 1px solid var(--color-neutral-100);
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    /* ── Table area ── */
+    .panel-table-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .panel-table-area .data-table-wrapper {
+      border: none;
+      border-radius: 0;
+    }
+
+    .panel-table-area .data-table {
+      min-width: 580px;
+    }
+
+    .donor-name {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .donor-name-primary {
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    .donor-name-secondary {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .cell-amount {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+    }
+
+    .status-dot::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-dot--inactive::before {
+      background: var(--color-amber);
+    }
+
+    .status-dot--active::before {
+      background: var(--color-primary-light);
+    }
+
+    .status-dot--lost::before {
+      background: var(--color-neutral-400);
+    }
+
+    /* Row highlight */
+    .data-table tbody tr.row-highlighted {
+      background: var(--color-primary-50) !important;
+      outline: 2px solid var(--color-primary);
+      outline-offset: -2px;
+    }
+
+    /* ── Pagination ── */
+    .panel-pagination {
+      padding: var(--space-3) var(--space-5);
+      border-top: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    /* ── Annotation ── */
+    .annotation {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--color-indigo-50);
+      border: 1px solid var(--color-indigo-light);
+      color: var(--color-indigo);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semi);
+      padding: var(--space-1-5) var(--space-3);
+      border-radius: var(--radius-pill);
+    }
+
+    .annotation svg {
+      flex-shrink: 0;
+    }
+
+    .annotation-bar {
+      padding: var(--space-2) var(--space-5);
+      background: var(--color-neutral-50);
+      border-top: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    /* ── Sync indicator ── */
+    .sync-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      font-weight: var(--weight-medium);
+    }
+
+    .sync-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      animation: pulse-sync 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-sync {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ── Mobile responsive ── */
+    @media (max-width: 768px) {
+      .hybrid-split {
+        flex-direction: column;
+      }
+
+      .panel-conversation {
+        width: 100%;
+        min-width: 0;
+        max-height: 45vh;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .split-divider {
+        display: none;
+      }
+
+      .panel-data {
+        flex: 1;
+        min-height: 300px;
+      }
+
+      .hybrid-header {
+        padding: var(--space-3) var(--space-4);
+      }
+
+      .panel-data-header {
+        padding: var(--space-3);
+        flex-wrap: wrap;
+      }
+
+      .panel-filters {
+        padding: var(--space-2) var(--space-3);
+      }
+
+      .panel-pagination {
+        padding: var(--space-3);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-logo">L</div>
+      <span class="sidebar-brand-text">Libero</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="../index.html" class="nav-item" style="margin-bottom:4px;opacity:0.7;font-size:12px;">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="nav-item-label">Retour a Libero</span>
+      </a>
+      <div class="sidebar-section">Mode Conversationnel</div>
+      <a href="conversation-hub.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+        <span class="nav-item-label">Hub conversationnel</span>
+      </a>
+      <a href="inline-results.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span>
+        <span class="nav-item-label">Resultats inline</span>
+      </a>
+      <a href="action-orchestration.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <span class="nav-item-label">Orchestration</span>
+      </a>
+      <a href="action-confirmation.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+        <span class="nav-item-label">Confirmations</span>
+      </a>
+      <a href="agent-activity.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+        <span class="nav-item-label">Journal d'activite</span>
+      </a>
+      <a href="hybrid-view.html" class="nav-item active">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg></span>
+        <span class="nav-item-label">Vue hybride</span>
+      </a>
+      <a href="smart-command.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <span class="nav-item-label">Palette de commandes</span>
+      </a>
+      <a href="agent-permissions.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <span class="nav-item-label">Permissions agent</span>
+      </a>
+      <a href="onboarding-agent.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+        <span class="nav-item-label">Onboarding</span>
+      </a>
+      <a href="mobile-conversation.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
+        <span class="nav-item-label">Mobile</span>
+      </a>
+      <a href="dashboard-ai.html" class="nav-item">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        <span class="nav-item-label">Dashboard IA</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">ML</div>
+      <div class="sidebar-footer-info">
+        <div class="sidebar-footer-name">Marie Laurent</div>
+        <div class="sidebar-footer-role">Directrice</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="../index.html">Libero</a>
+        <span class="topbar-breadcrumb-sep">&rsaquo;</span>
+        <a href="./index.html">Mode Conversationnel</a>
+        <span class="topbar-breadcrumb-sep">&rsaquo;</span>
+        <span class="topbar-breadcrumb-current">Vue hybride</span>
+      </div>
+      <div class="topbar-search"><input type="text" class="topbar-search-input" placeholder="Rechercher... (&#8984;K)"></div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notification-dot"></span></button>
+        <div class="topbar-avatar">ML</div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="main-content">
+
+      <!-- Compact page header -->
+      <div class="hybrid-header">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-3);">
+          <div>
+            <a href="./index.html" style="font-size:12px;color:var(--color-text-secondary);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              Retour
+            </a>
+            <h1 style="font-family:var(--font-heading);font-size:var(--text-xl);color:var(--color-text);margin:0;display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;">
+              Vue hybride
+              <span style="display:inline-block;background:#5B4FD4;color:#fff;font-size:11px;font-family:var(--font-body);font-weight:600;padding:3px 10px;border-radius:99px;">Vision 2026-2028</span>
+              <span class="sync-indicator" style="margin-left:var(--space-3);"><span class="sync-dot"></span> Synchronise</span>
+            </h1>
+            <p style="font-size:var(--text-xs);color:var(--color-text-secondary);margin-top:2px;">Le meilleur des deux mondes &mdash; conversation et donnees synchronisees</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Split layout -->
+      <div class="hybrid-split">
+
+        <!-- LEFT: Conversation panel -->
+        <div class="panel-conversation">
+          <div class="panel-header">
+            <div class="panel-header-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Conversation
+            </div>
+            <span style="font-size:var(--text-xs);color:var(--color-text-muted);">3 messages</span>
+          </div>
+
+          <div class="chat-messages">
+
+            <!-- User message 1 -->
+            <div class="chat-message">
+              <div class="chat-avatar chat-avatar--user">ML</div>
+              <div class="chat-bubble">
+                <div class="chat-sender">Marie Laurent <span class="chat-sender-time">10:14</span></div>
+                <div class="chat-body chat-body--user">
+                  <p>Montre-moi les donateurs LYBUNT de 2024 &mdash; ceux qui ont donne en 2022 ou 2023 mais pas en 2024.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Agent response -->
+            <div class="chat-message">
+              <div class="chat-avatar chat-avatar--agent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="15" r="1"/></svg>
+              </div>
+              <div class="chat-bubble">
+                <div class="chat-sender">Agent Libero <span class="chat-sender-time">10:14</span></div>
+                <div class="chat-body">
+                  <p>J'ai identifie <strong>127 donateurs LYBUNT</strong> pour 2024. Le panneau de droite affiche les resultats.</p>
+                  <p>Quelques chiffres cles :</p>
+                  <p style="font-size:var(--text-xs);color:var(--color-text-secondary);">
+                    &bull; Don moyen historique : <strong style="color:var(--color-text);">CHF 285</strong><br>
+                    &bull; Montant total recuperable : <strong style="color:var(--color-text);">CHF 36 195</strong><br>
+                    &bull; 43 donateurs avec dernier don > CHF 500
+                  </p>
+                  <div class="chat-inline-link">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                    Voir dans le panneau donnees &rarr;
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- User follow-up -->
+            <div class="chat-message">
+              <div class="chat-avatar chat-avatar--user">ML</div>
+              <div class="chat-bubble">
+                <div class="chat-sender">Marie Laurent <span class="chat-sender-time">10:16</span></div>
+                <div class="chat-body chat-body--user">
+                  <p>Filtre-moi ceux avec un don superieur a CHF 500. Je veux cibler les grands donateurs en priorite.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Chat input -->
+          <div class="chat-input-area">
+            <div class="chat-input-wrapper">
+              <input type="text" class="chat-input" placeholder="Affiner les resultats ou poser une question...">
+              <button class="chat-send-btn" aria-label="Envoyer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="split-divider"></div>
+
+        <!-- RIGHT: Data panel -->
+        <div class="panel-data">
+
+          <div class="panel-data-header">
+            <div class="panel-data-breadcrumb">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="15" r="1"/></svg>
+              Genere par l'agent
+              <span class="panel-data-breadcrumb-sep">&middot;</span>
+              Segment LYBUNT
+              <span class="panel-data-breadcrumb-sep">&middot;</span>
+              <strong>127 resultats</strong>
+            </div>
+            <button class="btn btn-secondary btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              Ouvrir en plein ecran
+            </button>
+          </div>
+
+          <!-- Filters -->
+          <div class="panel-filters">
+            <span class="filter-chip active">Tous (127)</span>
+            <span class="filter-chip">Montant &gt; 500 (43)</span>
+            <span class="filter-chip">Montant &gt; 1000 (18)</span>
+          </div>
+
+          <!-- Table -->
+          <div class="panel-table-area">
+            <div class="data-table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Dernier don</th>
+                    <th class="text-right">Montant</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="row-highlighted">
+                    <td>
+                      <div class="donor-name">
+                        <span class="donor-name-primary">Dupont, Jean-Pierre</span>
+                        <span class="donor-name-secondary">ID-2341</span>
+                      </div>
+                    </td>
+                    <td>jp.dupont@bluewin.ch</td>
+                    <td>12.03.2023</td>
+                    <td class="text-right"><span class="cell-amount">CHF 1 200</span></td>
+                    <td><span class="status-dot status-dot--inactive">Inactif</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="donor-name">
+                        <span class="donor-name-primary">Muller, Catherine</span>
+                        <span class="donor-name-secondary">ID-1872</span>
+                      </div>
+                    </td>
+                    <td>c.muller@gmail.com</td>
+                    <td>05.11.2023</td>
+                    <td class="text-right"><span class="cell-amount">CHF 800</span></td>
+                    <td><span class="status-dot status-dot--inactive">Inactif</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="donor-name">
+                        <span class="donor-name-primary">Rochat, Philippe</span>
+                        <span class="donor-name-secondary">ID-3102</span>
+                      </div>
+                    </td>
+                    <td>ph.rochat@sunrise.ch</td>
+                    <td>28.06.2023</td>
+                    <td class="text-right"><span class="cell-amount">CHF 500</span></td>
+                    <td><span class="status-dot status-dot--inactive">Inactif</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="donor-name">
+                        <span class="donor-name-primary">Favre, Isabelle</span>
+                        <span class="donor-name-secondary">ID-2756</span>
+                      </div>
+                    </td>
+                    <td>i.favre@protonmail.ch</td>
+                    <td>14.09.2022</td>
+                    <td class="text-right"><span class="cell-amount">CHF 2 000</span></td>
+                    <td><span class="status-dot status-dot--lost">Perdu</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="donor-name">
+                        <span class="donor-name-primary">Berset, Marc</span>
+                        <span class="donor-name-secondary">ID-1543</span>
+                      </div>
+                    </td>
+                    <td>marc.berset@swisscom.ch</td>
+                    <td>22.04.2023</td>
+                    <td class="text-right"><span class="cell-amount">CHF 350</span></td>
+                    <td><span class="status-dot status-dot--inactive">Inactif</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="donor-name">
+                        <span class="donor-name-primary">Schneider, Anna</span>
+                        <span class="donor-name-secondary">ID-2988</span>
+                      </div>
+                    </td>
+                    <td>a.schneider@gmx.ch</td>
+                    <td>01.08.2023</td>
+                    <td class="text-right"><span class="cell-amount">CHF 150</span></td>
+                    <td><span class="status-dot status-dot--inactive">Inactif</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="donor-name">
+                        <span class="donor-name-primary">Zufferey, Laurent</span>
+                        <span class="donor-name-secondary">ID-3215</span>
+                      </div>
+                    </td>
+                    <td>l.zufferey@hispeed.ch</td>
+                    <td>18.12.2022</td>
+                    <td class="text-right"><span class="cell-amount">CHF 600</span></td>
+                    <td><span class="status-dot status-dot--lost">Perdu</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="panel-pagination">
+            <div class="pagination">
+              <div class="pagination-info">1 &ndash; 7 sur 127 resultats</div>
+              <div class="pagination-controls">
+                <button class="pagination-btn" disabled>&lsaquo;</button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <span style="font-size:var(--text-xs);color:var(--color-text-muted);padding:0 4px;">...</span>
+                <button class="pagination-btn">19</button>
+                <button class="pagination-btn">&rsaquo;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Annotation bar -->
+          <div class="annotation-bar">
+            <span class="annotation">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Pattern UX : les panneaux sont synchronises &mdash; cliquer un donateur enrichit la conversation
+            </span>
+          </div>
+
+        </div><!-- /panel-data -->
+
+      </div><!-- /hybrid-split -->
+
+    </div><!-- /main-content -->
+  </div><!-- /main-wrapper -->
+</div><!-- /app-layout -->
+
+<script src="../shared/mobile.js"></script>
+</body>
+</html>
